@@ -1,0 +1,15 @@
+export class Constantes{
+
+    /**
+     * Catalogos CRUD
+     */
+    static NUEVO_REGISTRO:string = 'N';
+    static EDITAR_REGISTRO:string = 'E';
+    static VER_REGISTRO:string = 'V';
+    static BORRAR_REGISTRO:string = 'D';
+    static AGREGAR_REGISTRO:string = 'A';
+    static IMPRIMIR_REGISTRO:string = 'P';
+    static SINCRONIZAR_REGISTRO:string = 'S';
+    static LISTAR_REGISTRO:string = 'L';
+    static ES_MODIFICABLE:number = 1;
+}

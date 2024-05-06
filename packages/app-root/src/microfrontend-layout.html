@@ -1,0 +1,22 @@
+<single-spa-router  base="/" mode="history">
+	<main>
+		<route path="/app">
+			<route path="home">
+			  	<application name="@bsc/home" loader="loading"></application>    
+			</route>
+			<route path="seguridades">
+			  	<application name="@bsc/seguridades" loader="loading"></application>    
+			</route>
+			<route path="dashboard">
+			  	<application name="@bsc/dashboard" loader="loading"></application>    
+			</route>			
+			<route default>
+			  <h1>Unknown product page</h1>
+			</route>
+		</route>
+		<route default>
+			<h1>Unknown product page22</h1>
+		</route>
+		<redirect from="/" to="/app/home"></redirect>
+	</main>
+</single-spa-router>
