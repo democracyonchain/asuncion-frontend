@@ -11,12 +11,30 @@
 			  	<application name="@bsc/dashboard" loader="loading"></application>    
 			</route>			
 			<route default>
-			  <h1>Unknown product page</h1>
+				<div style="display: flex; flex-direction: column; height: 100vh; justify-content: center; align-items: center;background-color: rgb(243 244 246 );">
+					<div style="display: flex; flex-direction: column; align-items: center;padding: 1px;">
+						<h1 style="font-size: 100px;font-weight: 800; color:rgb(55 65 81 ); margin: 0px;">404</h1>
+						<p style="font-size: 1.5rem; font-weight: 500;color: rgb(75 85 99 );margin-bottom: 1.5rem;">Página No Encontrada</p>
+						<a style="font-weight: 800; border-radius: 0.375rem; color: rgb(255 255 255 ); cursor: pointer;
+							padding-top: 0.5rem; padding-bottom: 0.5rem;padding-left: 1rem;padding-right: 1rem;background-color: rgb(99 102 241);
+						" onclick='location.href="/"'>
+							 Regresar Inicio</a>
+					</div>
+				</div>
 			</route>
 		</route>
 		<route default>
-			<h1>Unknown product page22</h1>
+			<div style="display: flex; flex-direction: column; height: 100vh; justify-content: center; align-items: center;background-color: rgb(243 244 246 );">
+				<div style="display: flex; flex-direction: column; align-items: center;padding: 1px;">
+					<h1 style="font-size: 100px;font-weight: 800; color:rgb(55 65 81 ); margin: 0px;">404</h1>
+					<p style="font-size: 1.5rem; font-weight: 500;color: rgb(75 85 99 );margin-bottom: 1.5rem;">Página No Encontrada</p>
+					<a style="font-weight: 800; border-radius: 0.375rem; color: rgb(255 255 255 ); cursor: pointer;
+						padding-top: 0.5rem; padding-bottom: 0.5rem;padding-left: 1rem;padding-right: 1rem;background-color: rgb(99 102 241);
+					" onclick='location.href="/"'>
+						 Regresar Inicio</a>
+				</div>
+			</div>
 		</route>
-		<redirect from="/" to="/app/home"></redirect>
+		<redirect from="/" to="/app/seguridades"></redirect>
 	</main>
 </single-spa-router>

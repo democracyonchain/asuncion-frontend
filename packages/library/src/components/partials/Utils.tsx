@@ -12,25 +12,26 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { StyleClass } from 'primereact/styleclass';
-
-
+import { useMountEffect } from 'primereact/hooks';
+import { Messages } from 'primereact/messages';
+import { useNavigate } from "react-router-dom";
 export const UtilsButton = (
     {
         label=undefined,type='button',link=false,icon='',loading=false,onClick,severity=undefined,
         disabled=false,raised=false,rounded=false,text=false,outlined=false,ariaLabel='',badge,
-        badgeClassName='', size=undefined, className
+        badgeClassName='', size=undefined, className, autoFocus=false
     }:
     {
         label:string|undefined,type:any,link?:boolean,icon?:any,loading?:boolean,onClick?:any,severity?:any,
         disabled?:boolean,raised?:boolean,rounded?:boolean,text?:boolean,outlined?:boolean,ariaLabel?:any,badge?:any,
-        badgeClassName?:any,size?:any,className?:any
+        badgeClassName?:any,size?:any,className?:any,autoFocus?:boolean
     }) => {
 
     return (
         <Button 
             label={label} rounded={rounded} type={type} link={link}  icon={icon} loading={loading} onClick={onClick} severity={severity}
             disabled={disabled} raised={raised} text={text} outlined={outlined} aria-label={ariaLabel} badge={badge} 
-            badgeClassName={badgeClassName} size={size} className={className}
+            badgeClassName={badgeClassName} size={size} className={className} autoFocus={autoFocus} 
         />
     )
 }
@@ -284,20 +285,28 @@ export const UtilsModal=(
         headerElement='',
         footerContent='',
         contenido='',
-        maximizable=false
+        maximizable=false,
+        closable=true,
+        closeOnEscape=true,
+        position='center',
+        width='50rem'
     }
     :{
         setVisible:any,
         visible:boolean,
-        headerElement:string|null|JSX.Element|JSX.Element[],
-        footerContent:string|null|JSX.Element|JSX.Element[],
+        headerElement?:string|null|JSX.Element|JSX.Element[],
+        footerContent?:string|null|JSX.Element|JSX.Element[],
         contenido?:string|null|JSX.Element|JSX.Element[],
         maximizable?:boolean
+        closable?:boolean
+        closeOnEscape?:boolean
+        position?:any,
+        width?:any
     })=>{
 
     return (
-        <Dialog maximizable={maximizable} visible={visible} modal header={headerElement} 
-        footer={footerContent} style={{ width: '50rem' }} onHide={() => setVisible(false)}
+        <Dialog maximizable={maximizable} visible={visible} modal header={headerElement}  closable={closable} position={position}
+        footer={footerContent} style={{ width }} onHide={() => setVisible(false)} closeOnEscape={closeOnEscape}
         breakpoints={{ '960px': '75vw', '641px': '100vw' }}
         >
             {contenido}
@@ -317,5 +326,42 @@ export const UtilsSpinner=({visible=false}:{visible:boolean})=>{
         }
         </>
         
+    )
+}
+
+export const UtilsMessages=({
+    data=[{sticky:true,severity:'success',summary:'Success',detail: 'Closable Message',closable:true}]    
+    }:{
+        data:[{sticky?:any,severity:any,summary:string,detail: string,closable?:boolean}]
+    })=>{
+    const msgs = useRef<Messages>(null);
+
+    useMountEffect(() => {
+        msgs.current?.clear();
+        msgs.current?.show(
+            data
+        );
+    })
+
+    return (<Messages ref={msgs}  pt={{wrapper:{className:'p-2 text-sm'}}}/>)
+}
+
+export const Utils404=({path}:{path:string})=>{
+    //Varaibles Generales
+	const navigate = useNavigate();
+
+    return(
+        <>
+            <div className="surface-section px-4 py-8 md:px-6 lg:px-8">
+                <div style={{background:'radial-gradient(50% 109138%, rgba(0, 0, 100, 0.1) 0%, rgba(254, 244, 247, 0) 100%)'}} className="text-center">
+                    <span className="bg-white text-primary font-bold text-2xl inline-block px-3">404</span>
+                </div>
+                <div className="mt-8 mb-2 font-bold text-3xl text-600 text-center">Página no encontrada</div>
+                <p className="text-500 text-lg mt-0 mb-6 text-center">Lo sentimos, no hemos podido encontrar la página.</p>
+                <div className="text-center">
+                  <UtilsButton type='button' link severity="secondary" outlined size={'small'} label='Volver a la pagina principal' icon={'pi pi-home' } onClick={()=>{navigate("/app/"+path);}}></UtilsButton>                  
+                </div>
+            </div>
+        </>
     )
 }

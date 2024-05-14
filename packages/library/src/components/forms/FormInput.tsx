@@ -15,7 +15,7 @@ import { InputSwitch,InputSwitchChangeEvent } from 'primereact/inputswitch';
 import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
 import { Password } from 'primereact/password';
 import { Message } from 'primereact/message';
-
+import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 interface IReactHookFormTextProps {
     type?:string
     variant?:string |undefined 
@@ -428,10 +428,10 @@ export const TextInput = (
                                     inputRef={field.ref} 
                                     header={header}
                                     footer={footer}
-                                    className={' w-full p-inputtext-sm text-sm ' + classNames({ 'p-invalid': fieldState.error })} 
+                                    className={' p-inputtext-sm inline ' + classNames({ 'p-invalid': fieldState.error })} 
                                     feedback={feedback} 
                                     toggleMask={toggleMask}
-                                    pt={{input:{className:'w-full pr-5'},showIcon:{className:'relative inline-block -mx-4 mt-3'},hideIcon:{className:'relative -mx-4 mt-3'}}}
+                                    pt={{input:{className:'w-full'}}}
                                     
                                     />
 
@@ -716,3 +716,46 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
             </>
         )
 }
+
+
+export const RadioButtonInput=({disabled=false,methods,label,name,value,inputId='',setValue}:{
+    disabled:boolean, methods:any, label:string,  name: string,value:any, inputId:string,setValue?:any
+
+})=>{
+
+const { formState: { errors }, control } = methods;
+const [valueRadio, setValueRadio] = useState<any>(setValue);
+
+return (
+    <>
+        <Controller
+            name={name}
+            control={control}		
+            defaultValue={valueRadio}						
+            render={({ field, fieldState }) => (
+                <>                                              
+                    <RadioButton                                              
+                        disabled={disabled} 
+                        inputId={inputId} 
+                        checked={value === field.value} 
+                        inputRef={field.ref} 
+                        {...field}
+                        className={classNames({ 'p-invalid mr-1': fieldState.error })}                           
+                        value={value}
+                        name={field.name}
+                        onChange={(e:any)=>{field.onChange(e.value);setValueRadio(e.value)}}                       
+                    />		
+
+                    <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error ml-2':'text-sm text-bluegray-600 ml-2 font-medium hover:bg-gray-100 hover:text-primary p-2'}`}>{label} </label>  
+                    
+                    {(errors[field.name]?.message)&&
+                        <small color="red" className="p-error text-xs" id={field.name}>
+                            {errors[field.name]?.message}
+                        </small>
+                    }
+                </>
+            )}
+        />    
+    </>
+)
+} 

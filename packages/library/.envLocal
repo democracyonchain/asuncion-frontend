@@ -1,0 +1,4 @@
+URLCONEXIONGRAPQL = 'http://172.32.27.73:3099/graphql'
+URLHOME = 'http://localhost:9000'
+URLLOGOUT = 'http://localhost:9000/app/home'
+FRONT_ETIQUETA = 'AMBIENTE LOCAL'

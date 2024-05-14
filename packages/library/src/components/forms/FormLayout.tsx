@@ -7,15 +7,14 @@ export const FormLayout = (
     { 
         children,methods,onSubmit,labels={btn1:'Cancelar',btn2:'Guardar',btn3:'',btn4:'',icon:true,btnload:false},
         opt=Constantes.NUEVO_REGISTRO,onReset,onResetData,onFinalizar,modal, modal48, openmodal=true,
-        visibleModal=false,setVisibleModal
+        visibleModal=false,setVisibleModal,width='50rem'
     }:
     {   
         children: string | JSX.Element | JSX.Element[],methods:any,onSubmit:any,labels:{btn1:string,btn2:string,btn3?:string,btn4?:string,icon:boolean,btnload:boolean},
         opt?:string,onReset:any,onResetData?:any,onFinalizar?:any,modal?:boolean,modal48?:boolean, openmodal?:boolean,
-        visibleModal:any,setVisibleModal?:Dispatch<any>
+        visibleModal:any,setVisibleModal?:Dispatch<any>,width?:any
     }) =>
     {
-
         return (        
             <FormProvider {...methods}>
                 <form  autoComplete="off">  
@@ -36,20 +35,42 @@ export const FormLayout = (
                             
                             </>
                         } 
+                        
+                        closable={visibleModal.closable}
+                        closeOnEscape={visibleModal.closacloseOnEscapeble}
                         headerElement={visibleModal.header}
                         visible={visibleModal.active} 
                         setVisible={setVisibleModal} 
                         footerContent={
                             <>
                                 {(labels.btn1)&&                   
-                                    <UtilsButton type='button'  onClick={onReset} icon={'pi pi-times'} severity="danger" label= {labels.btn1}   raised className="text-sm text-red-500"/>
+                                    <UtilsButton 
+                                    type='button'  
+                                    outlined 
+                                    onClick={onReset} 
+                                    icon={'pi pi-times'}
+                                    size={'small'}  
+                                    severity="danger"                                    
+                                      
+                                    label= {labels.btn1}   
+                                    className="text-sm"/>
                                 } 
                                 {(labels.btn2)&&
-                                    <UtilsButton  type='submit'  icon={'pi pi-check'} label= {labels.btn2} severity="info"  raised className="text-sm" onClick={methods.handleSubmit(onSubmit)}/>
+                                    <UtilsButton  
+                                    type='submit'  
+                                     
+                                    icon={'pi pi-check'} 
+                                    label= {labels.btn2} 
+                                    size={'small'} 
+                                    severity="primary"  
+                                  
+                                    className="text-sm" 
+                                    onClick={methods.handleSubmit(onSubmit)}/>
                                 } 
                             </>
                         }
-                        maximizable={visibleModal.maximizable} 
+                        maximizable={visibleModal.maximizable}
+                        width={width} 
                     />
                 </form>                             
             </FormProvider>
@@ -64,7 +85,7 @@ export const FormLayoutInit = (
         visibleModal=false,setVisibleModal
     }:
     {   
-        children: string | JSX.Element | JSX.Element[],methods:any,onSubmit:any,labels:{btn1:string,btn2:string,btn3?:string,btn4?:string,icon:boolean,btnload:boolean},
+        children: string | JSX.Element | JSX.Element[]|any,methods:any,onSubmit:any,labels:{btn1:string,btn2:string,btn3?:string,btn4?:string,icon:boolean,btnload:boolean},
         opt?:string,onReset:any,onResetData?:any,onFinalizar?:any,modal?:boolean,modal48?:boolean, openmodal?:boolean,
         visibleModal:any,setVisibleModal?:Dispatch<any>
     }) =>

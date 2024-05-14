@@ -45,6 +45,10 @@ function generateDirectoryStructure(basePath) {
           isDirectory: true,
           children: [
             {
+              name: "components",
+              isDirectory: true,
+            },
+            {
               name: "useCases",
               isDirectory: true,
             },

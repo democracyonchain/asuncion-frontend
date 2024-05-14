@@ -1,6 +1,12 @@
-import React from 'react'
-
+import { coreMenuUser } from '@components/service/authservice';
+import { useNavigate } from "react-router-dom";
 export const MainLayout = () => {
+    //Varibles Generales
+    const getModuloSession=JSON.parse(sessionStorage.getItem("getModuloSession") as any);
+    
+    //Hook Navigate
+	const navigate = useNavigate();
+
     return (
         <div className="surface-0 text-center  bg-transparent">
             <div className="mb-4 font-semibold text-sm p-2  flex justify-content-end">
@@ -9,73 +15,23 @@ export const MainLayout = () => {
                 </span>
                 
             </div>
-            <div className="grid"> 
-                <div className="col-12 lg:col-6 xl:col-4">
-                    <div className='bg-gray-50 '>
-                        <span className="p-3  cursor-pointer  hidden lg:inline-block border-1 surface-border hover:shadow-2 " style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-lock text-indigo-400"}></i>
-                        </span>
-                        <span className="p-3 cursor-pointer inline-block lg:hidden" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-lock text-indigo-300"}></i>
-                        </span>
-                        <div className="text-gray-500 text-sm mb-3 font-semibold p-2">Seguridades</div>
-                    </div>                        
-                </div>   
-                <div className="col-12 lg:col-6 xl:col-4">
-                    <div className='bg-gray-50'>
-                        <span className="p-3 cursor-pointer  hidden lg:inline-block border-1 surface-border hover:shadow-2" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-sliders-v text-bluegray-400"}></i>
-                        </span>
-                        <span className="p-3 cursor-pointer  inline-block lg:hidden" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-sliders-v text-bluegray-400"}></i>
-                        </span>
-                        <div className="text-gray-500 text-sm mb-3 font-semibold p-2">Parametrización</div>      
-                    </div>                  
-                </div> 
-                <div className="col-12 lg:col-6 xl:col-4 ">
-                    <div className='bg-gray-50'>
-                        <span className="p-3 cursor-pointer hidden lg:inline-block border-1 surface-border hover:shadow-2 " style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-share-alt text-teal-400"}></i>
-                        </span>
-                        <span className="p-3 cursor-pointer  inline-block lg:hidden" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-share-alt text-teal-300"}></i>
-                        </span>
-                        <div className="text-gray-500  text-sm mb-3 font-semibold p-2">Procesos</div>    
-                    </div>                    
-                </div> 
-                <div className="col-12 lg:col-6 xl:col-4 ">
-                    <div className='bg-gray-50'>
-                        <span className="p-3 cursor-pointer hidden lg:inline-block border-1 surface-border hover:shadow-2" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-chart-bar text-yellow-400"}></i>
-                        </span>
-                        <span className="p-3 cursor-pointer inline-block lg:hidden" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{}}>
-                            <i className={" text-7xl pi pi-chart-bar text-yellow-300"}></i>
-                        </span>
-                        <div className="text-gray-500 text-sm mb-3 font-semibold p-2">Reportes</div>       
-                    </div>                 
-                </div> 
-                {/* {userModulos?.map((data:any)=>(                            
-                    <div className="col-12 md:col-6 lg:col-4 "  key={data.idmodulo}>
-                        <span className="p-3 shadow-2 mb-3  cursor-pointer hover:shadow-6 hidden lg:inline-block" style={{ borderRadius: '10px' }} 
-                            onClick={()=>onGetModulos({nombre:data.nombre,idmodulo:data.idmodulo})}>
-                            <i className={data.icono + " text-6xl text-blue-500"}></i>
-                        </span>
-                        <span className="p-3 shadow-2 mb-3  cursor-pointer hover:shadow-6 inline-block lg:hidden" style={{ borderRadius: '10px' }} 
-                            onClick={()=>{dispatch(setNavegacion({open:true}));onGetModulos({nombre:data.nombre,idmodulo:data.idmodulo})}}>
-                            <i className={data.icono + " text-6xl text-indigo-500"}></i>
-                        </span>
-                        <div className="text-bluegray-700  text-sm mb-3 font-normal ">Módulo de {data.nombre}</div>                        
-                    </div>  
-                ))}                 */}
-                
+            <div className="grid">
+              
+                {getModuloSession?.map((data:any,key:any)=>(                    
+                    <div className="col-12 lg:col-6 xl:col-4" key={key}>
+                        <div className='bg-gray-50 '>
+                            <span className="p-3  cursor-pointer  hidden lg:inline-block border-1 surface-border hover:shadow-2 surface-100 " style={{ borderRadius: '10px' }} 
+                                onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate})}}>
+                                <i className={` text-7xl ${data.color} ${data.icono} `}></i>
+                            </span>
+                            <span className="p-3 cursor-pointer inline-block lg:hidden border-1 surface-border surface-100" style={{ borderRadius: '10px' }} 
+                                onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate})}}>
+                                <i className={` text-7xl ${data.color} ${data.icono}`}></i>
+                            </span>
+                            <div className="text-gray-500 text-sm mb-3 font-semibold p-2">{data.nombre}</div>
+                        </div>                        
+                    </div>   
+                ))}
             </div>
         </div>   
     )

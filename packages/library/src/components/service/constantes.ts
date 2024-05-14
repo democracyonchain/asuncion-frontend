@@ -1,3 +1,5 @@
+const dataEnv:any =process;
+
 export class Constantes{
 
     /**
@@ -12,4 +14,11 @@ export class Constantes{
     static SINCRONIZAR_REGISTRO:string = 'S';
     static LISTAR_REGISTRO:string = 'L';
     static ES_MODIFICABLE:number = 1;
+
+    /**
+    * Constantes Core Sistema Nacional de Inventarios
+    */
+    static URLCONEXIONGRAPQL: string = dataEnv.URLCONEXIONGRAPQL;
+    static URLHOME: string = dataEnv.URLHOME;
+    static URLHOMELOGOUT: string = dataEnv.URLLOGOUT;
 }

@@ -2,6 +2,17 @@ const { merge } = require("webpack-merge");
 const singleSpaDefaults = require("webpack-config-single-spa-react-ts");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const path = require("path");
+const webpack = require('webpack');
+
+let dotenv = require('dotenv').config({ path: __dirname + '/.envLocal' });
+
+if(process.env.NODE_ENV === 'test'){
+   dotenv = require('dotenv').config({ path: __dirname + '/.envTest' });
+}else if(process.env.NODE_ENV == 'prod'){
+   dotenv = require('dotenv').config({ path: __dirname + '/.envProd' });
+}else if(process.env.NODE_ENV == 'dev'){
+  dotenv = require('dotenv').config({ path: __dirname + '/.envDev' });
+}
 
 module.exports = (webpackConfigEnv, argv) => {
 	const defaultConfig = singleSpaDefaults({
@@ -11,8 +22,8 @@ module.exports = (webpackConfigEnv, argv) => {
 		argv,
 		module: {
 			rules: {
-			  //test: "match",
-			  //use: "replace",
+			  test: "match",
+			  use: "replace",
 			},
 		  },
 	});
@@ -33,19 +44,14 @@ module.exports = (webpackConfigEnv, argv) => {
 			filename: '[name].js',      
 		 },
 		 plugins: [
-		  // new webpack.DefinePlugin({
-		  //   process:{
-		  //       'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-		  //       'URLCONEXIONGRAPQL': JSON.stringify(dotenv.parsed.URLCONEXIONGRAPQL),
-		  //       'URLKEYCLOACK': JSON.stringify(dotenv.parsed.URLKEYCLOACK),
-		  //       'REALMKEYCLOACK': JSON.stringify(dotenv.parsed.REALMKEYCLOACK),
-		  //       'CLIENTCLOACK': JSON.stringify(dotenv.parsed.CLIENTCLOACK),
-		  //       'URLHOME': JSON.stringify(dotenv.parsed.URLHOME),
-		  //       'CLIENT_KEYCLOACK_ROL': JSON.stringify(dotenv.parsed.CLIENT_KEYCLOACK_ROL),
-		  //       'FRONT_ETIQUETA': JSON.stringify(dotenv.parsed.FRONT_ETIQUETA),
-		  //       'API_MEF_ESBYE': JSON.stringify(dotenv.parsed.API_MEF_ESBYE),
-		  //   }
-		  // })
+		  new webpack.DefinePlugin({
+		    	process:{
+					'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+					'URLCONEXIONGRAPQL': JSON.stringify(dotenv.parsed.URLCONEXIONGRAPQL),					
+					'URLHOME': JSON.stringify(dotenv.parsed.URLHOME),					
+					'FRONT_ETIQUETA': JSON.stringify(dotenv.parsed.FRONT_ETIQUETA),					
+		    	}
+		  	})
 		],
 		optimization: {
 			splitChunks: { 

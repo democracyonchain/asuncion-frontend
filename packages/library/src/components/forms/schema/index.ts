@@ -1,1 +1,2 @@
-export * from './schemaLogin'
+export * from './schemaLogin';
+export * from './schemaRolLayout'

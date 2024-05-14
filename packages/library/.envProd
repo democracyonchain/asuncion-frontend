@@ -1,0 +1,4 @@
+URLCONEXIONGRAPQL = 'https://sni-api.msp.gob.ec/graphql'
+URLHOME = 'https://sni.msp.gob.ec'
+URLLOGOUT = 'https://sni.msp.gob.ec/app/administracion'
+FRONT_ETIQUETA = ''
