@@ -39,7 +39,7 @@ export const LoginLayout = () => {
 
     return (
         <>        
-            <FormLayoutInit methods={methods} onSubmit={onSubmitLogin} labels={labels} onReset={()=>{}}  visibleModal={false}>            
+            <FormLayoutInit methods={methods} onSubmit={onSubmitLogin} labels={labels} onReset={()=>{}}>            
                 
                 <div className="flex justify-content-end">                 
                 {(dataEnv?.NODE_ENV !='prod')&&<h3 className='flex justify-content-center text-red-500 mb-2'>{dataEnv?.FRONT_ETIQUETA}</h3>}

@@ -9,8 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const RolLayout = ({setVisible,visibleModal,toast}:{setVisible:any,visibleModal:any,toast:any}) => {
 
-    
-    //Varibles Generales
+    //Variables Generales
     const getRolSession=JSON.parse(sessionStorage.getItem("getRolSession") as any);
     const dataRolUser=JSON.parse(sessionStorage.getItem("dataRolUser") as any)
 

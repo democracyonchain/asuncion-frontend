@@ -5,6 +5,7 @@ export const AUTH_LOGIN_FIELDS = gql`
     fragment authLoginFields on Login{
         token
         username
+        provincia
     }
 `
 
@@ -31,22 +32,18 @@ export const AUTH_MODULO_PERMISO_ID_FIELDS = gql`
 
     fragment authModuloPermisoIdFields on ModuloAuth{
         codigo
-        estado
         icono
-        id
         nombre
         url
         color
-        menu {
-            id
+        menu {            
             titulo
             icono
             url
             permisos {
                 crear
                 editar
-                eliminar
-                id
+                eliminar               
                 imprimir
                 leer
             }

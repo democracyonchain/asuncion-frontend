@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit'
+
 const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
 
@@ -40,7 +42,16 @@ export interface IArguments{
         title:string
         mensaje:string
     },
-    loadView:boolean
+    loadView:boolean,
+    visibleModal:{
+        dataGrid?:any
+        active:boolean,
+        header:string,
+        opt?:string,
+        closable:boolean,
+        maximizable:boolean,
+        closeOnEscape:boolean
+    }
 }
 
 export const initialState:IArguments = {
@@ -84,6 +95,15 @@ export const initialState:IArguments = {
         open:false
     },
     loadView:false,
+    visibleModal:{
+        dataGrid:{},
+        active:false,
+        header:'',
+        opt:'',
+        closable:false,
+        maximizable:true,
+        closeOnEscape:false
+    }
 }
 
 
@@ -126,7 +146,7 @@ export const librarySlice = createSlice({
         state.periodoLocal=action.payload.periodo;
         state.mesLocal=action.payload.mes;
     },
-    setDataUser:(state,action)=>{
+    setDataUser:(state,action:PayloadAction<{data:any,status:boolean}>)=>{
         state.dataUser.data=action.payload.data;
         state.dataUser.status=action.payload.status;
     },
@@ -157,9 +177,19 @@ export const librarySlice = createSlice({
     },
     setLoadView:(state,action)=>{
         state.loadView=action.payload;
+    },
+    setVisibleModal:(state,action:PayloadAction<{dataGrid?:any,active:boolean,header:string,opt?:string,closable:boolean,maximizable:boolean,closeOnEscape:boolean}>)=>{
+            
+        state.visibleModal.dataGrid=action.payload.dataGrid;
+        state.visibleModal.active=action.payload.active;
+        state.visibleModal.header=action.payload.header;
+        state.visibleModal.opt=action.payload.opt;
+        state.visibleModal.closable=action.payload.closable;
+        state.visibleModal.maximizable=action.payload.maximizable;
+        state.visibleModal.closeOnEscape=action.payload.closeOnEscape;
     }
   },
 })
 
 
-export const { resetAction,setAction,setEjercicio, setDataUser,setEtiqueta, setNavegacion, setDataEntidad, setViewModal,setMensajes,setLoadView } = librarySlice.actions
+export const { resetAction,setAction,setEjercicio, setDataUser,setEtiqueta, setNavegacion, setDataEntidad, setViewModal,setMensajes,setLoadView,setVisibleModal } = librarySlice.actions

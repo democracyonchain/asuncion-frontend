@@ -70,7 +70,7 @@ export const Header = ({setVisibleModalAux,path,toast}:{setVisibleModalAux:any,p
 	const items: any = [	
         {
             label: getUserStorage?.email,
-            icon: 'pi pi-envelope',
+            icon: 'pi pi-book',
 			className:'text-sm text-red-500',
 			template: itemRenderer
         },
@@ -87,8 +87,8 @@ export const Header = ({setVisibleModalAux,path,toast}:{setVisibleModalAux:any,p
 			}
 		},
 		{
-			label: 'Notificaciones',
-			icon: 'pi pi-bell',
+			label: 'Mensajes',
+			icon: 'pi pi-inbox',
 			className:'text-sm',
 			badge: 4,
 			template: itemRenderer
@@ -137,7 +137,7 @@ export const Header = ({setVisibleModalAux,path,toast}:{setVisibleModalAux:any,p
 			<Button  
 				text severity="secondary" size="large"  className='p-1 hidden lg:inline-block cursor-text'											
 				label ={`${(dataMenuUser)?'Modulo | ' + dataMenuUser?.modulo:''}`}
-				pt={{label:{className:'text-base text-gray-600'},root:{className:'p-1'}}}
+				pt={{label:{className:'text-sm text-gray-600'},root:{className:'p-1'}}}
 			/>
 		</div>
 	);
@@ -157,16 +157,16 @@ export const Header = ({setVisibleModalAux,path,toast}:{setVisibleModalAux:any,p
 
 	return (
 		<>					
-			<div className='flex flex-column fixed mt-6 bg-white w-full  h-3rem opacity-90 z-5 border-bottom-1 border-bluegray-100 '>
+			<div className='flex flex-column fixed mt-6 bg-white w-full  h-3rem opacity-90 z-5 border-bottom-1 border-bluegray-100'>
 				<Toolbar start={startContent}  end={endContent} className="border-noround shadow-none fixed w-full h-4rem left-0 top-0 pt-0 pr-5 pb-0 pl-5 border-none" style={{zIndex:'997',backgroundImage:`url(${header})`}}/>
 				<div className='flex flex-row-reverse flex-wrap  '> 
-					<BreadCrumb model={itemsBread} home={home} className='border-noround bg-primary text-white w-full mt-2 flex align-items-center justify-content-end'  pt={{
+					<BreadCrumb model={itemsBread} home={home} className='border-noround w-full mt-2 flex align-items-center justify-content-end bg-primary-500'  pt={{
                           
                           separatorIcon: ({ props } :any) => ({
-                                className:  'w-7 h-7 text-gray-400 text-white'
+                                className:  'w-7 h-7 text-white '
                             }),
                             label:()=>({
-                                className:'text-gray-600 text-xs font-semibold text-white'
+                                className:'text-white text-xs font-semibold '
                             })
                         }}
 					/>

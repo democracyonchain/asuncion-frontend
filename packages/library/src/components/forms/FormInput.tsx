@@ -275,7 +275,9 @@ export const TextInput = (
                                 minFractionDigits={minFractionDigits} maxFractionDigits={maxFractionDigits}  locale={locales}
                                 mode={mode} currency={currency} prefix={prefix} suffix={suffix} showButtons={showButtons}
                                 buttonLayout={buttonLayout} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
-                                inputClassName={' w-full p-input text-sm ' + classNames({ 'p-invalid': fieldState.error }) + {size} } />
+                                inputClassName={' w-full p-input text-sm ' + classNames({ 'p-invalid': fieldState.error }) + {size} } 
+                                invalid={(errors[field.name]?.message)?true:false}
+                                />
                                 
                             {(errors[field.name]?.message)&&
                                <Message severity="error" text={errors[field.name]?.message}  className='w-full justify-content-start p-2 mt-1' pt={{
@@ -300,8 +302,9 @@ export const TextInput = (
                         <>
                             <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label> 
                             <InputTextarea id={field.name}  value={field.value} onBlur={field.onBlur} autoResize={autoResize} keyfilter={keyfilter}
-                             readOnly={readOnly} disabled={disabled} rows={rows} cols={cols} onChange={(e) => field.onChange(e.target.value)}
-                              className={' w-full p-input text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}} 
+                                readOnly={readOnly} disabled={disabled} rows={rows} cols={cols} onChange={(e) => field.onChange(e.target.value)}
+                                className={' w-full p-input text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}} 
+                                invalid={(errors[field.name]?.message)?true:false}
                               />
                                 
                             {(errors[field.name]?.message)&&
@@ -337,6 +340,7 @@ export const TextInput = (
                                             root: { className: 'p-inputtext-sm text-sm text-gray-600' }
                                         },
                                     }}
+                                    invalid={(errors[field.name]?.message)?true:false}
 				                />								
                             
                                 {(errors[field.name]?.message)&&
@@ -369,6 +373,7 @@ export const TextInput = (
                                         placeholder={placeholder}
                                         readOnly={readOnly} 
                                         disabled={disabled}
+                                        invalid={(errors[field.name]?.message)?true:false}
                                 />						
                             
                                 {(errors[field.name]?.message)&&
@@ -391,14 +396,14 @@ export const TextInput = (
                         control={control}								
                         render={({ field, fieldState }) => (
                             <>
-                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700 p-2'}`}>{label}</label>                            
+                                                           
                                 
                                 <InputSwitch inputId={field.name}  inputRef={field.ref} checked={field.value}
                                 className={'text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}}
-                                readOnly={readOnly} 
+                                readOnly={readOnly} defaultChecked={defaultValue}
                                 disabled={disabled}
                                 onChange={(e: InputSwitchChangeEvent) => {field.onChange(e.value); onChange(e.value)} } />
-                                                            
+                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold p-2'}`}>{label}</label> 
                             
                                 {(errors[field.name]?.message)&&
                                     <Message severity="error" text={errors[field.name]?.message}  className='w-full justify-content-start p-2 mt-1' pt={{
@@ -420,8 +425,8 @@ export const TextInput = (
                         control={control}								
                         render={({ field, fieldState }) => (
                             <>
-                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
-                                <br></br>
+                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold'}`}>{label}</label>                            
+                               
                                <Password 
                                
                                     id={field.name} {...field} 
@@ -432,13 +437,13 @@ export const TextInput = (
                                     feedback={feedback} 
                                     toggleMask={toggleMask}
                                     pt={{input:{className:'w-full'}}}
-                                    
+                                    invalid={(errors[field.name]?.message)?true:false}
                                     />
 
                             
                                 {(errors[field.name]?.message)&&
                                     <Message severity="error" text={errors[field.name]?.message}  className='w-full justify-content-start p-2' pt={{
-                                        root: { className: '' },
+                                        root: { className: 'bg-white' },
                                         text: { className: 'text-xs' }
                                         }}/>
                                 }
@@ -456,15 +461,15 @@ export const TextInput = (
                         control={control}								
                         render={({ field, fieldState }) => (
                             <>
-                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
+                                <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold block mb-2' }`}>{label}</label>                            
                                 <InputText id={field.name} value={field.value}  className={' w-full p-inputtext-sm  text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}} 
                                 onChange={(e) => field.onChange(e.target.value)} placeholder={placeholder} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
-                                maxLength={maxLength} minLength={minLength} keyfilter={keyfilter}
+                                maxLength={maxLength} minLength={minLength} keyfilter={keyfilter}  invalid={(errors[field.name]?.message)?true:false}
                                 />										
                             
                                 {(errors[field.name]?.message)&&
                                    <Message severity="error" text={errors[field.name]?.message}  className='w-full justify-content-start p-2 border-round' pt={{
-                                        root: { className: '' },
+                                        root: { className: 'bg-white' },
                                         text: { className: 'text-xs' }
                                     }}/>
                                 }
@@ -494,28 +499,29 @@ interface IReactHookFormSelectProps {
     data:any,
     defaultValue?:any   
     isObject?:boolean
+    loading?:boolean
 }
 
 
 export const SelectInput: FC<IReactHookFormSelectProps> = (
     {
         name, label, data, methods, isDisabled, onChangeSelect, placeholder='--Seleccione--',defaultValue,
-        isObject=false
+        isObject=false,loading=false
     }:
         IReactHookFormSelectProps)=> {
 
         const { formState: { errors }, control} = methods;
-        const [ dataSelect, setDataSelect ] = useState<{code:any,name:any}[]>([])
+        const [ dataSelect, setDataSelect ] = useState<{id:any,nombre:any}[]>([])
         
         useEffect(()=>{
             if(data){                              
                 if(Array.isArray(data)){
                     setDataSelect(data)
                 }else{
-                    setDataSelect([{code:null,name:'--Seleccione--'}])
+                    setDataSelect([{id:null,nombre:'--Seleccione--'}])
                 }
             }else{
-                setDataSelect([{code:null,name:'--Seleccione--'}])
+                setDataSelect([{id:null,nombre:'--Seleccione--'}])
             }
         },[data])
 
@@ -531,15 +537,16 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
                         <br></br>                           
                         <Dropdown 
                             id={field.name}
-                            value={(!isObject)?field.value:dataSelect?.find(c=>c.code ===field.value?.code)}                             
+                            value={(!isObject)?field.value:dataSelect?.find((c:any)=>c.id ===field.value?.id)}                             
                             onChange={(e: DropdownChangeEvent) => {field.onChange(e.value);  (onChangeSelect)?onChangeSelect(e.value):null }}
                             options={dataSelect} 
-                            optionLabel="name" 
+                            optionLabel="nombre" 
                             showClear
                             editable 
                             placeholder={placeholder} 
                             className={' w-full p-inputtext-sm  text-sm '+ classNames({ 'p-invalid': fieldState.error })} 
                             filter
+                            loading={loading}
                             disabled={isDisabled} 
                             defaultValue={defaultValue} 
                             focusInputRef={field.ref}
@@ -553,7 +560,7 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
                     
                         {(errors[field.name]?.message)&&
                              <Message severity="error" text={errors[field.name]?.message}  className='w-full justify-content-start p-1 mt-1' pt={{
-                                root: { className: '' },
+                                root: { className: 'bg-white' },
                                 text: { className: 'text-xs' }
                             }}/>
                         }
@@ -662,7 +669,7 @@ export const InputGroup=(
 
 export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
     {
-        name, label, data, methods, isDisabled, onChangeSelect, placeholder,defaultValue
+        name, label, data, methods, isDisabled, onChangeSelect, placeholder,defaultValue,loading
     }:
         IReactHookFormSelectProps)=> {
 
@@ -690,11 +697,11 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
                 control={control}								
                 render={({ field, fieldState }) => (
                     <>
-                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600'}`}>{label}</label>                            
-                        <br></br>			
-                        <MultiSelect id={field.name} name={name} value={field.value} options={dataSelect} disabled={isDisabled}
-                            onChange={(e: MultiSelectChangeEvent) => field.onChange(e.value)} optionLabel="name" placeholder={placeholder} 
-                            maxSelectedLabels={3} className="w-full p-inputtext-sm text-sm" filter 
+                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600 font-semibold'}`}>{label}</label>                            
+                        			
+                        <MultiSelect id={field.name} name={name} value={field.value} options={dataSelect} disabled={isDisabled} optionValue='id'
+                            onChange={(e: MultiSelectChangeEvent) => field.onChange(e.value)} optionLabel="nombre" placeholder={placeholder} 
+                            maxSelectedLabels={3} className="w-full p-inputtext-sm text-sm" filter  loading={loading}
                             pt={{
 					
                                 item: ({ context }:any) => ({

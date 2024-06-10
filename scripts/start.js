@@ -4,7 +4,6 @@ const prompts = require("prompts");
 const pidTree = require("pidtree");
 
 const portMaps = {
-  dashboard: 9002,
   seguridades: 9003,
   home: 9004,
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState,Dispatch } from 'react';
+import { useEffect, useRef, useState,Dispatch } from 'react';
 import { Button } from 'primereact/button';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Fieldset } from 'primereact/fieldset';
@@ -15,6 +15,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { useMountEffect } from 'primereact/hooks';
 import { Messages } from 'primereact/messages';
 import { useNavigate } from "react-router-dom";
+
 export const UtilsButton = (
     {
         label=undefined,type='button',link=false,icon='',loading=false,onClick,severity=undefined,
@@ -22,7 +23,7 @@ export const UtilsButton = (
         badgeClassName='', size=undefined, className, autoFocus=false
     }:
     {
-        label:string|undefined,type:any,link?:boolean,icon?:any,loading?:boolean,onClick?:any,severity?:any,
+        label:string|undefined,type?:any,link?:boolean,icon?:any,loading?:boolean,onClick?:any,severity?:any,
         disabled?:boolean,raised?:boolean,rounded?:boolean,text?:boolean,outlined?:boolean,ariaLabel?:any,badge?:any,
         badgeClassName?:any,size?:any,className?:any,autoFocus?:boolean
     }) => {
@@ -31,7 +32,7 @@ export const UtilsButton = (
         <Button 
             label={label} rounded={rounded} type={type} link={link}  icon={icon} loading={loading} onClick={onClick} severity={severity}
             disabled={disabled} raised={raised} text={text} outlined={outlined} aria-label={ariaLabel} badge={badge} 
-            badgeClassName={badgeClassName} size={size} className={className} autoFocus={autoFocus} 
+            badgeClassName={badgeClassName} size={size} className={className} autoFocus={autoFocus} pt={{label:{className:'hidden lg:inline-block'}}}
         />
     )
 }
@@ -165,78 +166,25 @@ export const UtilsPanel=(
         headerTemplate='',
         footerTemplate='',
         toggleable=false,
-        ref,
-        content='',
+        children='',
         header='', 
-        isFrm=false
+        className='',
+       
     }:
     {
         headerTemplate:string|null|JSX.Element|JSX.Element[],
         footerTemplate:string|null|JSX.Element|JSX.Element[],
         toggleable:boolean
-        ref:any
-        content:string|null|JSX.Element|JSX.Element[],
+        children:string|null|JSX.Element|JSX.Element[],
         header:string|null|JSX.Element|JSX.Element[],
         className:string,
-        isFrm:boolean
+       
     })=>{
 
-        const configMenu = useRef<any>(null);;
-        const items = [
-            {
-                label: 'Refresh',
-                icon: 'pi pi-refresh'
-            },
-            {
-                label: 'Search',
-                icon: 'pi pi-search'
-            },
-            {
-                separator: true
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-times'
-            }
-        ];
-    
-        const headerTemplateAux = (options:any) => {
-            const className = `${options.className} justify-content-space-between`;
-    
-            return (
-                <div className={className}>
-                     <div className="flex align-items-center gap-2">
-                        <span className="font-bold">Formulario Roles</span>
-                    </div>
-                    <div>
-                        <Menu model={items} popup ref={configMenu} id="config_menu" />
-                        <button className="p-panel-header-icon p-link mr-2" onClick={(e) => configMenu?.current?.toggle(e)}>
-                            <span className="pi pi-cog"></span>
-                        </button>
-                        {options.togglerElement}
-                    </div>
-                </div>
-            );
-        };
-
-
-    const footerTemplateAux = (options:any) => {
-        const className = `${options.className} flex flex-wrap align-items-center justify-content-between gap-3`;
-
-        return (
-            <div className={className}>
-                <div className="flex align-items-center gap-2">
-                    <Button icon="pi pi-save" severity='info' rounded text></Button>
-                    <Button icon="pi pi-times" severity="danger" rounded text></Button>
-                </div>
-                <span className="p-text-secondary">Updated 2 hours ago</span>
-            </div>
-        );
-    };
-
     return (
-        <Panel ref={ref} header={header} headerTemplate={(isFrm)?headerTemplateAux:headerTemplate} footerTemplate={(isFrm)?footerTemplateAux:footerTemplate} toggleable>
-            {content}
+        <Panel header={header} headerTemplate={headerTemplate} footerTemplate={footerTemplate} toggleable={toggleable} className={className} 
+                pt={{header:{className:'text-sm text-gray-600'}}}>
+            {children}
         </Panel>
     )
 }
@@ -258,21 +206,21 @@ export const UtilsConfirm=(
         accept:()=>{},
         reject:()=>{},
         message:string,
-        header:string,
-        icon:string,
-        opt:number
+        header?:string,
+        icon?:string,
+        opt?:number
     })=>{
               
     return (
         <ConfirmDialog 
-            visible={visible} onHide={() => {setVisible({status:false,opt:opt,mensaje:message,header:header})}}
+            visible={visible} onHide={() => {(setVisible)?setVisible({status:false,opt:opt,mensaje:message,header:header}):''}}
             message={message} 
             header={header} 
             icon={(opt==1)?'pi pi-exclamation-triangle':'pi pi-info-circle'} 
             accept={accept} reject={reject}
             acceptLabel='Si'
             acceptClassName={(opt==1)?'p-button-label':'p-button-danger'}
-            position='top'
+            position='center'
         />
     )
 
@@ -296,7 +244,7 @@ export const UtilsModal=(
         visible:boolean,
         headerElement?:string|null|JSX.Element|JSX.Element[],
         footerContent?:string|null|JSX.Element|JSX.Element[],
-        contenido?:string|null|JSX.Element|JSX.Element[],
+        contenido?:string|null|JSX.Element|JSX.Element[]|any,
         maximizable?:boolean
         closable?:boolean
         closeOnEscape?:boolean

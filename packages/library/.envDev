@@ -1,4 +1,4 @@
-URLCONEXIONGRAPQL = 'http://172.32.27.73:3099/graphql'
+URLCONEXIONGRAPQL = 'http://172.32.27.73:3090/graphql'
 URLHOME = 'http://dev-sni.msp.gob.ec'
 URLLOGOUT = 'http://dev-sni.msp.gob.ec/app/administracion'
 FRONT_ETIQUETA = 'AMBIENTE DESARROLLO'
