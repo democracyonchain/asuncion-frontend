@@ -1,5 +1,7 @@
 import { coreMenuUser } from '@components/service/authservice';
 import { useNavigate } from "react-router-dom";
+import { Card } from 'primereact/card';
+import { UtilsButton } from '@components/partials/Utils'
 export const MainLayout = () => {
     //Varibles Generales
     const getModuloSession=JSON.parse(sessionStorage.getItem("getModuloSession") as any);
@@ -15,22 +17,28 @@ export const MainLayout = () => {
                 </span>
                 
             </div>
-            <div className="grid">
-              
-                {getModuloSession?.map((data:any,key:any)=>(                    
-                    <div className="col-12 lg:col-6 xl:col-4" key={key}>
-                        <div className='bg-gray-50 '>
-                            <span className="p-3  cursor-pointer  hidden lg:inline-block border-1 surface-border hover:shadow-2 surface-100 " style={{ borderRadius: '10px' }} 
-                                onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate})}}>
-                                <i className={` text-7xl ${data.color} ${data.icono} `}></i>
-                            </span>
-                            <span className="p-3 cursor-pointer inline-block lg:hidden border-1 surface-border surface-100" style={{ borderRadius: '10px' }} 
-                                onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate})}}>
-                                <i className={` text-7xl ${data.color} ${data.icono}`}></i>
-                            </span>
-                            <div className="text-gray-500 text-sm mb-3 font-semibold p-2">{data.nombre}</div>
-                        </div>                        
-                    </div>   
+            <div className="card flex justify-content-center ">              
+                {getModuloSession?.map((data:any,key:any)=>(      
+                    <Card key={key} title={data.nombre} subTitle="Blockchain System Voting " 
+                        footer={<UtilsButton 
+                                onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate,url:data.url})}}
+                                label='Acceder'
+                                size='small'
+                                severity='primary'
+                                className={` ${data.color} hover:shadow-2 border-1 border-200`}
+                                icon='pi pi-check'
+                                outlined                               
+                                ></UtilsButton>} 
+                        header={<></>} 
+                        className="md:w-25rem shadow-none" 
+                        pt={{title:{'className':'text-base'},subTitle:{'className':'text-sm'}}}
+                    >
+                        <span className="p-3  cursor-pointer  inline-block border-1 surface-border hover:shadow-2 surface-100 " style={{ borderRadius: '10px' }}
+                             onClick={()=>{coreMenuUser({dataMenuUser:data.menu,modulo:data.nombre,navigate,url:data.url})}}  
+                        >
+                            <i className={` text-7xl ${data.color} ${data.icono} `}></i>
+                        </span>
+                    </Card>                   
                 ))}
             </div>
         </div>   

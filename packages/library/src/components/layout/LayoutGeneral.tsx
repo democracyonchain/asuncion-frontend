@@ -40,7 +40,6 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
     //Hook UseEffect
     useEffect(()=>{
         if(initTokenUser && !sessionStorage.getItem('dataRolUser')){
-            console.log('aquii')
             processAuthPerfil({setAuthPerfilLazyQuery,navigate});
             setVisibleModalAux({active:true,header:'Rol Usuario',closable:false,maximizable:true});
         }
@@ -53,7 +52,7 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
     return (
         <>
             <UtilsSpinner visible={loadView}/>
-            <Toast ref={toast} position="top-right" className='bg-white'/>
+            <Toast ref={toast} position="bottom-center"/>
             <div className="min-h-full ">    
                 {(initTokenUser)?
                     <>              

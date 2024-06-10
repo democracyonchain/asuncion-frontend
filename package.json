@@ -26,6 +26,8 @@
     "@hookform/resolvers": "^3.3.4",
     "@reduxjs/toolkit": "^2.2.3",
     "cssnano": "^6.1.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "pidtree": "^0.6.0",
     "postcss-cli": "^11.0.0",
     "primeflex": "^3.3.1",

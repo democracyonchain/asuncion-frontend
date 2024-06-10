@@ -105,8 +105,8 @@ export const processAuthModuloPermisosId=(parameters:any,dataAuxRol:any)=>{
     )
 } 
 
-export const coreMenuUser=(parameters:{dataMenuUser:any,modulo:string,navigate:any})=>{
-    parameters.navigate("/app/seguridades");
+export const coreMenuUser=(parameters:{dataMenuUser:any,modulo:string,navigate:any,url:string})=>{
+    parameters.navigate(parameters.url);
     sessionStorage.setItem("dataMenuUser",JSON.stringify({dataMenuUser:parameters.dataMenuUser,modulo:parameters.modulo}) as any);
     
 }
@@ -151,20 +151,21 @@ export const coreMenuModulo=(parameters:{dataAuxMenu:any,dataMenuUser:any,naviga
 
 
     if(parameters.dataAuxMenu){             
-        dataGenericaMenu=[...dataGenericaMenu,
-            {
-                //label: parameters.dataMenuUser?.modulo,
+        dataGenericaMenu=[...dataGenericaMenu,   
+            {                
                 items:[
                 ...parameters.dataAuxMenu.map((data:any)=>{                        
                     return( 
                         {
                             label: data.titulo,
                             icon: data.icono,
-                            shortcut: '⌘+N',
+                           
                             template: itemRenderer,
-                            command: () => {               				
-                                //console.log(data)
-                                parameters.navigate(data?.url);                              
+                            command: () => {  
+                                let dataAux=data?.permisos[0];
+                                let path=`${data?.url}${(dataAux?.crear && !dataAux?.leer)?'new':(dataAux?.crear && dataAux?.leer)?'new':(dataAux?.leer && !dataAux?.crear)&&'record'}`                                                           
+                                sessionStorage.setItem("accesosBsc", JSON.stringify(data.permisos) as any);
+                                parameters.navigate(path,{ state: { permisos:data?.permisos[0] } });                              
                             },
                         }
                     )
@@ -202,4 +203,64 @@ export const processAuthLogout=(parameters:{dispatch:any,setAuthlogoutLazyQuery:
             sessionStorage.clear();
         }
     })
+}
+
+
+interface IpermisosValues  {
+    onEdit?: boolean
+    onView?: boolean
+    onAdd?: boolean
+    onDelete?: boolean
+    onNew?:boolean
+    onPrint?:boolean
+    dataTabs?:{
+        read?:boolean
+        create?:boolean
+    }
+    conteo?:{
+        initDefault?:string
+        initCreate?:number
+        initRead?:number
+    }
+};
+export const coreAccesosBsc=()=>{
+    const accesos=JSON.parse(sessionStorage.getItem("accesosBsc") as any);
+    let getAccesos={};
+    let getTabs:{create?:boolean,read?:boolean}={};
+    let permisosBotones:IpermisosValues={};
+    let conteo={}
+
+    accesos?.forEach((element:any) => {
+        getTabs={
+            ...(element.leer || element?.editar || element.eliminar || element.imprimir)&&{read:true},
+            ...(element.crear)&&{create:true}
+        }
+        getAccesos ={
+            ...(element?.leer)&&{onView:true},...(element?.editar)&&{onEdit:true},
+            ...(element?.eliminar)&&{onDelete:true}, ...(element.imprimir)&&{onPrint:true},
+            ...(element?.crear)&&{onAdd:true},getTabs
+        }
+
+    });
+
+    conteo={
+        ...(getTabs.read && getTabs.create)&&{
+            initDefault:'new',
+            initCreate:0,
+            initRead:1
+        },
+        ...(getTabs.create && !getTabs?.read)&&{
+            initDefault:'new',
+            initCreate:0,
+        },
+        ...(getTabs.read && !getTabs?.create)&&{
+            initDefault:'record',
+            initRead:0,
+        }
+    }
+    permisosBotones = {...getAccesos,conteo};
+
+
+    return permisosBotones;
+
 }
