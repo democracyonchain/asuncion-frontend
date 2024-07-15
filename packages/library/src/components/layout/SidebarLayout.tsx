@@ -4,6 +4,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { Ripple } from 'primereact/ripple';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import Icon from '@mui/material/Icon';
 export const SidebarLayout = ({active,setActive,path}:{active:boolean,setActive:any,path:any}) => {
     //Data Storage
 	const dataMenuUser=JSON.parse(sessionStorage.getItem("dataMenuUser") as any);
@@ -38,7 +39,8 @@ export const SidebarLayout = ({active,setActive,path}:{active:boolean,setActive:
                 <div id="app-sidebar-2" className="surface-section h-screen flex-shrink-0 absolute left-0 top-0 z-1  select-none" style={{ width: '250px' }}>
                     <div className="flex flex-column h-full">                      
                         <div className="">
-                        <ul className="list-none p-1 m-0">
+                        {(dataAuxMenu)&&
+                            <ul className="list-none p-1 m-0">
                                 <li>
                                     <StyleClass nodeRef={btnRef1} selector="@next" enterClassName="hidden" enterActiveClassName="slidedown" leaveToClassName="hidden" leaveActiveClassName="slideup">
                                         <div ref={btnRef1} className="p-ripple p-3 flex align-items-center justify-content-between text-600 cursor-pointer">
@@ -50,9 +52,12 @@ export const SidebarLayout = ({active,setActive,path}:{active:boolean,setActive:
                                     <ul className="list-none p-0 m-0 ">
 
                                     {dataAuxMenu?.map((data:any,key:any)=>(
+                                        
                                         <li  key={key}>
-                                            <a onClick={()=>{navigate(data.url); dispatch(setActive({open:false}))}} className=" hover:text-primary p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
-                                                <i className={data.icono + " mr-2"}></i>
+                                            <a onClick={()=>{navigate(
+                                                `${data?.url}${(data?.permisos[0]?.crear && !data?.permisos[0]?.leer)?'new':(data?.permisos[0]?.crear && data?.permisos[0]?.leer)?'new':(data?.permisos[0]?.leer && !data?.permisos[0]?.crear)&&'record'}`,{ state: { permisos:data?.permisos[0] } });
+                                                 dispatch(setActive({open:false}))}} className=" hover:text-primary p-ripple flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors w-full">
+                                                <Icon fontSize="medium" className='mr-2'>{data.icono}</Icon>
                                                 <span className="font-medium text-sm">{ data.titulo}</span>
                                                 <Ripple />
                                             </a>
@@ -60,7 +65,8 @@ export const SidebarLayout = ({active,setActive,path}:{active:boolean,setActive:
                                     ))}
                                     </ul>
                                 </li>
-                            </ul>                                              
+                            </ul>
+                        }                                              
                         </div>              
                     </div>
                 </div>

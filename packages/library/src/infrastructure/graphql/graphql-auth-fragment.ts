@@ -67,3 +67,21 @@ export const AUTH_LOGOUT = gql`
         status
     }
 `
+
+export const PROVINCIA_SELECT_FIELDS = gql`
+    fragment provinciaSelectFields on ProvinciaCollectionType{
+        data {           
+            id
+            nombre            
+        }
+    }
+`
+
+export const ESTABLECIMIENTO_SELECT_FIELDS = gql`
+    fragment establecimientoSelectFields on EstablecimientoCollectionType{
+        data {
+            id
+            nombre            
+        }
+    }
+`

@@ -16,7 +16,7 @@ export const HomeUsuario = () => {
 
     useEffect(()=>{        
         dispatch(resetAction());
-        dispatch(setLabelTab({labelNew:'Nuevo Usuario',labelGrid:'Datos Usuarios'}));
+        dispatch(setLabelTab({labelNew:'Nuevo Usuario',labelGrid:'Datos Usuarios',iconNew:'group_add'}));
     },[])
    
     return (

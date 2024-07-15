@@ -6,6 +6,7 @@ const pidTree = require("pidtree");
 const portMaps = {
   seguridades: 9003,
   home: 9004,
+  procesos: 9005,
 };
 
 (async () => {

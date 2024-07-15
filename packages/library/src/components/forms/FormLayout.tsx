@@ -97,7 +97,7 @@ export const FormLayoutInit = (
             <FormProvider {...methods}>
                 <form  autoComplete="off" className=""> 
                     <div className="flex align-items-center justify-content-center mt-10 p-5 ">
-                        <div className="surface-card p-5  border-round-xl w-full  xl:w-3 shadow-1 surface-border m-2">
+                        <div className="surface-card p-5  border-round-xl w-full  xl:w-3 shadow-8 surface-border m-2 ">
                             {children}
                             <div className="mb-4">
                             {(labels.btn1)&&                   

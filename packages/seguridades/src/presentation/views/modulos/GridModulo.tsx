@@ -44,7 +44,7 @@ export const GridModulo = ({navigate}:{navigate:any}) => {
 	useEffect(()=>{
 		if(!message){
 			processModuloCollection({getModuloCollectionLazyQuery,setDataModuloCollection,limit:pageInfo?.limit,offset:pageInfo?.offset,cache,dispatch});
-			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Modulo',iconNew:'pi pi-clone'}));
+			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Módulo',iconNew:'post_add'}));
 		}		
 	},[])
 

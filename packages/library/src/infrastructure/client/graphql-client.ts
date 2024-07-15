@@ -14,18 +14,18 @@ const errorLink = onError(({ graphQLErrors, networkError,response }) => {
 	
 
 	if (graphQLErrors) {
-			graphQLErrors.map(({ message,extensions }:any) =>{
-				if(extensions?.response?.statusCode == 403) { //Forbidden
-					localStorage.setItem('errorGraphql', `[GraphQL error]: Message: ${message}, Code: ${extensions?.response?.statusCode}, Error: ${extensions?.response?.error}`);
-				}else if(extensions?.response?.statusCode == 500){ //Internal Server Error
-				}else if(extensions?.response?.statusCode == 401){ //Unauthorized					
+			graphQLErrors.map(({ message,extensions }:any) =>{				
+				if(extensions?.originalError?.statusCode == 403) { //Forbidden
+					localStorage.setItem('errorGraphql', `[GraphQL error]: Message: ${message}, Code: ${extensions?.originalError?.statusCode}, Error: ${extensions?.originalError?.error}`);
+				}else if(extensions?.originalError?.statusCode == 500){ //Internal Server Error
+				}else if(extensions?.originalError?.statusCode == 401){ //Unauthorized					
 					window.location.href=Constantes.URLHOME +'/app/seguridades';
 					localStorage.clear();
                 	sessionStorage.clear();
 				}
 				else{
 					if(dataEnv.NODE_ENV=='local'){
-						throw Error(`[GraphQL error]: Message: ${message}, Code: ${extensions?.response?.statusCode}, Error: ${extensions?.response?.error}`);
+						throw Error(`[GraphQL error]: Message: ${message}, Code: ${extensions?.originalError?.statusCode}, Error: ${extensions?.originalError?.error}`);
 					}
 				}
 			}

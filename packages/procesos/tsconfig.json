@@ -1,0 +1,18 @@
+{
+  "extends": "ts-config-single-spa",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "declarationDir": "dist",
+    "baseUrl": "../seguridades/src/",
+    "strict": true,
+    "paths": {
+      "@presentation/*": ["presentation/*"],
+      "@domain/*": ["domain/*"],
+      "@application/*": ["application/*"],
+      "@infrastructure/*": ["infrastructure/*"]
+    }
+  },
+  "files": ["src/bsc-procesos.tsx"],
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test*"]
+}

@@ -22,7 +22,7 @@ export const processMenuCollection =(parameters:{getMenuCollectionLazyQuery:any,
         },
         fetchPolicy: parameters.cache,
         onCompleted:(c:any)=>{            
-            parameters.setDataMenuCollection(c?.menuCollection);
+            parameters.setDataMenuCollection(c?.adminMenuCollection);
             parameters.dispatch(setCache({cache:'cache-first'}))           
         },onError:(error:any)=>{            
             parameters.setDataMenuCollection([]);
@@ -40,7 +40,7 @@ export const processModuloSelect =(parameters:{getModuloSelectLazyQuery:any,setD
         },
         fetchPolicy: 'cache-first',
         onCompleted:(c:any)=>{            
-            parameters.setDataModuloSelect(c?.moduloCollection?.data);          
+            parameters.setDataModuloSelect(c?.adminModuloCollection?.data);          
         },onError:(error:any)=>{            
             parameters.setDataModuloSelect([]);
         }
@@ -55,7 +55,7 @@ export const processMenuQuery =(parameters:{getMenuLazyQuery:any,setMenuQuery:an
         },
         onCompleted:(c:any)=>{              
             parameters.setStatusLoading(false);
-            parameters.setMenuQuery(c.menu);           
+            parameters.setMenuQuery(c.adminMenu);           
         },onError:(error:any)=>{
             parameters.setMenuQuery([]);
             parameters.setStatusLoading(false)
@@ -73,7 +73,7 @@ export const processEliminarMenu=(eliminar:{data:any,toast:any,menuDeleteMutatio
         onCompleted:(c:any)=>{
             eliminar.navigate("record");       
             eliminar.dispatch(setInitial({initial:1}));
-            eliminar.dispatch(setMessage({message:c.menuDelete?.message}));                                              
+            eliminar.dispatch(setMessage({message:c.adminMenuDelete?.message}));                                              
         },onError:(error:any)=>{
             eliminar.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });              
         }
@@ -92,7 +92,7 @@ export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:an
         id_menu:''
     });
     parameters.navigate("new")
-    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Menu',iconNew:'pi pi-clone'}));
+    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Menu',iconNew:'post_add'}));
 }
 
 export const processValueForm=(parameters:{setValue:any,menuQuery:any,setEstadoForm:any})=>{
@@ -155,7 +155,7 @@ const processCreateMenu=(create:{data:any,toast:any,menuCreateMutation:any,navig
        onCompleted:(c:any)=>{      
            create.navigate("record");       
            create.dispatch(setInitial({initial:1}))
-           create.dispatch(setMessage({message:c.menuCreate?.message}))
+           create.dispatch(setMessage({message:c.adminMenuCreate?.message}))
        },onError:(error:any)=>{           
            create.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });   
        }
@@ -178,7 +178,7 @@ const processUpdateMenu=(update:{data:any,toast:any,menuUpdateMutation:any,navig
         },onCompleted:(c:any)=>{      
             update.navigate("record");
             update.dispatch(setInitial({initial:1}))
-            update.dispatch(setMessage({message:c.menuUpdate?.message}))
+            update.dispatch(setMessage({message:c.adminMenuUpdate?.message}))
 
         },onError:(error:any)=>{
             update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });              

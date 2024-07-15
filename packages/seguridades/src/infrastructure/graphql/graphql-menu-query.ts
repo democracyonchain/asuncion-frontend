@@ -11,7 +11,7 @@ export const GET_MENU_COLLECTION =()=>{
                 $inputOrder:StringOrderInput,
                 $inputPagination:PaginationInput
             ){
-                menuCollection(
+                adminMenuCollection(
                     where: $inputWhere
                     order: $inputOrder
                     pagination: $inputPagination
@@ -28,7 +28,7 @@ export const GET_MENU_ID = ()=>{
         ${MENU_ID_FIELDS}
         query Menu($id:Int!)
         {
-            menu(id:$id){
+            adminMenu(id:$id){
                 ...menuIdFields
             }
         }    
@@ -44,7 +44,7 @@ export const GET_MENU_SELECT =()=>{
             $inputWhere: MenuFilterInput,
             $inputOrder:StringOrderInput,                
         ){
-            menuCollection(
+            adminMenuCollection(
                 where: $inputWhere
                 order: $inputOrder                    
             ){

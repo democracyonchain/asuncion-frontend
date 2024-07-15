@@ -6,12 +6,13 @@ import { MenuItem } from 'primereact/menuitem';
 import { useEffect,useRef,useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
-import { Tag } from 'primereact/tag';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { DataTable,DataTableSelectEvent } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { locale, addLocale } from 'primereact/api';
 import { Message } from 'primereact/message';
+import { DeleteOutlineOutlined,VisibilityOutlined,DriveFileRenameOutlineOutlined,TextSnippetOutlined,ArticleOutlined } from '@mui/icons-material/';
+import Icon from '@mui/material/Icon';
 export const UtilsCoreToolbar=(
     {
         setVisibleModalAux,selectedGrid=false,onClickExport,onClickExportPdf,opt=false,navigate,
@@ -33,19 +34,19 @@ export const UtilsCoreToolbar=(
                     />
                 }
                 {(dataAccesos.onEdit)&&
-                    <UtilsButton label="Editar" type='button' size={'small'} icon="pi pi-pencil" severity="secondary"  raised text link 
+                    <UtilsButton label="Editar" type='button' size={'small'} icon={<DriveFileRenameOutlineOutlined fontSize="small"/>} severity="secondary"  raised text link 
                         onClick={()=>{navigate("new",{ state: { dataRecord:{dataGrid}} })}} 
                         disabled={!selectedGrid }
                     />
                 }
                 {(dataAccesos.onView)&&
-                    <UtilsButton  label="Ver" size={'small'} icon="pi pi-eye"  severity="warning" raised text link
+                    <UtilsButton  label="Ver" size={'small'} icon={<VisibilityOutlined fontSize="small"/>}  severity="warning" raised text link
                         onClick={()=>{setVisibleModalAux({active:true,header:'Mostrar Registro',opt:'V',closable:true,maximizable:true})}}
                         disabled={!selectedGrid } 
                     />
                 }
                 {(dataAccesos.onDelete)&&
-                    <UtilsButton label="Borrar" size={'small'} icon="pi pi-trash"  severity="danger" raised text link
+                    <UtilsButton label="Borrar" size={'small'} icon={<DeleteOutlineOutlined fontSize="small"/>}  severity="danger" raised text link
                         onClick={()=>setVisibleModalAux({active:true,header:'Eliminar Registro',opt:'D',closable:true,maximizable:true})} 
                         disabled={!selectedGrid } 
                     />
@@ -62,8 +63,8 @@ export const UtilsCoreToolbar=(
                 <div>
                     {(dataAccesos.onPrint)&&
 				        <>
-                            <UtilsButton size='small' raised text link label="" icon="pi pi-file text-xl" className="p-button-secondary" onClick={onClickExport} /> &nbsp;&nbsp;
-			    	        <UtilsButton size='small' raised text link label="" icon="pi pi-file-pdf text-xl" className="p-button-help text-red-500" severity="danger" onClick={onClickExportPdf} />
+                            <UtilsButton size='small' raised text link label="" icon={<TextSnippetOutlined fontSize="small" titleAccess={'CSV'}/>} className="p-button-secondary text-teal-500" onClick={onClickExport} /> &nbsp;&nbsp;
+			    	        <UtilsButton size='small' raised text link label="" icon={<ArticleOutlined fontSize="small" titleAccess={'PDF'}/>} className="p-button-help text-red-500" severity="danger" onClick={onClickExportPdf} />
                         </>
                     }
                 </div>
@@ -79,7 +80,7 @@ export const UtilsCoreToolbar=(
 
 export const UtilsCoreTabMenu =(
     {
-        model={labelNew:'Nuevo',labelGrid:'Grid',iconNew:'pi pi-clone',iconGrid:'pi pi-th-large'},
+        model={labelNew:'Nuevo',labelGrid:'Grid',iconNew:'post_add',iconGrid:'desktop_landscape'},
         viewForm='Formulario',viewGrid='Datos',useRoutes,navigate,init, setInitial, dispatch
         
     }:
@@ -96,12 +97,12 @@ export const UtilsCoreTabMenu =(
     const items: MenuItem[] = [
         { 
             ...(dataAccesos?.getTabs?.create)&&{
-                label: (model.labelNew)?model.labelNew:'Nuevo', icon: (model.iconNew)?model.iconNew:'pi pi-clone', command: () => {navigate("new")} 
+                label: (model.labelNew)?model.labelNew:'Nuevo', icon: <Icon className='mr-2'>{(model.iconNew)?model.iconNew:'post_add'}</Icon>, command: () => {navigate("new")} 
             }
         },
         { 
             ...(dataAccesos?.getTabs?.read)&&{
-                label: (model.labelGrid)?model.labelGrid:'Grid', icon: (model.iconGrid)?model.iconGrid:'pi pi-th-large',command: () => {navigate("record")} 
+                label: (model.labelGrid)?model.labelGrid:'Grid', icon: <Icon className='mr-2'>{(model.iconGrid)?model.iconGrid:'desktop_landscape'}</Icon>,command: () => {navigate("record")} 
             }
         }
         

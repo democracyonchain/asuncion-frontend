@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { graphql,UtilsSpinner } from "@bsc/library";
 import { processModuloQuery } from "@application/services/moduloService";
 import { Divider } from 'primereact/divider';
+import Icon from '@mui/material/Icon';
 export const ViewModulo = ({dataGrid}:{dataGrid:any}) => {
 
 	//Metodos Graphql
@@ -56,7 +57,7 @@ export const ViewModulo = ({dataGrid}:{dataGrid:any}) => {
 							</div>
 							
 					</Divider>
-					<i className={moduloQuery?.icono} style={{ fontSize: '1.5rem',marginLeft:'2rem' }}></i>
+					<Icon style={{ fontSize: '1.5rem',marginLeft:'2rem' }}>{moduloQuery?.icono} </Icon>					
 				</div>
 			</div>	
 			<div className="formgrid grid">	

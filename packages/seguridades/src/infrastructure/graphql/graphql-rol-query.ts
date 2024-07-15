@@ -11,7 +11,7 @@ export const GET_ROL_COLLECTION =()=>{
             $inputOrder:StringOrderInput,
             $inputPagination:PaginationInput
         ){
-            rolCollection(
+            adminRolCollection(
                 where: $inputWhere
                 order: $inputOrder
                 pagination: $inputPagination
@@ -28,7 +28,7 @@ export const GET_ROL_ID = ()=>{
         ${ROL_ID_FIELDS}
         query Rol($id:Int!)
         {
-            rol(id:$id){
+            adminRol(id:$id){
                 ...rolIdFields
             }
         }    
@@ -44,7 +44,7 @@ export const GET_MODULO_SELECT =()=>{
                 $inputWhere: RolFilterInput,
                 $inputOrder:StringOrderInput,               
             ){
-                rolCollection(
+                adminRolCollection(
                     where: $inputWhere
                     order: $inputOrder                    
                 ){

@@ -5,7 +5,7 @@ export const UPDATE_USUARIO=()=>{
     return gql`
         ${USUARIO_CRUD_FIELDS}
         mutation UsuarioUpdate($inputUpdate: UsuarioUpdateInput!) {
-            usuarioUpdate(dataInput: $inputUpdate) {
+            adminUsuarioUpdate(dataInput: $inputUpdate) {
                 ... usuarioCrudFields
             }
         }
@@ -16,7 +16,7 @@ export const CREATE_USUARIO =()=>{
     return gql`
         ${USUARIO_CRUD_FIELDS}
         mutation UsuarioCreate($inputCreate: UsuarioCreateInput!) {
-            usuarioCreate(dataInput: $inputCreate) {
+            adminUsuarioCreate(dataInput: $inputCreate) {
                 ... usuarioCrudFields
             }
         }
@@ -27,7 +27,7 @@ export const DELETE_USUARIO =()=>{
     return gql`
     ${USUARIO_CRUD_FIELDS}
     mutation UsuarioDelete($id:Int!){
-        usuarioDelete( id:$id){
+        adminUsuarioDelete( id:$id){
             ...usuarioCrudFields
         }
     }

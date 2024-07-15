@@ -23,7 +23,7 @@ export const processModuloCollection =(parameters:{getModuloCollectionLazyQuery:
         },
         fetchPolicy: parameters.cache,
         onCompleted:(c:any)=>{            
-            parameters.setDataModuloCollection(c?.moduloCollection);
+            parameters.setDataModuloCollection(c?.adminModuloCollection);
             parameters.dispatch(setCache({cache:'cache-first'}))           
         },onError:(error:any)=>{            
             parameters.setDataModuloCollection([]);
@@ -39,7 +39,7 @@ export const processModuloQuery =(parameters:{getModuloLazyQuery:any,setModuloQu
         },
         onCompleted:(c:any)=>{              
             parameters.setStatusLoading(false);
-            parameters.setModuloQuery(c.modulo);           
+            parameters.setModuloQuery(c.adminModulo);           
         },onError:(error:any)=>{
             parameters.setModuloQuery([]);
             parameters.setStatusLoading(false)
@@ -59,7 +59,7 @@ export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:an
         id_modulo:'',
     });
     parameters.navigate("new")
-    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Modulo',iconNew:'pi pi-clone'}));
+    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Modulo',iconNew:'post_add'}));
 }
 
 export const processValueForm=(parameters:{setValue:any,moduloQuery:any,setEstadoForm:any})=>{
@@ -121,7 +121,7 @@ const processCreateModulo=(create:{data:any,toast:any,moduloCreateMutation:any,n
         onCompleted:(c:any)=>{                   
             create.navigate("record");       
             create.dispatch(setInitial({initial:1}))
-            create.dispatch(setMessage({message:c.moduloCreate?.message}))
+            create.dispatch(setMessage({message:c.adminModuloCreate?.message}))
         },onError:(error:any)=>{           
             create.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });   
         }
@@ -144,7 +144,7 @@ const processUpdateModulo=(update:{data:any,toast:any,moduloUpdateMutation:any,n
         },onCompleted:(c:any)=>{                 
             update.navigate("record");
             update.dispatch(setInitial({initial:1}))
-            update.dispatch(setMessage({message:c.moduloUpdate?.message}))
+            update.dispatch(setMessage({message:c.adminModuloUpdate?.message}))
 
         },onError:(error:any)=>{
             update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });              
@@ -162,7 +162,7 @@ export const processEliminarModulo=(eliminar:{data:any,toast:any,moduloDeleteMut
         onCompleted:(c:any)=>{  
             eliminar.navigate("record");       
             eliminar.dispatch(setInitial({initial:1}));
-            eliminar.dispatch(setMessage({message:c.moduloDelete?.message}));
+            eliminar.dispatch(setMessage({message:c.adminModuloDelete?.message}));
                                                           
         },onError:(error:any)=>{
             eliminar.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });              

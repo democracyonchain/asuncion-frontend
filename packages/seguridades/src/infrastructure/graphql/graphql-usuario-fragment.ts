@@ -9,6 +9,7 @@ export const USUARIO_COLLECTION_FIELDS = gql`
             nombres
             provincia_id
             username
+            email
             provincia {
                 id
                 nombre
@@ -28,13 +29,27 @@ export const USUARIO_ID_FIELDS = gql`
 
     fragment usuarioIdFields on UsuarioAdministracion{
         apellidos
+        establecimiento_id
         estado
         id
         nombres
         provincia_id
         username
+        email
+        rolusuario {
+            id
+            rol {               
+                id
+                nombre
+            }
+        }
         provincia {
             id
+            nombre
+        }
+        establecimiento {
+            id
+            logo
             nombre
         }
     }

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
-import { AUTH_LOGIN_FIELDS,AUTH_PERFIL_FIELDS,AUTH_MODULO_PERMISO_ID_FIELDS,AUTH_CAMBIO_PASSWORD,AUTH_LOGOUT } from '@infrastructure/graphql/graphql-auth-fragment';
+import { AUTH_LOGIN_FIELDS,AUTH_PERFIL_FIELDS,AUTH_MODULO_PERMISO_ID_FIELDS,AUTH_CAMBIO_PASSWORD,AUTH_LOGOUT,
+        PROVINCIA_SELECT_FIELDS,ESTABLECIMIENTO_SELECT_FIELDS } from '@infrastructure/graphql/graphql-auth-fragment';
 
 export const GET_AUTH_LOGIN =()=>{
 
@@ -8,7 +9,7 @@ export const GET_AUTH_LOGIN =()=>{
         ${AUTH_LOGIN_FIELDS}
         query Authlogin($password: String!,$username:String!){
             
-            authlogin(password: $password, username: $username) {
+            authLogin(password: $password, username: $username) {
                 ...authLoginFields
             }
         }
@@ -45,7 +46,7 @@ export const GET_AUTH_CAMBIO_PASSWORD = ()=>{
 
     return gql`
         ${AUTH_CAMBIO_PASSWORD}
-        query AuthCambioPassword($password:String!){
+        mutation AuthCambioPassword($password:String!){
             authCambioPassword(password:$password){
                 ...authCambioPassword
             }
@@ -60,9 +61,45 @@ export const GET_AUTH_LOGOUT=()=>{
 
         ${AUTH_LOGOUT}
         query Authlogout{
-            authlogout{
+            authLogout{
                 ...authLogout
             }
         }
     `
+}
+
+export const GET_PROVINCIA_SELECT =()=>{
+
+    return gql`
+        ${PROVINCIA_SELECT_FIELDS}
+            query ProvinciaSelect(
+                $inputWhere: ProvinciaFilterInput,
+                $inputOrder:StringOrderInput,               
+            ){
+                adminProvinciaCollection(
+                    where: $inputWhere
+                    order: $inputOrder                    
+                ){
+                    ...provinciaSelectFields
+                }
+            }
+        `
+}
+
+export const GET_ESTABLECIMIENTO_SELECT =()=>{
+
+    return gql`
+        ${ESTABLECIMIENTO_SELECT_FIELDS}
+            query EstablecimientoSelect(
+                $inputWhere: EstablecimientoFilterInput,
+                $inputOrder:StringOrderInput,               
+            ){
+                adminEstablecimientoCollection(
+                    where: $inputWhere
+                    order: $inputOrder                    
+                ){
+                    ...establecimientoSelectFields
+                }
+            }
+        `
 }

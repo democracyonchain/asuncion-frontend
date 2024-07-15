@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { graphql,UtilsSpinner } from "@bsc/library";
 import { processMenuQuery } from "@application/services/menuService";
 import { Divider } from 'primereact/divider';
-
+import Icon from '@mui/material/Icon';
 export const ViewMenu = ({dataGrid}:{dataGrid:any}) => {
 
     //Metodos Graphql
@@ -57,7 +57,7 @@ export const ViewMenu = ({dataGrid}:{dataGrid:any}) => {
                         </div>
                         
                 </Divider>
-                <i className={menuQuery?.icono} style={{ fontSize: '1.5rem',marginLeft:'2rem' }}></i>
+                <Icon style={{marginLeft:'2rem' }}>{menuQuery?.icono} </Icon>
             </div>
         </div>	
         <div className="formgrid grid">	

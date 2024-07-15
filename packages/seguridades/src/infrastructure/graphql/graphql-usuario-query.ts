@@ -11,7 +11,7 @@ export const GET_USUARIO_COLLECTION =()=>{
             $inputOrder:StringOrderInput,
             $inputPagination:PaginationInput
         ){
-            usuarioCollection(
+            adminUsuarioCollection(
                 where: $inputWhere
                 order: $inputOrder
                 pagination: $inputPagination
@@ -28,7 +28,7 @@ export const GET_USUARIO_ID = ()=>{
         ${USUARIO_ID_FIELDS}
         query Usuario($id:Int!)
         {
-            usuario(id:$id){
+            adminUsuario(id:$id){
                 ...usuarioIdFields
             }
         }    

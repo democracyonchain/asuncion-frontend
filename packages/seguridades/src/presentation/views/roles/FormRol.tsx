@@ -7,6 +7,7 @@ import { processResetForm,processRolQuery,processValueForm,processSubmitForm,pro
         categories,processDataCheck, processHeaderTemplate } from "@application/services/rolService"
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
+import Icon from '@mui/material/Icon';
 
 export const FormRol = ({navigate}:{navigate:any}) => {
   // Location Hook
@@ -60,7 +61,7 @@ export const FormRol = ({navigate}:{navigate:any}) => {
 		if(state){
 			let dataId=state?.dataRecord?.dataGrid;	
 			if(dataId?.id){
-				dispatch(setLabelTab({labelNew:'Editar Rol',labelGrid:'Datos Rol',iconNew:'pi pi-pencil',iconGrid:'pi pi-th-large'}));
+				dispatch(setLabelTab({...labelTab,labelNew:'Editar Rol',iconNew:'edit_square'}));
 				processRolQuery({getRolLazyQuery,setRolQuery,query:{id:parseInt(dataId?.id)},setStatusLoading});
 				setLabels({ ...labels,btn1: 'Cancelar', btn2: 'Editar',opt:'E'});	
 			}		
@@ -91,7 +92,7 @@ export const FormRol = ({navigate}:{navigate:any}) => {
                 <div className="formgrid grid">
                     <div className='field col-12 md:col-6 mb-4'>
                         <TextInput disabled={false} label='Nombre *' name='nombre_rol' placeholder="Ingrese el Nombre" 
-                        methods={methods} keyfilter='alpha' maxLength={20}
+                        methods={methods} maxLength={40}
                         />
                     </div>
                     <div className='field col-12 md:col-6'>
@@ -112,11 +113,11 @@ export const FormRol = ({navigate}:{navigate:any}) => {
                                                 {
                                                     categories.map((category:any, keyId:any)=>{
                                                         return(
-                                                            <div className='col-12 md:col-3 flex align-items-center m-2' key={keyId}> 
+                                                            <div className='col-12 md:col-3 flex align-items-center mt-3' key={keyId}> 
                                                                 <TextInput disabled={disabled[key]?.disabled}  label={category.name} name={`accesos${keyId}${data.id}`} 
                                                                     methods={methods} optInput={'S'} 
                                                                     onChange={(e:any)=>{processDataCheck({data,category,chek:e,key,opt:'C',setValue,getValues})}}/>
-																<i className={category.icon}></i>  	
+																	<Icon fontSize="medium" className='text-gray-500'>{category.icon}</Icon>  
                                                             </div>
                                                         )
                                                     })

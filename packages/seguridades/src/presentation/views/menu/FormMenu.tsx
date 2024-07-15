@@ -57,7 +57,7 @@ export const FormMenu = ({navigate}:{navigate:any}) => {
 		if(state){
 			let dataId=state?.dataRecord?.dataGrid;	
 			if(dataId?.id){
-				dispatch(setLabelTab({labelNew:'Editar Menu',labelGrid:'Datos Menu',iconNew:'pi pi-pencil',iconGrid:'pi pi-th-large'}));
+				dispatch(setLabelTab({...labelTab,labelNew:'Editar Menu',iconNew:'edit_square'}));
 				processMenuQuery({getMenuLazyQuery,setMenuQuery,query:{id:parseInt(dataId?.id)},setStatusLoading});
 				setLabels({ ...labels,btn1: 'Cancelar', btn2: 'Editar',opt:'E'});	
 			}		
@@ -108,7 +108,7 @@ export const FormMenu = ({navigate}:{navigate:any}) => {
             </div>
             <div className="formgrid grid mb-4">				
 				<div className='field col-12 md:col-4'>
-					<TextInput disabled={false} label='Icono *' name='icono_menu' placeholder="Ingrese el icono" methods={methods} maxLength={20}/>
+					<TextInput disabled={false} label='Icono *' name='icono_menu' placeholder="Ingrese el icono" methods={methods} maxLength={50}/>
 				</div>
 				<div className='field col-12 md:col-4'>
 					<TextInput disabled={false} label='Orden *' name='orden_menu' placeholder="Ingrese el orden" methods={methods} maxLength={20} keyfilter={'num'}/>
