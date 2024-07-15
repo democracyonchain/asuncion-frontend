@@ -4,7 +4,7 @@ import { processUsuarioCollection,columnsUsuario,processEliminarUsuario } from "
 import { setPageInfo,setLabelTab,setMessage,setCache } from '@presentation/actions';
 import { useSelector,useDispatch } from "react-redux";
 import { RootState } from '@presentation/stores';
-import { ViewUsaurio } from '@presentation/views/usuarios/ViewUsaurio'
+import { ViewUsuario } from '@presentation/views/usuarios/ViewUsuario'
 
 
 interface Usuario{
@@ -40,7 +40,7 @@ export const GridUsuario = ({navigate}:{navigate:any}) => {
 	useEffect(()=>{
 		if(!message){
 			processUsuarioCollection({getUsuarioCollectionLazyQuery,setDataUsuarioCollection,limit:pageInfo?.limit,offset:pageInfo?.offset,cache,dispatch});
-			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Usuario',iconNew:'pi pi-clone'}));
+			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Usuario',iconNew:'group_add'}));
 		}		
 	},[])
 
@@ -69,7 +69,7 @@ export const GridUsuario = ({navigate}:{navigate:any}) => {
 				setPageInfo={setPageInfo}
 				pageInfo={pageInfo}
 				dispatch={dispatch}
-				ContenidoView={ViewUsaurio}
+				ContenidoView={ViewUsuario}
 				navigate={navigate}
 				onSubmit={onSubmit}
 				toast={toast}

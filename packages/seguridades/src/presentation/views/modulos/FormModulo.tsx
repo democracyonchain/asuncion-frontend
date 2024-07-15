@@ -55,7 +55,7 @@ export const FormModulo = ({navigate}:{navigate:any}) => {
 		if(state){
 			let dataId=state?.dataRecord?.dataGrid;	
 			if(dataId?.id){
-				dispatch(setLabelTab({labelNew:'Editar Modulo',labelGrid:'Datos Módulo',iconNew:'pi pi-pencil',iconGrid:'pi pi-th-large'}));
+				dispatch(setLabelTab({...labelTab,labelNew:'Editar Modulo',iconNew:'edit_square'}));
 				processModuloQuery({getModuloLazyQuery,setModuloQuery,query:{id:parseInt(dataId?.id)},setStatusLoading});
 				setLabels({ ...labels,btn1: 'Cancelar', btn2: 'Editar',opt:'E'});	
 			}		

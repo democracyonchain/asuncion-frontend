@@ -28,7 +28,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  Base64Scalar: { input: any; output: any };
+  Base64: { input: any; output: any };
   DateScalar: { input: any; output: any };
   Decimal: { input: any; output: any };
 };
@@ -36,14 +36,14 @@ export type Scalars = {
 export type EstablecimientoAdminitracion = {
   __typename?: "EstablecimientoAdminitracion";
   id: Scalars["Float"]["output"];
-  logo?: Maybe<Scalars["Base64Scalar"]["output"]>;
+  logo?: Maybe<Scalars["Base64"]["output"]>;
   nombre: Scalars["String"]["output"];
 };
 
 export type EstablecimientoAuth = {
   __typename?: "EstablecimientoAuth";
   id: Scalars["Float"]["output"];
-  logo?: Maybe<Scalars["String"]["output"]>;
+  logo?: Maybe<Scalars["Base64"]["output"]>;
   nombre: Scalars["String"]["output"];
 };
 
@@ -197,81 +197,87 @@ export type ModuloUpdateInput = {
 
 export type Mutation = {
   __typename?: "Mutation";
-  establecimientoCreate: GlobalResultType;
-  establecimientoDelete: GlobalResultType;
-  establecimientoUpdate: GlobalResultType;
-  menuCreate: GlobalResultType;
-  menuDelete: GlobalResultType;
-  menuUpdate: GlobalResultType;
-  moduloCreate: GlobalResultType;
-  moduloDelete: GlobalResultType;
-  moduloUpdate: GlobalResultType;
-  rolCreate: GlobalResultType;
-  rolDelete: GlobalResultType;
-  rolUpdate: GlobalResultType;
-  usuarioCreate: GlobalResultType;
-  usuarioDelete: GlobalResultType;
-  usuarioUpdate: GlobalResultType;
+  adminEstablecimientoCreate: GlobalResultType;
+  adminEstablecimientoDelete: GlobalResultType;
+  adminEstablecimientoUpdate: GlobalResultType;
+  adminMenuCreate: GlobalResultType;
+  adminMenuDelete: GlobalResultType;
+  adminMenuUpdate: GlobalResultType;
+  adminModuloCreate: GlobalResultType;
+  adminModuloDelete: GlobalResultType;
+  adminModuloUpdate: GlobalResultType;
+  adminRolCreate: GlobalResultType;
+  adminRolDelete: GlobalResultType;
+  adminRolUpdate: GlobalResultType;
+  adminUsuarioCreate: GlobalResultType;
+  adminUsuarioDelete: GlobalResultType;
+  adminUsuarioUpdate: GlobalResultType;
+  authCambioPassword: GlobalResultType;
 };
 
-export type MutationEstablecimientoCreateArgs = {
+export type MutationAdminEstablecimientoCreateArgs = {
   dataInput: EstablecimientoCreateInput;
 };
 
-export type MutationEstablecimientoDeleteArgs = {
+export type MutationAdminEstablecimientoDeleteArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type MutationEstablecimientoUpdateArgs = {
+export type MutationAdminEstablecimientoUpdateArgs = {
   dataInput: EstablecimientoUpdateInput;
 };
 
-export type MutationMenuCreateArgs = {
+export type MutationAdminMenuCreateArgs = {
   dataInput: MenuCreateInput;
 };
 
-export type MutationMenuDeleteArgs = {
+export type MutationAdminMenuDeleteArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type MutationMenuUpdateArgs = {
+export type MutationAdminMenuUpdateArgs = {
   dataInput: MenuUpdateInput;
 };
 
-export type MutationModuloCreateArgs = {
+export type MutationAdminModuloCreateArgs = {
   dataInput: ModuloCreateInput;
 };
 
-export type MutationModuloDeleteArgs = {
+export type MutationAdminModuloDeleteArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type MutationModuloUpdateArgs = {
+export type MutationAdminModuloUpdateArgs = {
   dataInput: ModuloUpdateInput;
 };
 
-export type MutationRolCreateArgs = {
+export type MutationAdminRolCreateArgs = {
   dataInput: RolCreateInput;
 };
 
-export type MutationRolDeleteArgs = {
+export type MutationAdminRolDeleteArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type MutationRolUpdateArgs = {
+export type MutationAdminRolUpdateArgs = {
   dataInput: RolUpdateInput;
 };
 
-export type MutationUsuarioCreateArgs = {
+export type MutationAdminUsuarioCreateArgs = {
   dataInput: UsuarioCreateInput;
 };
 
-export type MutationUsuarioDeleteArgs = {
+export type MutationAdminUsuarioDeleteArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type MutationUsuarioUpdateArgs = {
+export type MutationAdminUsuarioUpdateArgs = {
   dataInput: UsuarioUpdateInput;
+};
+
+export type MutationAuthCambioPasswordArgs = {
+  id?: InputMaybe<Scalars["Int"]["input"]>;
+  password: Scalars["String"]["input"];
 };
 
 /** Filtros para cuando los filtros son de tipo numero */
@@ -352,86 +358,187 @@ export type ProvinciaAdministracion = {
   nombre: Scalars["String"]["output"];
 };
 
-export type Query = {
-  __typename?: "Query";
-  authCambioPassword: GlobalResultType;
-  authModuloPermisosId: Array<ModuloAuth>;
-  authPerfil: UsuarioAuth;
-  authlogin: Login;
-  authlogout: GlobalResultType;
-  establecimiento: EstablecimientoAdminitracion;
-  establecimientoCollection?: Maybe<EstablecimientoCollectionType>;
-  menu: MenuAdministracion;
-  menuCollection?: Maybe<MenuCollectionType>;
-  modulo: ModuloAdministracion;
-  moduloCollection?: Maybe<ModuloCollectionType>;
-  rol: Rol;
-  rolCollection?: Maybe<RolCollectionType>;
-  usuario: UsuarioAdministracion;
-  usuarioCollection?: Maybe<UsuarioCollectionType>;
+export type ProvinciaCollectionType = {
+  __typename?: "ProvinciaCollectionType";
+  data?: Maybe<Array<ProvinciaAdministracion>>;
+  pageInfo?: Maybe<PageInfo>;
 };
 
-export type QueryAuthCambioPasswordArgs = {
+export type ProvinciaDigitalizacion = {
+  __typename?: "ProvinciaDigitalizacion";
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+};
+
+export type ProvinciaDigitalizacionCollectionType = {
+  __typename?: "ProvinciaDigitalizacionCollectionType";
+  data?: Maybe<Array<ProvinciaDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ProvinciaDigitalizacionFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
+export type ProvinciaFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
+export type ProvinciaReportes = {
+  __typename?: "ProvinciaReportes";
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+};
+
+export type ProvinciaReportesCollectionType = {
+  __typename?: "ProvinciaReportesCollectionType";
+  data?: Maybe<Array<ProvinciaReportes>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ProvinciaReportesFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
+export type ProvinciaVerificacion = {
+  __typename?: "ProvinciaVerificacion";
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+};
+
+export type ProvinciaVerificacionCollectionType = {
+  __typename?: "ProvinciaVerificacionCollectionType";
+  data?: Maybe<Array<ProvinciaVerificacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ProvinciaVerificacionFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
+export type Query = {
+  __typename?: "Query";
+  adminEstablecimiento: EstablecimientoAdminitracion;
+  adminEstablecimientoCollection?: Maybe<EstablecimientoCollectionType>;
+  adminMenu: MenuAdministracion;
+  adminMenuCollection?: Maybe<MenuCollectionType>;
+  adminModulo: ModuloAdministracion;
+  adminModuloCollection?: Maybe<ModuloCollectionType>;
+  adminProvincia: ProvinciaAdministracion;
+  adminProvinciaCollection?: Maybe<ProvinciaCollectionType>;
+  adminRol: Rol;
+  adminRolCollection?: Maybe<RolCollectionType>;
+  adminUsuario: UsuarioAdministracion;
+  adminUsuarioCollection?: Maybe<UsuarioCollectionType>;
+  authLogin: Login;
+  authLogout: GlobalResultType;
+  authModuloPermisosId: Array<ModuloAuth>;
+  authPerfil: UsuarioAuth;
+  digtProvincia: ProvinciaDigitalizacion;
+  digtProvinciaCollection?: Maybe<ProvinciaDigitalizacionCollectionType>;
+  rptProvincia: ProvinciaReportes;
+  rptProvinciaCollection?: Maybe<ProvinciaReportesCollectionType>;
+  vrfProvinciaVerificacion: ProvinciaVerificacion;
+  vrfProvinciaVerificacionCollection?: Maybe<ProvinciaVerificacionCollectionType>;
+};
+
+export type QueryAdminEstablecimientoArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminEstablecimientoCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<EstablecimientoFilterInput>;
+};
+
+export type QueryAdminMenuArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminMenuCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<MenuFilterInput>;
+};
+
+export type QueryAdminModuloArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminModuloCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<ModuloFilterInput>;
+};
+
+export type QueryAdminProvinciaArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminProvinciaCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<ProvinciaFilterInput>;
+};
+
+export type QueryAdminRolArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminRolCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<RolFilterInput>;
+};
+
+export type QueryAdminUsuarioArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type QueryAdminUsuarioCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<UsuarioFilterInput>;
+};
+
+export type QueryAuthLoginArgs = {
   password: Scalars["String"]["input"];
+  username: Scalars["String"]["input"];
 };
 
 export type QueryAuthModuloPermisosIdArgs = {
   rol_id: Scalars["Int"]["input"];
 };
 
-export type QueryAuthloginArgs = {
-  password: Scalars["String"]["input"];
-  username: Scalars["String"]["input"];
-};
-
-export type QueryEstablecimientoArgs = {
+export type QueryDigtProvinciaArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type QueryEstablecimientoCollectionArgs = {
+export type QueryDigtProvinciaCollectionArgs = {
   order?: InputMaybe<StringOrderInput>;
   pagination?: InputMaybe<PaginationInput>;
-  where?: InputMaybe<EstablecimientoFilterInput>;
+  where?: InputMaybe<ProvinciaDigitalizacionFilterInput>;
 };
 
-export type QueryMenuArgs = {
+export type QueryRptProvinciaArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type QueryMenuCollectionArgs = {
+export type QueryRptProvinciaCollectionArgs = {
   order?: InputMaybe<StringOrderInput>;
   pagination?: InputMaybe<PaginationInput>;
-  where?: InputMaybe<MenuFilterInput>;
+  where?: InputMaybe<ProvinciaReportesFilterInput>;
 };
 
-export type QueryModuloArgs = {
+export type QueryVrfProvinciaVerificacionArgs = {
   id: Scalars["Int"]["input"];
 };
 
-export type QueryModuloCollectionArgs = {
+export type QueryVrfProvinciaVerificacionCollectionArgs = {
   order?: InputMaybe<StringOrderInput>;
   pagination?: InputMaybe<PaginationInput>;
-  where?: InputMaybe<ModuloFilterInput>;
-};
-
-export type QueryRolArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryRolCollectionArgs = {
-  order?: InputMaybe<StringOrderInput>;
-  pagination?: InputMaybe<PaginationInput>;
-  where?: InputMaybe<RolFilterInput>;
-};
-
-export type QueryUsuarioArgs = {
-  id: Scalars["Int"]["input"];
-};
-
-export type QueryUsuarioCollectionArgs = {
-  order?: InputMaybe<StringOrderInput>;
-  pagination?: InputMaybe<PaginationInput>;
-  where?: InputMaybe<UsuarioFilterInput>;
+  where?: InputMaybe<ProvinciaVerificacionFilterInput>;
 };
 
 export type Rol = {
@@ -522,6 +629,9 @@ export type StringWhereInput = {
 export type UsuarioAdministracion = {
   __typename?: "UsuarioAdministracion";
   apellidos: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
+  establecimiento: EstablecimientoAdminitracion;
+  establecimiento_id: Scalars["Float"]["output"];
   estado: Scalars["Boolean"]["output"];
   id: Scalars["Float"]["output"];
   nombres: Scalars["String"]["output"];
@@ -544,6 +654,9 @@ export type UsuarioAuth = {
 export type UsuarioBasicAdministracion = {
   __typename?: "UsuarioBasicAdministracion";
   apellidos: Scalars["String"]["output"];
+  email: Scalars["String"]["output"];
+  establecimiento: EstablecimientoAdminitracion;
+  establecimiento_id: Scalars["Float"]["output"];
   estado: Scalars["Boolean"]["output"];
   id: Scalars["Float"]["output"];
   nombres: Scalars["String"]["output"];
@@ -561,6 +674,7 @@ export type UsuarioCollectionType = {
 export type UsuarioCreateInput = {
   apellidos: Scalars["String"]["input"];
   email: Scalars["String"]["input"];
+  establecimiento_id: Scalars["Float"]["input"];
   nombres: Scalars["String"]["input"];
   password: Scalars["String"]["input"];
   provincia_id: Scalars["Float"]["input"];
@@ -579,6 +693,7 @@ export type UsuarioFilterInput = {
 export type UsuarioUpdateInput = {
   apellidos?: InputMaybe<Scalars["String"]["input"]>;
   email?: InputMaybe<Scalars["String"]["input"]>;
+  establecimiento_id?: InputMaybe<Scalars["Float"]["input"]>;
   estado?: InputMaybe<Scalars["Boolean"]["input"]>;
   id: Scalars["Int"]["input"];
   nombres?: InputMaybe<Scalars["String"]["input"]>;
@@ -649,6 +764,24 @@ export type AuthLogoutFragment = {
   status: boolean;
 };
 
+export type ProvinciaSelectFieldsFragment = {
+  __typename?: "ProvinciaCollectionType";
+  data?: Array<{
+    __typename?: "ProvinciaAdministracion";
+    id: number;
+    nombre: string;
+  }> | null;
+};
+
+export type EstablecimientoSelectFieldsFragment = {
+  __typename?: "EstablecimientoCollectionType";
+  data?: Array<{
+    __typename?: "EstablecimientoAdminitracion";
+    id: number;
+    nombre: string;
+  }> | null;
+};
+
 export type AuthloginQueryVariables = Exact<{
   password: Scalars["String"]["input"];
   username: Scalars["String"]["input"];
@@ -656,7 +789,7 @@ export type AuthloginQueryVariables = Exact<{
 
 export type AuthloginQuery = {
   __typename?: "Query";
-  authlogin: {
+  authLogin: {
     __typename?: "Login";
     token: string;
     username: string;
@@ -718,12 +851,12 @@ export type AuthModuloPermisosIdQuery = {
   }>;
 };
 
-export type AuthCambioPasswordQueryVariables = Exact<{
+export type AuthCambioPasswordMutationVariables = Exact<{
   password: Scalars["String"]["input"];
 }>;
 
-export type AuthCambioPasswordQuery = {
-  __typename?: "Query";
+export type AuthCambioPasswordMutation = {
+  __typename?: "Mutation";
   authCambioPassword: {
     __typename?: "GlobalResultType";
     message: string;
@@ -735,11 +868,45 @@ export type AuthlogoutQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AuthlogoutQuery = {
   __typename?: "Query";
-  authlogout: {
+  authLogout: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
   };
+};
+
+export type ProvinciaSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<ProvinciaFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type ProvinciaSelectQuery = {
+  __typename?: "Query";
+  adminProvinciaCollection?: {
+    __typename?: "ProvinciaCollectionType";
+    data?: Array<{
+      __typename?: "ProvinciaAdministracion";
+      id: number;
+      nombre: string;
+    }> | null;
+  } | null;
+};
+
+export type EstablecimientoSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<EstablecimientoFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type EstablecimientoSelectQuery = {
+  __typename?: "Query";
+  adminEstablecimientoCollection?: {
+    __typename?: "EstablecimientoCollectionType";
+    data?: Array<{
+      __typename?: "EstablecimientoAdminitracion";
+      id: number;
+      nombre: string;
+    }> | null;
+  } | null;
 };
 
 export type MenuCollectionFieldsFragment = {
@@ -801,7 +968,7 @@ export type MenuUpdateMutationVariables = Exact<{
 
 export type MenuUpdateMutation = {
   __typename?: "Mutation";
-  menuUpdate: {
+  adminMenuUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -814,7 +981,7 @@ export type MenuCreateMutationVariables = Exact<{
 
 export type MenuCreateMutation = {
   __typename?: "Mutation";
-  menuCreate: {
+  adminMenuCreate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -827,7 +994,7 @@ export type MenuDeleteMutationVariables = Exact<{
 
 export type MenuDeleteMutation = {
   __typename?: "Mutation";
-  menuDelete: {
+  adminMenuDelete: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -842,7 +1009,7 @@ export type MenuCollectionQueryVariables = Exact<{
 
 export type MenuCollectionQuery = {
   __typename?: "Query";
-  menuCollection?: {
+  adminMenuCollection?: {
     __typename?: "MenuCollectionType";
     data?: Array<{
       __typename?: "MenuAdministracion";
@@ -872,7 +1039,7 @@ export type MenuQueryVariables = Exact<{
 
 export type MenuQuery = {
   __typename?: "Query";
-  menu: {
+  adminMenu: {
     __typename?: "MenuAdministracion";
     estado: boolean;
     icono: string;
@@ -895,7 +1062,7 @@ export type MenuSelectQueryVariables = Exact<{
 
 export type MenuSelectQuery = {
   __typename?: "Query";
-  menuCollection?: {
+  adminMenuCollection?: {
     __typename?: "MenuCollectionType";
     data?: Array<{
       __typename?: "MenuAdministracion";
@@ -959,7 +1126,7 @@ export type ModuloUpdateMutationVariables = Exact<{
 
 export type ModuloUpdateMutation = {
   __typename?: "Mutation";
-  moduloUpdate: {
+  adminModuloUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -972,7 +1139,7 @@ export type ModuloCreateMutationVariables = Exact<{
 
 export type ModuloCreateMutation = {
   __typename?: "Mutation";
-  moduloCreate: {
+  adminModuloCreate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -985,7 +1152,7 @@ export type ModuloDeleteMutationVariables = Exact<{
 
 export type ModuloDeleteMutation = {
   __typename?: "Mutation";
-  moduloDelete: {
+  adminModuloDelete: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1000,7 +1167,7 @@ export type ModuloCollectionQueryVariables = Exact<{
 
 export type ModuloCollectionQuery = {
   __typename?: "Query";
-  moduloCollection?: {
+  adminModuloCollection?: {
     __typename?: "ModuloCollectionType";
     data?: Array<{
       __typename?: "ModuloAdministracion";
@@ -1029,7 +1196,7 @@ export type ModuloQueryVariables = Exact<{
 
 export type ModuloQuery = {
   __typename?: "Query";
-  modulo: {
+  adminModulo: {
     __typename?: "ModuloAdministracion";
     codigo: string;
     color: string;
@@ -1048,7 +1215,7 @@ export type ModuloSelectQueryVariables = Exact<{
 
 export type ModuloSelectQuery = {
   __typename?: "Query";
-  moduloCollection?: {
+  adminModuloCollection?: {
     __typename?: "ModuloCollectionType";
     data?: Array<{
       __typename?: "ModuloAdministracion";
@@ -1117,7 +1284,7 @@ export type RolUpdateMutationVariables = Exact<{
 
 export type RolUpdateMutation = {
   __typename?: "Mutation";
-  rolUpdate: {
+  adminRolUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1130,7 +1297,7 @@ export type RolCreateMutationVariables = Exact<{
 
 export type RolCreateMutation = {
   __typename?: "Mutation";
-  rolCreate: {
+  adminRolCreate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1143,7 +1310,7 @@ export type RolDeleteMutationVariables = Exact<{
 
 export type RolDeleteMutation = {
   __typename?: "Mutation";
-  rolDelete: {
+  adminRolDelete: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1158,7 +1325,7 @@ export type RolCollectionQueryVariables = Exact<{
 
 export type RolCollectionQuery = {
   __typename?: "Query";
-  rolCollection?: {
+  adminRolCollection?: {
     __typename?: "RolCollectionType";
     data?: Array<{
       __typename?: "RolAdministracion";
@@ -1184,7 +1351,7 @@ export type RolQueryVariables = Exact<{
 
 export type RolQuery = {
   __typename?: "Query";
-  rol: {
+  adminRol: {
     __typename?: "Rol";
     descripcion?: string | null;
     estado?: boolean | null;
@@ -1211,7 +1378,7 @@ export type RolSelectQueryVariables = Exact<{
 
 export type RolSelectQuery = {
   __typename?: "Query";
-  rolCollection?: {
+  adminRolCollection?: {
     __typename?: "RolCollectionType";
     data?: Array<{
       __typename?: "RolAdministracion";
@@ -1231,6 +1398,7 @@ export type UsuarioCollectionFieldsFragment = {
     nombres: string;
     provincia_id: number;
     username: string;
+    email: string;
     provincia: {
       __typename?: "ProvinciaAdministracion";
       id: number;
@@ -1250,14 +1418,31 @@ export type UsuarioCollectionFieldsFragment = {
 export type UsuarioIdFieldsFragment = {
   __typename?: "UsuarioAdministracion";
   apellidos: string;
+  establecimiento_id: number;
   estado: boolean;
   id: number;
   nombres: string;
   provincia_id: number;
   username: string;
+  email: string;
+  rolusuario?: Array<{
+    __typename?: "RolUsuarioAdministracion";
+    id: number;
+    rol?: {
+      __typename?: "RolAdministracion";
+      id: number;
+      nombre: string;
+    } | null;
+  }> | null;
   provincia: {
     __typename?: "ProvinciaAdministracion";
     id: number;
+    nombre: string;
+  };
+  establecimiento: {
+    __typename?: "EstablecimientoAdminitracion";
+    id: number;
+    logo?: any | null;
     nombre: string;
   };
 };
@@ -1274,7 +1459,7 @@ export type UsuarioUpdateMutationVariables = Exact<{
 
 export type UsuarioUpdateMutation = {
   __typename?: "Mutation";
-  usuarioUpdate: {
+  adminUsuarioUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1287,7 +1472,7 @@ export type UsuarioCreateMutationVariables = Exact<{
 
 export type UsuarioCreateMutation = {
   __typename?: "Mutation";
-  usuarioCreate: {
+  adminUsuarioCreate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1300,7 +1485,7 @@ export type UsuarioDeleteMutationVariables = Exact<{
 
 export type UsuarioDeleteMutation = {
   __typename?: "Mutation";
-  usuarioDelete: {
+  adminUsuarioDelete: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1315,7 +1500,7 @@ export type UsuarioCollectionQueryVariables = Exact<{
 
 export type UsuarioCollectionQuery = {
   __typename?: "Query";
-  usuarioCollection?: {
+  adminUsuarioCollection?: {
     __typename?: "UsuarioCollectionType";
     data?: Array<{
       __typename?: "UsuarioBasicAdministracion";
@@ -1325,6 +1510,7 @@ export type UsuarioCollectionQuery = {
       nombres: string;
       provincia_id: number;
       username: string;
+      email: string;
       provincia: {
         __typename?: "ProvinciaAdministracion";
         id: number;
@@ -1348,17 +1534,34 @@ export type UsuarioQueryVariables = Exact<{
 
 export type UsuarioQuery = {
   __typename?: "Query";
-  usuario: {
+  adminUsuario: {
     __typename?: "UsuarioAdministracion";
     apellidos: string;
+    establecimiento_id: number;
     estado: boolean;
     id: number;
     nombres: string;
     provincia_id: number;
     username: string;
+    email: string;
+    rolusuario?: Array<{
+      __typename?: "RolUsuarioAdministracion";
+      id: number;
+      rol?: {
+        __typename?: "RolAdministracion";
+        id: number;
+        nombre: string;
+      } | null;
+    }> | null;
     provincia: {
       __typename?: "ProvinciaAdministracion";
       id: number;
+      nombre: string;
+    };
+    establecimiento: {
+      __typename?: "EstablecimientoAdminitracion";
+      id: number;
+      logo?: any | null;
       nombre: string;
     };
   };
@@ -1419,6 +1622,22 @@ export const AuthLogoutFragmentDoc = gql`
   fragment authLogout on GlobalResultType {
     message
     status
+  }
+`;
+export const ProvinciaSelectFieldsFragmentDoc = gql`
+  fragment provinciaSelectFields on ProvinciaCollectionType {
+    data {
+      id
+      nombre
+    }
+  }
+`;
+export const EstablecimientoSelectFieldsFragmentDoc = gql`
+  fragment establecimientoSelectFields on EstablecimientoCollectionType {
+    data {
+      id
+      nombre
+    }
   }
 `;
 export const MenuCollectionFieldsFragmentDoc = gql`
@@ -1578,6 +1797,7 @@ export const UsuarioCollectionFieldsFragmentDoc = gql`
       nombres
       provincia_id
       username
+      email
       provincia {
         id
         nombre
@@ -1595,13 +1815,27 @@ export const UsuarioCollectionFieldsFragmentDoc = gql`
 export const UsuarioIdFieldsFragmentDoc = gql`
   fragment usuarioIdFields on UsuarioAdministracion {
     apellidos
+    establecimiento_id
     estado
     id
     nombres
     provincia_id
     username
+    email
+    rolusuario {
+      id
+      rol {
+        id
+        nombre
+      }
+    }
     provincia {
       id
+      nombre
+    }
+    establecimiento {
+      id
+      logo
       nombre
     }
   }
@@ -1614,7 +1848,7 @@ export const UsuarioCrudFieldsFragmentDoc = gql`
 `;
 export const AuthloginDocument = gql`
   query Authlogin($password: String!, $username: String!) {
-    authlogin(password: $password, username: $username) {
+    authLogin(password: $password, username: $username) {
       ...authLoginFields
     }
   }
@@ -1836,86 +2070,59 @@ export type AuthModuloPermisosIdQueryResult = Apollo.QueryResult<
   AuthModuloPermisosIdQueryVariables
 >;
 export const AuthCambioPasswordDocument = gql`
-  query AuthCambioPassword($password: String!) {
+  mutation AuthCambioPassword($password: String!) {
     authCambioPassword(password: $password) {
       ...authCambioPassword
     }
   }
   ${AuthCambioPasswordFragmentDoc}
 `;
+export type AuthCambioPasswordMutationFn = Apollo.MutationFunction<
+  AuthCambioPasswordMutation,
+  AuthCambioPasswordMutationVariables
+>;
 
 /**
- * __useAuthCambioPasswordQuery__
+ * __useAuthCambioPasswordMutation__
  *
- * To run a query within a React component, call `useAuthCambioPasswordQuery` and pass it any options that fit your needs.
- * When your component renders, `useAuthCambioPasswordQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useAuthCambioPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAuthCambioPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useAuthCambioPasswordQuery({
+ * const [authCambioPasswordMutation, { data, loading, error }] = useAuthCambioPasswordMutation({
  *   variables: {
  *      password: // value for 'password'
  *   },
  * });
  */
-export function useAuthCambioPasswordQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
-  > &
-    (
-      | { variables: AuthCambioPasswordQueryVariables; skip?: boolean }
-      | { skip: boolean }
-    )
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
-  >(AuthCambioPasswordDocument, options);
-}
-export function useAuthCambioPasswordLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
+export function useAuthCambioPasswordMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AuthCambioPasswordMutation,
+    AuthCambioPasswordMutationVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
+  return Apollo.useMutation<
+    AuthCambioPasswordMutation,
+    AuthCambioPasswordMutationVariables
   >(AuthCambioPasswordDocument, options);
 }
-export function useAuthCambioPasswordSuspenseQuery(
-  baseOptions?: Apollo.SuspenseQueryHookOptions<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useSuspenseQuery<
-    AuthCambioPasswordQuery,
-    AuthCambioPasswordQueryVariables
-  >(AuthCambioPasswordDocument, options);
-}
-export type AuthCambioPasswordQueryHookResult = ReturnType<
-  typeof useAuthCambioPasswordQuery
+export type AuthCambioPasswordMutationHookResult = ReturnType<
+  typeof useAuthCambioPasswordMutation
 >;
-export type AuthCambioPasswordLazyQueryHookResult = ReturnType<
-  typeof useAuthCambioPasswordLazyQuery
->;
-export type AuthCambioPasswordSuspenseQueryHookResult = ReturnType<
-  typeof useAuthCambioPasswordSuspenseQuery
->;
-export type AuthCambioPasswordQueryResult = Apollo.QueryResult<
-  AuthCambioPasswordQuery,
-  AuthCambioPasswordQueryVariables
+export type AuthCambioPasswordMutationResult =
+  Apollo.MutationResult<AuthCambioPasswordMutation>;
+export type AuthCambioPasswordMutationOptions = Apollo.BaseMutationOptions<
+  AuthCambioPasswordMutation,
+  AuthCambioPasswordMutationVariables
 >;
 export const AuthlogoutDocument = gql`
   query Authlogout {
-    authlogout {
+    authLogout {
       ...authLogout
     }
   }
@@ -1984,9 +2191,165 @@ export type AuthlogoutQueryResult = Apollo.QueryResult<
   AuthlogoutQuery,
   AuthlogoutQueryVariables
 >;
+export const ProvinciaSelectDocument = gql`
+  query ProvinciaSelect(
+    $inputWhere: ProvinciaFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    adminProvinciaCollection(where: $inputWhere, order: $inputOrder) {
+      ...provinciaSelectFields
+    }
+  }
+  ${ProvinciaSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useProvinciaSelectQuery__
+ *
+ * To run a query within a React component, call `useProvinciaSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProvinciaSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProvinciaSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useProvinciaSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ProvinciaSelectQuery,
+    ProvinciaSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProvinciaSelectQuery, ProvinciaSelectQueryVariables>(
+    ProvinciaSelectDocument,
+    options
+  );
+}
+export function useProvinciaSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProvinciaSelectQuery,
+    ProvinciaSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProvinciaSelectQuery,
+    ProvinciaSelectQueryVariables
+  >(ProvinciaSelectDocument, options);
+}
+export function useProvinciaSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ProvinciaSelectQuery,
+    ProvinciaSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ProvinciaSelectQuery,
+    ProvinciaSelectQueryVariables
+  >(ProvinciaSelectDocument, options);
+}
+export type ProvinciaSelectQueryHookResult = ReturnType<
+  typeof useProvinciaSelectQuery
+>;
+export type ProvinciaSelectLazyQueryHookResult = ReturnType<
+  typeof useProvinciaSelectLazyQuery
+>;
+export type ProvinciaSelectSuspenseQueryHookResult = ReturnType<
+  typeof useProvinciaSelectSuspenseQuery
+>;
+export type ProvinciaSelectQueryResult = Apollo.QueryResult<
+  ProvinciaSelectQuery,
+  ProvinciaSelectQueryVariables
+>;
+export const EstablecimientoSelectDocument = gql`
+  query EstablecimientoSelect(
+    $inputWhere: EstablecimientoFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    adminEstablecimientoCollection(where: $inputWhere, order: $inputOrder) {
+      ...establecimientoSelectFields
+    }
+  }
+  ${EstablecimientoSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useEstablecimientoSelectQuery__
+ *
+ * To run a query within a React component, call `useEstablecimientoSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEstablecimientoSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEstablecimientoSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useEstablecimientoSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >(EstablecimientoSelectDocument, options);
+}
+export function useEstablecimientoSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >(EstablecimientoSelectDocument, options);
+}
+export function useEstablecimientoSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    EstablecimientoSelectQuery,
+    EstablecimientoSelectQueryVariables
+  >(EstablecimientoSelectDocument, options);
+}
+export type EstablecimientoSelectQueryHookResult = ReturnType<
+  typeof useEstablecimientoSelectQuery
+>;
+export type EstablecimientoSelectLazyQueryHookResult = ReturnType<
+  typeof useEstablecimientoSelectLazyQuery
+>;
+export type EstablecimientoSelectSuspenseQueryHookResult = ReturnType<
+  typeof useEstablecimientoSelectSuspenseQuery
+>;
+export type EstablecimientoSelectQueryResult = Apollo.QueryResult<
+  EstablecimientoSelectQuery,
+  EstablecimientoSelectQueryVariables
+>;
 export const MenuUpdateDocument = gql`
   mutation MenuUpdate($inputUpdate: MenuUpdateInput!) {
-    menuUpdate(dataInput: $inputUpdate) {
+    adminMenuUpdate(dataInput: $inputUpdate) {
       ...menuCrudFields
     }
   }
@@ -2037,7 +2400,7 @@ export type MenuUpdateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const MenuCreateDocument = gql`
   mutation MenuCreate($inputCreate: MenuCreateInput!) {
-    menuCreate(dataInput: $inputCreate) {
+    adminMenuCreate(dataInput: $inputCreate) {
       ...menuCrudFields
     }
   }
@@ -2088,7 +2451,7 @@ export type MenuCreateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const MenuDeleteDocument = gql`
   mutation MenuDelete($id: Int!) {
-    menuDelete(id: $id) {
+    adminMenuDelete(id: $id) {
       ...menuCrudFields
     }
   }
@@ -2143,7 +2506,7 @@ export const MenuCollectionDocument = gql`
     $inputOrder: StringOrderInput
     $inputPagination: PaginationInput
   ) {
-    menuCollection(
+    adminMenuCollection(
       where: $inputWhere
       order: $inputOrder
       pagination: $inputPagination
@@ -2223,7 +2586,7 @@ export type MenuCollectionQueryResult = Apollo.QueryResult<
 >;
 export const MenuDocument = gql`
   query Menu($id: Int!) {
-    menu(id: $id) {
+    adminMenu(id: $id) {
       ...menuIdFields
     }
   }
@@ -2282,7 +2645,7 @@ export const MenuSelectDocument = gql`
     $inputWhere: MenuFilterInput
     $inputOrder: StringOrderInput
   ) {
-    menuCollection(where: $inputWhere, order: $inputOrder) {
+    adminMenuCollection(where: $inputWhere, order: $inputOrder) {
       ...menuSelectFields
     }
   }
@@ -2355,7 +2718,7 @@ export type MenuSelectQueryResult = Apollo.QueryResult<
 >;
 export const ModuloUpdateDocument = gql`
   mutation ModuloUpdate($inputUpdate: ModuloUpdateInput!) {
-    moduloUpdate(dataInput: $inputUpdate) {
+    adminModuloUpdate(dataInput: $inputUpdate) {
       ...moduloCrudFields
     }
   }
@@ -2406,7 +2769,7 @@ export type ModuloUpdateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const ModuloCreateDocument = gql`
   mutation ModuloCreate($inputCreate: ModuloCreateInput!) {
-    moduloCreate(dataInput: $inputCreate) {
+    adminModuloCreate(dataInput: $inputCreate) {
       ...moduloCrudFields
     }
   }
@@ -2457,7 +2820,7 @@ export type ModuloCreateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const ModuloDeleteDocument = gql`
   mutation ModuloDelete($id: Int!) {
-    moduloDelete(id: $id) {
+    adminModuloDelete(id: $id) {
       ...moduloCrudFields
     }
   }
@@ -2512,7 +2875,7 @@ export const ModuloCollectionDocument = gql`
     $inputOrder: StringOrderInput
     $inputPagination: PaginationInput
   ) {
-    moduloCollection(
+    adminModuloCollection(
       where: $inputWhere
       order: $inputOrder
       pagination: $inputPagination
@@ -2592,7 +2955,7 @@ export type ModuloCollectionQueryResult = Apollo.QueryResult<
 >;
 export const ModuloDocument = gql`
   query Modulo($id: Int!) {
-    modulo(id: $id) {
+    adminModulo(id: $id) {
       ...moduloIdFields
     }
   }
@@ -2660,7 +3023,7 @@ export const ModuloSelectDocument = gql`
     $inputWhere: ModuloFilterInput
     $inputOrder: StringOrderInput
   ) {
-    moduloCollection(where: $inputWhere, order: $inputOrder) {
+    adminModuloCollection(where: $inputWhere, order: $inputOrder) {
       ...moduloSelectFields
     }
   }
@@ -2735,7 +3098,7 @@ export type ModuloSelectQueryResult = Apollo.QueryResult<
 >;
 export const RolUpdateDocument = gql`
   mutation RolUpdate($inputUpdate: RolUpdateInput!) {
-    rolUpdate(dataInput: $inputUpdate) {
+    adminRolUpdate(dataInput: $inputUpdate) {
       ...rolCrudFields
     }
   }
@@ -2785,7 +3148,7 @@ export type RolUpdateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const RolCreateDocument = gql`
   mutation RolCreate($inputCreate: RolCreateInput!) {
-    rolCreate(dataInput: $inputCreate) {
+    adminRolCreate(dataInput: $inputCreate) {
       ...rolCrudFields
     }
   }
@@ -2835,7 +3198,7 @@ export type RolCreateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const RolDeleteDocument = gql`
   mutation RolDelete($id: Int!) {
-    rolDelete(id: $id) {
+    adminRolDelete(id: $id) {
       ...rolCrudFields
     }
   }
@@ -2889,7 +3252,7 @@ export const RolCollectionDocument = gql`
     $inputOrder: StringOrderInput
     $inputPagination: PaginationInput
   ) {
-    rolCollection(
+    adminRolCollection(
       where: $inputWhere
       order: $inputOrder
       pagination: $inputPagination
@@ -2969,7 +3332,7 @@ export type RolCollectionQueryResult = Apollo.QueryResult<
 >;
 export const RolDocument = gql`
   query Rol($id: Int!) {
-    rol(id: $id) {
+    adminRol(id: $id) {
       ...rolIdFields
     }
   }
@@ -3020,7 +3383,7 @@ export type RolSuspenseQueryHookResult = ReturnType<typeof useRolSuspenseQuery>;
 export type RolQueryResult = Apollo.QueryResult<RolQuery, RolQueryVariables>;
 export const RolSelectDocument = gql`
   query RolSelect($inputWhere: RolFilterInput, $inputOrder: StringOrderInput) {
-    rolCollection(where: $inputWhere, order: $inputOrder) {
+    adminRolCollection(where: $inputWhere, order: $inputOrder) {
       ...rolSelectFields
     }
   }
@@ -3090,7 +3453,7 @@ export type RolSelectQueryResult = Apollo.QueryResult<
 >;
 export const UsuarioUpdateDocument = gql`
   mutation UsuarioUpdate($inputUpdate: UsuarioUpdateInput!) {
-    usuarioUpdate(dataInput: $inputUpdate) {
+    adminUsuarioUpdate(dataInput: $inputUpdate) {
       ...usuarioCrudFields
     }
   }
@@ -3141,7 +3504,7 @@ export type UsuarioUpdateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const UsuarioCreateDocument = gql`
   mutation UsuarioCreate($inputCreate: UsuarioCreateInput!) {
-    usuarioCreate(dataInput: $inputCreate) {
+    adminUsuarioCreate(dataInput: $inputCreate) {
       ...usuarioCrudFields
     }
   }
@@ -3192,7 +3555,7 @@ export type UsuarioCreateMutationOptions = Apollo.BaseMutationOptions<
 >;
 export const UsuarioDeleteDocument = gql`
   mutation UsuarioDelete($id: Int!) {
-    usuarioDelete(id: $id) {
+    adminUsuarioDelete(id: $id) {
       ...usuarioCrudFields
     }
   }
@@ -3247,7 +3610,7 @@ export const UsuarioCollectionDocument = gql`
     $inputOrder: StringOrderInput
     $inputPagination: PaginationInput
   ) {
-    usuarioCollection(
+    adminUsuarioCollection(
       where: $inputWhere
       order: $inputOrder
       pagination: $inputPagination
@@ -3327,7 +3690,7 @@ export type UsuarioCollectionQueryResult = Apollo.QueryResult<
 >;
 export const UsuarioDocument = gql`
   query Usuario($id: Int!) {
-    usuario(id: $id) {
+    adminUsuario(id: $id) {
       ...usuarioIdFields
     }
   }
@@ -3395,8 +3758,9 @@ export const namedOperations = {
     Authlogin: "Authlogin",
     AuthPerfil: "AuthPerfil",
     AuthModuloPermisosId: "AuthModuloPermisosId",
-    AuthCambioPassword: "AuthCambioPassword",
     Authlogout: "Authlogout",
+    ProvinciaSelect: "ProvinciaSelect",
+    EstablecimientoSelect: "EstablecimientoSelect",
     MenuCollection: "MenuCollection",
     Menu: "Menu",
     MenuSelect: "MenuSelect",
@@ -3410,6 +3774,7 @@ export const namedOperations = {
     Usuario: "Usuario",
   },
   Mutation: {
+    AuthCambioPassword: "AuthCambioPassword",
     MenuUpdate: "MenuUpdate",
     MenuCreate: "MenuCreate",
     MenuDelete: "MenuDelete",
@@ -3429,6 +3794,8 @@ export const namedOperations = {
     authModuloPermisoIdFields: "authModuloPermisoIdFields",
     authCambioPassword: "authCambioPassword",
     authLogout: "authLogout",
+    provinciaSelectFields: "provinciaSelectFields",
+    establecimientoSelectFields: "establecimientoSelectFields",
     menuCollectionFields: "menuCollectionFields",
     menuIdFields: "menuIdFields",
     menuCrudFields: "menuCrudFields",

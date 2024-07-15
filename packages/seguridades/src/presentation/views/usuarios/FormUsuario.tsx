@@ -1,9 +1,9 @@
 import { useEffect,useState,useRef } from 'react'
 import { useLocation } from 'react-router-dom';
 import { setLabelTab } from '@presentation/actions';
-import { FormCore,TextInput,graphql,UtilsSpinner,MultiSelectInput } from "@bsc/library";
+import { FormCore,TextInput,graphql,UtilsSpinner,MultiSelectInput,SelectInput } from "@bsc/library";
 import { formUsuario} from '@application/components/form'
-import { processResetForm,processUsuarioQuery,processValueForm,processSubmitForm,processRolSelect } from "@application/services/usuarioService"
+import { processResetForm,processUsuarioQuery,processValueForm,processSubmitForm,processRolSelect,processProvinciaSelect,processEstablecimientoSelect } from "@application/services/usuarioService"
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 
@@ -33,13 +33,17 @@ export const FormUsuario = ({navigate}:{navigate:any}) => {
 	)  
 	const [ labels, setLabels ] = useState<{ btn1?: string, btn2?: string, icon?: boolean, btnload?: boolean,opt?:string }>({ btn1: '', btn2: '', icon: true, btnload: false,opt:'N' })
     const [ dataRolSelect,setDataRolSelect ] = useState<any[]>();
+	const [ dataProvinciaSelect,setDataProvinciaSelect ] = useState<any[]>();
+	const [ dataEstablecimientoSelect,setDataEstablecimientoSelect ] = useState<any[]>();
 
 	//Metodos Graphql
-	const { useUsuarioLazyQuery,useUsuarioCreateMutation,useUsuarioUpdateMutation,useRolSelectLazyQuery } = graphql
+	const { useUsuarioLazyQuery,useUsuarioCreateMutation,useUsuarioUpdateMutation,useRolSelectLazyQuery,useProvinciaSelectLazyQuery,useEstablecimientoSelectLazyQuery } = graphql
   	const [ getUsuarioLazyQuery ] = useUsuarioLazyQuery();
 	const [ usuarioCreateMutation ] = useUsuarioCreateMutation();
 	const [ usuarioUpdateMutation ] = useUsuarioUpdateMutation();
     const [ getRolSelectLazyQuery,{loading} ] = useRolSelectLazyQuery();
+	const [ getProvinciaSelectLazyQuery,{loading:loadingPro} ] = useProvinciaSelectLazyQuery();
+	const [ getEstablecimientoSelectLazyQuery,{loading:loadingEsta} ] = useEstablecimientoSelectLazyQuery();
 
 	const onSwitch=(status:any)=>{
 		setEstadoForm({...estadoForm,etiqueta:(status)?'Activo':'Inactivo'});  
@@ -53,11 +57,14 @@ export const FormUsuario = ({navigate}:{navigate:any}) => {
 	},[usuarioQuery])
 
 	useEffect(()=>{	
-        processRolSelect({getRolSelectLazyQuery,setDataRolSelect,cache,dispatch})	
+        processRolSelect({getRolSelectLazyQuery,setDataRolSelect,cache,dispatch});
+		processProvinciaSelect({getProvinciaSelectLazyQuery,setDataProvinciaSelect,cache,dispatch});
+		processEstablecimientoSelect({getEstablecimientoSelectLazyQuery,setDataEstablecimientoSelect,cache,dispatch});
+
 		if(state){
 			let dataId=state?.dataRecord?.dataGrid;	
 			if(dataId?.id){
-				dispatch(setLabelTab({labelNew:'Editar Usuario',labelGrid:'Datos Usuario',iconNew:'pi pi-pencil',iconGrid:'pi pi-th-large'}));
+				dispatch(setLabelTab({...labelTab,labelNew:'Editar Usuario',iconNew:'edit_square'}));
 				processUsuarioQuery({getUsuarioLazyQuery,setUsuarioQuery,query:{id:parseInt(dataId?.id)},setStatusLoading});
 				setLabels({ ...labels,btn1: 'Cancelar', btn2: 'Editar',opt:'E'});	
 			}		
@@ -88,23 +95,56 @@ export const FormUsuario = ({navigate}:{navigate:any}) => {
 			<div className="formgrid grid">
                 <div className='field col-12 md:col-4 mb-4'>
                     <TextInput disabled={false} label='Nombres *' name='nombres_usuario' placeholder="Ingrese el nombre" methods={methods} 
-						keyfilter='alphanum' maxLength={20}
+						maxLength={20}
 					/>
                 </div>
                 <div className='field col-12 md:col-4'>
                 <TextInput disabled={false} label='Apellidos *' name='apellidos_usuario' placeholder="Ingrese el apellido" methods={methods} 
-						keyfilter='alphanum' maxLength={20}
+					maxLength={20}
 					/>
                 </div>  
 				<div className='field col-12 md:col-4'>
 					<TextInput disabled={false} label='Usuario *' name='username_usuario' placeholder="Ingrese el usuario" methods={methods} maxLength={30}/>
-				</div>              
-            </div>
-            <div className="formgrid grid mb-2">				
+				</div>   
 				<div className='field col-12 md:col-4'>
                     <TextInput disabled={false} label='Correo *' name='correo_usuario' placeholder="Ingrese el correo" methods={methods} 
                     maxLength={50} keyfilter='email' />
-				</div>
+				</div>				
+				<div className='field col-12 md:col-4'>
+					<SelectInput 
+							data={dataEstablecimientoSelect} 
+							label={'Empresa *'} 
+							name='idEstablecimiento_usuario' 
+							methods={methods} 
+							isDisabled={false}     
+							placeholder='Seleccione una Empresa'  
+							isObject    
+							loading={loadingEsta}        
+						/>
+                </div>
+				<div className='field col-12 md:col-4'>
+					<SelectInput 
+							data={dataProvinciaSelect} 
+							label={'Provincia *'} 
+							name='idProvincia_usuario' 
+							methods={methods} 
+							isDisabled={false}     
+							placeholder='Seleccione una Provincia'  
+							isObject    
+							loading={loadingPro}        
+						/>
+                </div>    
+				
+            </div>
+            
+          
+			<div className="formgrid grid mb-2">				
+				{(labels.opt =='N')&&
+                    <div className='field col-12 md:col-4'>                    
+						<TextInput disabled={false} label='Contraseña *' name='contrasenia_usuario' placeholder="Ingrese la contraseña" methods={methods} 
+						optInput='P' feedback  toggleMask/>
+                    </div>                
+            	}
 				<div className='field col-12 md:col-8'>
                     <MultiSelectInput 
                             data={dataRolSelect} 
@@ -118,17 +158,6 @@ export const FormUsuario = ({navigate}:{navigate:any}) => {
                     />
 				</div>				
 			</div>
-            {(labels.opt =='N')&&
-                <div className="formgrid grid mb-4">
-                    <div className='field col-12 md:col-4'>
-                    
-                                <TextInput disabled={false} label='Contraseña *' name='contrasenia_usuario' placeholder="Ingrese la contraseña" methods={methods} 
-                                optInput='P' feedback  toggleMask/>
-                        
-                            
-                    </div>
-                </div>
-            }
 			</FormCore>
 		</>
 	)

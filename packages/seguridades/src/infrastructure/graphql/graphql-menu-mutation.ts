@@ -5,7 +5,7 @@ export const UPDATE_MENU=()=>{
     return gql`
         ${MENU_CRUD_FIELDS}
         mutation MenuUpdate($inputUpdate: MenuUpdateInput!) {
-            menuUpdate(dataInput: $inputUpdate) {
+            adminMenuUpdate(dataInput: $inputUpdate) {
                 ... menuCrudFields
             }
         }
@@ -16,7 +16,7 @@ export const CREATE_MENU =()=>{
     return gql`
         ${MENU_CRUD_FIELDS}
         mutation MenuCreate($inputCreate: MenuCreateInput!) {
-            menuCreate(dataInput: $inputCreate) {
+            adminMenuCreate(dataInput: $inputCreate) {
                 ... menuCrudFields
             }
         }
@@ -27,7 +27,7 @@ export const DELETE_MENU =()=>{
     return gql`
     ${MENU_CRUD_FIELDS}
     mutation MenuDelete($id:Int!){
-        menuDelete( id:$id){
+        adminMenuDelete( id:$id){
             ...menuCrudFields
         }
     }

@@ -2,7 +2,8 @@ import { FC,ReactNode,useEffect,useState,useRef} from 'react'
 import { Header } from '@components/layout/Header';
 import { Sidebar } from '@components/layout/Sidebar';
 import { MainLayout } from '@components/layout/MainLayout';
-import { RolLayout} from '@components/layout/RolLayout'
+import { RolLayout} from '@components/layout/RolLayout';
+import { PasswordLayout } from '@components/layout/PasswordLayout'
 import { useNavigate } from "react-router-dom";
 import { Route, Routes } from 'react-router-dom';
 import { LoginLayout } from '@components/layout/LoginLayout';
@@ -30,6 +31,11 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
     {
         active:boolean,header:string,opt?:string,closable:boolean,maximizable:boolean
     }>({active:false,header:'',opt:'',closable:false,maximizable:true});
+    
+    const [ visibleModalPass, setVisibleModalPass] = useState<
+    {
+        active:boolean,header:string,opt?:string,closable:boolean,maximizable:boolean
+    }>({active:false,header:'',opt:'',closable:false,maximizable:true});
 
     //Gestor estados Redux
     const { loadView }:any= useSelector<RootState>( (state) => state.actionShared);
@@ -42,6 +48,7 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
         if(initTokenUser && !sessionStorage.getItem('dataRolUser')){
             processAuthPerfil({setAuthPerfilLazyQuery,navigate});
             setVisibleModalAux({active:true,header:'Rol Usuario',closable:false,maximizable:true});
+            setVisibleModalPass({active:false,header:'',closable:false,maximizable:true});
         }
     },[initTokenUser])
 
@@ -52,11 +59,11 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
     return (
         <>
             <UtilsSpinner visible={loadView}/>
-            <Toast ref={toast} position="bottom-center"/>
+            <Toast ref={toast} position="bottom-center" pt={{content:{className:'border-round-lg shadow-2'},message:{className:'text-sm font-semibold'}}} />
             <div className="min-h-full ">    
                 {(initTokenUser)?
                     <>              
-                        <Header setVisibleModalAux={setVisibleModalAux} path={path} toast={toast}></Header>                
+                        <Header setVisibleModalAux={setVisibleModalAux} path={path} toast={toast} setVisibleModalPass={setVisibleModalPass}></Header>                
                         <div className='hidden xl:flex fixed border-round-lg overflow-y-auto bg-white ' style={{height:'calc(100vh - 9rem)',top:'8rem',left:'1rem',zIndex:'999'}} >
                             <Sidebar></Sidebar>   
                         </div> 
@@ -75,6 +82,10 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
                         </div>
                         {(visibleModalAux.active)&&
                             <RolLayout setVisible={setVisibleModalAux} visibleModal={visibleModalAux} toast={toast}/>
+                        }
+                        {(visibleModalPass.active)&&
+                            <PasswordLayout setVisible={setVisibleModalPass} visibleModal={visibleModalPass} toast={toast}/>
+
                         }
                     
                     </>:<LoginLayout></LoginLayout>

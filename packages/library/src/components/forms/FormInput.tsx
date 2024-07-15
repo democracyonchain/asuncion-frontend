@@ -518,10 +518,10 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
                 if(Array.isArray(data)){
                     setDataSelect(data)
                 }else{
-                    setDataSelect([{id:null,nombre:'--Seleccione--'}])
+                    setDataSelect([])
                 }
             }else{
-                setDataSelect([{id:null,nombre:'--Seleccione--'}])
+                setDataSelect([])
             }
         },[data])
 
@@ -533,7 +533,7 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
                 control={control}								
                 render={({ field, fieldState }) => (
                     <>
-                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600'}`}>{label}</label> 
+                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm font-semibold text-bluegray-600'}`}>{label}</label> 
                         <br></br>                           
                         <Dropdown 
                             id={field.name}
@@ -591,7 +591,7 @@ export const EditorInput =({readOnly=false,style={ height: '320px' },methods,lab
                 control={control}								
                 render={({ field, fieldState }) => (
                     <>
-                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600'}`}>{label}</label>                            
+                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600 font-semibold'}`}>{label}</label>                            
                         <Editor value={field.value} onTextChange={(e: EditorTextChangeEvent) => field.onChange(e.textValue)} style={style} readOnly={readOnly}/>						
                     
                         {(errors[field.name]?.message)&&
@@ -674,7 +674,7 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
         IReactHookFormSelectProps)=> {
 
         const { formState: { errors }, control} = methods;
-        const [ dataSelect, setDataSelect ] = useState<{code:any,name:any}[]>([])
+        const [ dataSelect, setDataSelect ] = useState<{id:any,nombre:any}[]>([])
         
      
         useEffect(()=>{
@@ -682,10 +682,10 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
                 if(Array.isArray(data)){
                     setDataSelect(data)
                 }else{
-                    setDataSelect([{code:null,name:'--Seleccione--'}])
+                    setDataSelect([{id:null,nombre:'--Seleccione--'}])
                 }
             }else{
-                setDataSelect([{code:null,name:'--Seleccione--'}])
+                setDataSelect([{id:null,nombre:'--Seleccione--'}])
             }
         },[data])
 
@@ -695,10 +695,9 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
             <Controller
                 name={name}
                 control={control}								
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                     <>
-                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600 font-semibold'}`}>{label}</label>                            
-                        			
+                        <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-bluegray-600 font-semibold'}`}>{label}</label>                                                    			
                         <MultiSelect id={field.name} name={name} value={field.value} options={dataSelect} disabled={isDisabled} optionValue='id'
                             onChange={(e: MultiSelectChangeEvent) => field.onChange(e.value)} optionLabel="nombre" placeholder={placeholder} 
                             maxSelectedLabels={3} className="w-full p-inputtext-sm text-sm" filter  loading={loading}
@@ -753,7 +752,7 @@ return (
                         onChange={(e:any)=>{field.onChange(e.value);setValueRadio(e.value)}}                       
                     />		
 
-                    <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error ml-2':'text-sm text-bluegray-600 ml-2 font-medium hover:bg-gray-100 hover:text-primary p-2'}`}>{label} </label>  
+                    <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error ml-2':'text-sm text-bluegray-600 ml-2 font-semibold hover:bg-gray-100 hover:text-primary p-2'}`}>{label} </label>  
                     
                     {(errors[field.name]?.message)&&
                         <small color="red" className="p-error text-xs" id={field.name}>

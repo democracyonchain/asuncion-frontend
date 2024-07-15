@@ -11,7 +11,7 @@ export const GET_MODULO_COLLECTION =()=>{
                 $inputOrder:StringOrderInput,
                 $inputPagination:PaginationInput
             ){
-                moduloCollection(
+                adminModuloCollection(
                     where: $inputWhere
                     order: $inputOrder
                     pagination: $inputPagination
@@ -28,7 +28,7 @@ export const GET_MODULO_ID = ()=>{
         ${MODULO_ID_FIELDS}
         query Modulo($id:Int!)
         {
-            modulo(id:$id){
+            adminModulo(id:$id){
                 ...moduloIdFields
             }
         }
@@ -46,7 +46,7 @@ export const GET_MODULO_SELECT =()=>{
                 $inputWhere: ModuloFilterInput,
                 $inputOrder:StringOrderInput,               
             ){
-                moduloCollection(
+                adminModuloCollection(
                     where: $inputWhere
                     order: $inputOrder                    
                 ){

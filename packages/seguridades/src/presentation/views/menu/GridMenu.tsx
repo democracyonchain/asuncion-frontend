@@ -42,7 +42,7 @@ export const GridMenu = ({navigate}:{navigate:any}) => {
 	useEffect(()=>{
 		if(!message){
 			processMenuCollection({getMenuCollectionLazyQuery,setDataMenuCollection,limit:pageInfo?.limit,offset:pageInfo?.offset,cache,dispatch});
-			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Menu',iconNew:'pi pi-clone'}));
+			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Menu',iconNew:'post_add'}));
 		}		
 	},[])
 

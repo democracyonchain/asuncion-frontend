@@ -22,7 +22,7 @@ export const processUsuarioCollection =(parameters:{getUsuarioCollectionLazyQuer
         },
         fetchPolicy: parameters.cache,
         onCompleted:(c:any)=>{            
-            parameters.setDataUsuarioCollection(c?.usuarioCollection);
+            parameters.setDataUsuarioCollection(c?.adminUsuarioCollection);
             parameters.dispatch(setCache({cache:'cache-first'}))           
         },onError:(error:any)=>{            
             parameters.setDataUsuarioCollection([]);
@@ -39,11 +39,35 @@ export const processRolSelect =(parameters:{getRolSelectLazyQuery:any,setDataRol
                 estado: { is: true }
             }
         },
-        fetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-and-network',
         onCompleted:(c:any)=>{            
-            parameters.setDataRolSelect(c?.rolCollection?.data);          
+            parameters.setDataRolSelect(c?.adminRolCollection?.data);          
         },onError:(error:any)=>{            
             parameters.setDataRolSelect([]);
+        }
+    })
+}
+
+export const processProvinciaSelect =(parameters:{getProvinciaSelectLazyQuery:any,setDataProvinciaSelect:any,cache:string,dispatch:any})=>{
+    
+    parameters.getProvinciaSelectLazyQuery({       
+        fetchPolicy: 'cache-first',
+        onCompleted:(c:any)=>{            
+            parameters.setDataProvinciaSelect(c?.adminProvinciaCollection?.data);          
+        },onError:(error:any)=>{            
+            parameters.setDataProvinciaSelect([]);
+        }
+    })
+}
+
+export const processEstablecimientoSelect =(parameters:{getEstablecimientoSelectLazyQuery:any,setDataEstablecimientoSelect:any,cache:string,dispatch:any})=>{
+    
+    parameters.getEstablecimientoSelectLazyQuery({       
+        fetchPolicy: 'cache-first',
+        onCompleted:(c:any)=>{            
+            parameters.setDataEstablecimientoSelect(c?.adminEstablecimientoCollection?.data);          
+        },onError:(error:any)=>{            
+            parameters.setDataEstablecimientoSelect([]);
         }
     })
 }
@@ -54,9 +78,10 @@ export const processUsuarioQuery =(parameters:{getUsuarioLazyQuery:any,setUsuari
         variables:{
             id: parameters.query?.id
         },
+        fetchPolicy:'cache-and-network',
         onCompleted:(c:any)=>{              
             parameters.setStatusLoading(false);
-            parameters.setUsuarioQuery(c.menu);           
+            parameters.setUsuarioQuery(c.adminUsuario);           
         },onError:(error:any)=>{
             parameters.setUsuarioQuery([]);
             parameters.setStatusLoading(false)
@@ -65,31 +90,37 @@ export const processUsuarioQuery =(parameters:{getUsuarioLazyQuery:any,setUsuari
 }
 
 
-
-
 export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:any,labelTab:any,setLabelTab:any,navigate:any})=>{
     parameters.clearErrors(); 
     parameters.reset({
-        titulo_menu:'',
-        idModulo_menu:'',
-        url_menu:'',
-        icono_menu:'',
-        color_menu:'',
-        id_menu:''
+        nombres_usuario:'',
+        apellidos_usuario:'',
+        username_usuario:'',
+        correo_usuario:'',
+        idRol_usuario:'',
+        contrasenia_usuario:'',
+        estado_usuario:true
     });
     parameters.navigate("new")
-    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Menu',iconNew:'pi pi-clone'}));
+    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Usuario',iconNew:'post_add'}));
 }
 
 export const processValueForm=(parameters:{setValue:any,usuarioQuery:any,setEstadoForm:any})=>{
    
-    parameters.setValue('titulo_menu',parameters.usuarioQuery?.titulo);
-    parameters.setValue('idModulo_menu',{id:parameters.usuarioQuery?.modulo.id});
-    parameters.setValue('url_menu',parameters.usuarioQuery?.url);
-    parameters.setValue('icono_menu',parameters.usuarioQuery?.icono);
-    parameters.setValue('orden_menu',parameters.usuarioQuery?.orden);
-    parameters.setValue('estado_menu',parameters.usuarioQuery?.estado);
-    parameters.setValue('id_menu',parameters.usuarioQuery?.id);
+    parameters.setValue('nombres_usuario',parameters.usuarioQuery?.nombres);
+    parameters.setValue('apellidos_usuario',parameters.usuarioQuery?.apellidos);
+    parameters.setValue('username_usuario',parameters.usuarioQuery?.username);
+    parameters.setValue('correo_usuario',parameters.usuarioQuery?.email);
+    parameters.setValue('estado_usuario',parameters.usuarioQuery?.estado);
+    parameters.setValue('idRol_usuario',parameters.usuarioQuery?.rolusuario?.map((data:any)=>{		       		
+        return(
+            data.rol?.id
+        )         
+    }));
+    parameters.setValue('idProvincia_usuario',{id:parameters.usuarioQuery?.provincia?.id});
+    parameters.setValue('idEstablecimiento_usuario',{id:parameters.usuarioQuery?.establecimiento?.id});
+    parameters.setValue('contrasenia_usuario',parameters.usuarioQuery?.estado);
+    parameters.setValue('id_usuario',parameters.usuarioQuery?.id);
     parameters.setEstadoForm({status:false,etiqueta:(parameters.usuarioQuery?.estado)?'Activo':'Inactivo'})
 }
 
@@ -127,21 +158,25 @@ export const processSubmitForm=(
 
 const processCreateUsuario=(create:{data:any,toast:any,usuarioCreateMutation:any,navigate:any,dispatch:any})=>{
     
-    const dataMenu=create.data
+    const dataUsuario=create.data
     create.usuarioCreateMutation({
        variables:{
            inputCreate: {
-               modulo_id: dataMenu.idModulo_menu.id, 
-               orden: dataMenu.orden_menu, 
-               icono: dataMenu.icono_menu, 
-               titulo: dataMenu.titulo_menu, 
-               url: dataMenu.url_menu,                
+                apellidos: dataUsuario.apellidos_usuario, 
+                email: dataUsuario.correo_usuario, 
+                estado: dataUsuario.estado_usuario, 
+                nombres: dataUsuario.nombres_usuario, 
+                password: dataUsuario.contrasenia_usuario,
+                provincia_id: dataUsuario.idProvincia_usuario.id,
+                roles: dataUsuario.idRol_usuario,
+                username: dataUsuario.username_usuario,               
+                establecimiento_id:dataUsuario.idEstablecimiento_usuario
            }
        },
        onCompleted:(c:any)=>{      
            create.navigate("record");       
            create.dispatch(setInitial({initial:1}))
-           create.dispatch(setMessage({message:c.usuarioCreate?.message}))
+           create.dispatch(setMessage({message:c.adminUsuarioCreate?.message}))
        },onError:(error:any)=>{           
            create.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });   
        }
@@ -149,22 +184,24 @@ const processCreateUsuario=(create:{data:any,toast:any,usuarioCreateMutation:any
 }
 
 const processUpdateUsuario=(update:{data:any,toast:any,usuarioUpdateMutation:any,navigate:any,dispatch:any})=>{
-    const dataMenu=update.data
+    const dataUsuario=update.data
     update.usuarioUpdateMutation({
         variables:{
             inputUpdate: {
-                id: dataMenu.id_menu,
-                modulo_id: dataMenu.idModulo_menu.id, 
-                orden: dataMenu.orden_menu, 
-                icono: dataMenu.icono_menu, 
-                titulo: dataMenu.titulo_menu, 
-                url: dataMenu.url_menu,
-                estado: dataMenu.estado_menu,
+                id: dataUsuario.id_usuario,
+                apellidos: dataUsuario.apellidos_usuario, 
+                email: dataUsuario.correo_usuario, 
+                estado: dataUsuario.estado_usuario, 
+                nombres: dataUsuario.nombres_usuario,                
+                provincia_id: dataUsuario.idProvincia_usuario.id,
+                roles: dataUsuario.idRol_usuario,
+                username: dataUsuario.username_usuario,
+                establecimiento_id:dataUsuario.idEstablecimiento_usuario.establecimiento_id
            }
         },onCompleted:(c:any)=>{      
             update.navigate("record");
             update.dispatch(setInitial({initial:1}))
-            update.dispatch(setMessage({message:c.usuarioUpdate?.message}))
+            update.dispatch(setMessage({message:c.adminUsuarioUpdate?.message}))
 
         },onError:(error:any)=>{
             update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });              
@@ -173,15 +210,15 @@ const processUpdateUsuario=(update:{data:any,toast:any,usuarioUpdateMutation:any
 }
 
 export const processEliminarUsuario=(eliminar:{data:any,toast:any,usuarioDeleteMutation:any,navigate:any,dispatch:any})=>{
-    const dataMenu=eliminar.data
+    const dataUsuario=eliminar.data
     eliminar.usuarioDeleteMutation({
         variables:{
-            id: dataMenu.id,
+            id: dataUsuario.id,
         },
         onCompleted:(c:any)=>{
             eliminar.navigate("record");       
             eliminar.dispatch(setInitial({initial:1}));
-            eliminar.dispatch(setMessage({message:c.menuDelete?.message}));                                              
+            eliminar.dispatch(setMessage({message:c.adminUsuarioDelete?.message}));                                              
         },onError:(error:any)=>{
             eliminar.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });              
         }

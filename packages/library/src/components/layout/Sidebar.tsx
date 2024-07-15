@@ -21,8 +21,8 @@ export const Sidebar = () => {
 
 
     return (
-        <>           
-            <Menu model={menuItems} className="w-19rem p-4 border-none "  pt={{menuitem:{'className':'text-sm text-gray-600 '},submenuHeader:{'className':''}}}/>
+        <>                  
+            <Menu model={menuItems} className="w-17rem p-4 border-none"  pt={{menuitem:{'className':'text-sm text-gray-600 '},submenuHeader:{'className':''}}}/>
         </>       
     )
 }

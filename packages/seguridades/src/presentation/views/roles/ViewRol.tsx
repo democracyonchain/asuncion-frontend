@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { graphql,UtilsSpinner,UtilsPanel } from "@bsc/library";
 import { processRolQuery } from "@application/services/rolService";
 import { Divider } from 'primereact/divider';
-import { Message } from 'primereact/message';
+import Icon from '@mui/material/Icon';
 export const ViewRol = ({dataGrid}:{dataGrid:any}) => {
         //Metodos Graphql
 	const { useRolLazyQuery } = graphql
@@ -26,7 +26,7 @@ export const ViewRol = ({dataGrid}:{dataGrid:any}) => {
             <div className='field col-12 md:col-12 flex flex-row-reverse flex-wrap'>
                 <Divider align="right" className='m-2'>
                         <div className="inline-flex align-items-center text-sm">                    
-                            <b>Estado |	{(rolQuery?.estado)?'Activo':'Inactivo'}</b>
+                            <b className={`${(rolQuery?.estado)?'text-blue-500':'text-red-500' } p-2 text-sm font-semibold`}>{(rolQuery?.estado)?'Activo':'Inactivo'}</b>
                         </div>
                 </Divider>
             </div>
@@ -60,58 +60,58 @@ export const ViewRol = ({dataGrid}:{dataGrid:any}) => {
                                     <div className='field col-12 md:col-4'>
                                         <Divider align="left" className='m-2'>
                                                 <div className="inline-flex align-items-center text-sm">                    
-                                                <i className="pi pi-plus mr-2"></i>  
+                                                <Icon className='mr-2'>add</Icon>  
                                                 <b>Crear :</b>
                                                 </div>
                                         </Divider>
                                         <span className={`text-sm ml-6 font-semibold ${(data?.crear)?'text-blue-400':'text-red-500'}`}>{
-                                            (data?.crear)?<i className='pi pi-check'></i>:<i className='pi pi-times'></i>}
+                                            (data?.crear)? <Icon>done_outline</Icon>:<Icon>block</Icon>}
                                         </span>
                                     </div>
                                     <div className='field col-6 md:col-4'>
                                         <Divider align="left" className='m-2'>
                                                 <div className="inline-flex align-items-center text-sm">                    
-                                                <i className="pi pi-pencil mr-2"></i>
+                                                <Icon className='mr-2'>edit_square</Icon> 
                                                 <b>Editar :</b>
                                                 </div>
                                         </Divider>
                                         <span className={`text-sm ml-6 font-semibold ${(data?.editar)?'text-blue-400':'text-red-500'}`}>{
-                                            (data?.editar)?<i className='pi pi-check'></i>:<i className='pi pi-times'></i>}
+                                            (data?.editar)?<Icon>done_outline</Icon>:<Icon>block</Icon>}
                                         </span>
                                     </div>
                                     <div className='field col-12 md:col-4'>
                                         <Divider align="left" className='m-2'>
                                                 <div className="inline-flex align-items-center text-sm">                    
-                                                <i className="pi pi-trash mr-2"></i>
+                                                <Icon className='mr-2'>delete</Icon> 
                                                 <b>Eliminar :</b>
                                                 </div>
                                         </Divider>
                                         <span className={`text-sm ml-6 font-semibold ${(data?.eliminar)?'text-blue-400':'text-red-500'}`}>{
-                                            (data?.eliminar)?<i className='pi pi-check'></i>:<i className='pi pi-times'></i>}
+                                            (data?.eliminar)?<Icon>done_outline</Icon>:<Icon>block</Icon>}
                                         </span>
                                     </div>
                                 </div>
                                 <div className="formgrid grid">	
                                     <div className='field col-12 md:col-4'>
                                         <Divider align="left" className='m-2'>
-                                                <div className="inline-flex align-items-center text-sm">                    
-                                                <i className="pi pi-file mr-2"></i>
+                                                <div className="inline-flex align-items-center text-sm">                                                                   
+                                                <Icon className='mr-2'>draft</Icon>
                                                 <b>Leer :</b>
                                                 </div>
                                         </Divider>
                                         <span className={`text-sm ml-6 font-semibold ${(data?.leer)?'text-blue-400':'text-red-500'}`}>{
-                                            (data?.leer)?<i className='pi pi-check'></i>:<i className='pi pi-times'></i>}
+                                            (data?.leer)?<Icon>done_outline</Icon>:<Icon>block</Icon>}
                                         </span>
                                     </div>
                                     <div className='field col-6 md:col-4'>
                                         <Divider align="left" className='m-2'>
                                                 <div className="inline-flex align-items-center text-sm">                    
-                                                <i className="pi pi-print mr-2"></i>
+                                                <Icon className='mr-2'>lab_profile</Icon>
                                                 <b>Imprimir :</b>
                                                 </div>
                                         </Divider>
                                         <span className={`text-sm ml-6 font-semibold ${(data?.imprimir)?'text-blue-400':'text-red-500'}`}>{
-                                            (data?.imprimir)?<i className='pi pi-check'></i>:<i className='pi pi-times'></i>}
+                                            (data?.imprimir)?<Icon>done_outline</Icon>:<Icon>block</Icon>}
                                         </span>
                                     </div>
                                 </div>

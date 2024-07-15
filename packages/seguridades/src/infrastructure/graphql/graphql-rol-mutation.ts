@@ -5,7 +5,7 @@ export const UPDATE_MENU=()=>{
     return gql`
         ${ROL_CRUD_FIELDS}
         mutation RolUpdate($inputUpdate: RolUpdateInput!) {
-            rolUpdate(dataInput: $inputUpdate) {
+            adminRolUpdate(dataInput: $inputUpdate) {
                 ... rolCrudFields
             }
         }
@@ -16,7 +16,7 @@ export const CREATE_MENU =()=>{
     return gql`
         ${ROL_CRUD_FIELDS}
         mutation RolCreate($inputCreate: RolCreateInput!) {
-            rolCreate(dataInput: $inputCreate) {
+            adminRolCreate(dataInput: $inputCreate) {
                 ... rolCrudFields
             }
         }
@@ -27,7 +27,7 @@ export const DELETE_MENU =()=>{
     return gql`
     ${ROL_CRUD_FIELDS}
     mutation RolDelete($id:Int!){
-        rolDelete( id:$id){
+        adminRolDelete( id:$id){
             ...rolCrudFields
         }
     }

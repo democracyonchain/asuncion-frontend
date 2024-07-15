@@ -1,5 +1,6 @@
 import { setEtiqueta,setLoadView } from '@store/slices/';
 import { Badge } from 'primereact/badge';
+import Icon from '@mui/material/Icon';
 export const onClikSaveAuth =(
     metodos:{dataForm:any,dispatch:any,setAuthloginLazyQuery:any,trigger?:any,navigate:any}
 )=>{
@@ -13,15 +14,14 @@ export const onClikSaveAuth =(
                 username:metodos.dataForm?.username_login
             },
             fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{                
+            onCompleted:(c:any)=>{             
                 metodos.dispatch(setLoadView(false));
-                localStorage.setItem("tokenUser",c?.authlogin?.token);
+                localStorage.setItem("tokenUser",c?.authLogin?.token);
                 metodos.navigate("/app/seguridades");
-            },onError:(error:any)=>{                
+            },onError:(error:any)=>{    
                 metodos.dispatch(setEtiqueta({mensaje:error.message,atributo:true}))
                 metodos.dispatch(setLoadView(false));
             }
-
         }
     )
 }
@@ -37,7 +37,7 @@ export const processAuthPerfil =(parameters:{setAuthPerfilLazyQuery:any,navigate
                 
                     {
                         'nombres':dataAuthPerfil.nombres+ ' ' +dataAuthPerfil.apellidos,
-                        'email':dataAuthPerfil.email
+                        'email':dataAuthPerfil.email, 'username':dataAuthPerfil.username
                     }
                 
             ) as any);
@@ -68,6 +68,25 @@ export const onSubmitRol=(parameters:{data:any,getRolSession:any,setVisible:any,
     processAuthModuloPermisosId(parameters,dataAuxRol);
 }
 
+export const onSubmitPass=(parameters:{data:any,setVisible:any,toast:any,setAuthAuthCambioPasswordLazyQuery:any,dispatch:any,navigate:any,setAuthlogoutLazyQuery:any})=>{
+    parameters.dispatch(setLoadView(true));
+    parameters.setAuthAuthCambioPasswordLazyQuery(
+        {
+            variables:{
+                password:parameters.data?.contrasenia_login,               
+            },
+            onCompleted:(c:any)=>{                
+                parameters.dispatch(setLoadView(false));
+                parameters.toast.current.show({ icon:'pi pi-check',severity: 'info', summary: 'Atención',  detail: c?.authCambioPassword.message,life: 4000});                     
+                processAuthLogout({setAuthlogoutLazyQuery:parameters.setAuthlogoutLazyQuery,dispatch:parameters.dispatch,navigate:parameters.navigate,toast:parameters.toast})
+            },onError:(error:any)=>{                
+                parameters.dispatch(setEtiqueta({mensaje:error.message,atributo:true}))
+                parameters.dispatch(setLoadView(false));
+            }
+
+        }
+    )
+}
 export const processAuthModuloPermisosId=(parameters:any,dataAuxRol:any)=>{
     
     parameters.dispatch(setLoadView(true));
@@ -85,7 +104,7 @@ export const processAuthModuloPermisosId=(parameters:any,dataAuxRol:any)=>{
                 parameters.setVisible({active:false,header:'',closable:false,maximizable:true});
                 parameters.navigate("/app/seguridades");
 
-                parameters.toast.current.show({ icon:'pi pi-info-circle',severity: 'info', summary: 'Atención', 
+                parameters.toast.current.show({ icon:'pi pi-check',severity: 'info', summary: 'Atención', 
                     content: (props:any)=>(
                         <div className="flex flex-column align-items-left" style={{ flex: '1' }}>                       
                             <div className="flex align-items-center gap-2 mb-3">
@@ -115,9 +134,9 @@ export const coreMenuModulo=(parameters:{dataAuxMenu:any,dataMenuUser:any,naviga
 
     const itemRenderer = (item:any) => (
         <div className='p-menuitem-content'>
-            <a className="flex align-items-center p-menuitem-link hover:text-primary" onClick={()=>{item.command()}}>
-                <span className={item.icon} />
-                <span className="mx-2 font-medium">{item.label}</span>
+            <a className="flex align-items-center p-menuitem-link hover:text-primary" onClick={()=>{item.command()}}>                              
+                <Icon fontSize="medium">{item.icon}</Icon>
+                <span className="mx-2 font-bold">{item.label}</span>
                 {item.badge && <Badge className="ml-auto" value={item.badge} />}
                 {item.shortcut && <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{item.shortcut}</span>}
             </a>
@@ -128,7 +147,7 @@ export const coreMenuModulo=(parameters:{dataAuxMenu:any,dataMenuUser:any,naviga
         {
             template: () => {
                 return (
-                    <span className="inline-flex align-items-center gap-2">
+                    <span className="inline-flex align-items-center gap-2 bg-primary-50 p-1 border-round-md">
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
                             <path fill="#4fc3f7" d="M44.945,21.453L26.547,3.055c-1.404-1.404-3.689-1.404-5.094,0L3.055,21.453	c-1.404,1.404-1.404,3.689,0,5.094l18.398,18.398c0.702,0.702,1.625,1.053,2.547,1.053s1.845-0.351,2.547-1.053l18.398-18.398	C46.349,25.143,46.349,22.857,44.945,21.453z M24,29l-5-5l5-5l5,5L24,29z">
                             </path>

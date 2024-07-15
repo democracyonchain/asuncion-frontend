@@ -5,7 +5,7 @@ export const UPDATE_MODULO=()=>{
     return gql`
         ${MODULO_CRUD_FIELDS}
         mutation ModuloUpdate($inputUpdate: ModuloUpdateInput!) {
-            moduloUpdate(dataInput: $inputUpdate) {
+            adminModuloUpdate(dataInput: $inputUpdate) {
                 ... moduloCrudFields
             }
         }
@@ -16,7 +16,7 @@ export const CREATE_MODULO =()=>{
     return gql`
         ${MODULO_CRUD_FIELDS}
         mutation ModuloCreate($inputCreate: ModuloCreateInput!) {
-            moduloCreate(dataInput: $inputCreate) {
+            adminModuloCreate(dataInput: $inputCreate) {
                 ... moduloCrudFields
             }
         }
@@ -27,7 +27,7 @@ export const DELETE_MODULO =()=>{
     return gql`
     ${MODULO_CRUD_FIELDS}
     mutation ModuloDelete($id:Int!){
-        moduloDelete( id:$id){
+        adminModuloDelete( id:$id){
             ...moduloCrudFields
         }
     }

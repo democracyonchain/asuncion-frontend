@@ -22,6 +22,6 @@ export const schemaUsuario = Yup.object().shape({
     estado_usuario:Yup.boolean(),
     roles_usuario:Yup.boolean(),
     opt_usuario:Yup.string().nullable(),
-    idProvincia_usuario:Yup.mixed().required('Este campo Módulo es requerido'),
-
+    idProvincia_usuario:Yup.mixed().required('Este campo Provincia es requerido'),
+    idEstablecimiento_usuario:Yup.mixed().required('Este campo Empresa es requerido')
 })

@@ -9,11 +9,11 @@ export const columnsRol=[
 ]
 
 export const categories = [
-    { name: 'crear', key:'c', icon:'pi pi-plus mr-2' },
-    { name: 'editar', key:'e', icon:'pi pi-pencil mr-2'},
-    { name: 'eliminar', key: 'd', icon:'pi pi-trash mr-2' },
-    { name: 'leer', key: 'r', icon:'pi pi-file mr-2' },
-    { name: 'imprimir', key: 'i', icon:'pi pi-print mr-2' }
+    { name: 'crear', key:'c', icon:'add' },
+    { name: 'editar', key:'e', icon:'edit_square'},
+    { name: 'eliminar', key: 'd', icon:'delete' },
+    { name: 'leer', key: 'r', icon:'draft' },
+    { name: 'imprimir', key: 'i', icon:'lab_profile' }
 ]
 export const processRolCollection =(parameters:{getRolCollectionLazyQuery:any,setDataRolCollection:any,limit:number,offset:number,cache:string,dispatch:any})=>{
     parameters.getRolCollectionLazyQuery({
@@ -28,7 +28,7 @@ export const processRolCollection =(parameters:{getRolCollectionLazyQuery:any,se
         },
         fetchPolicy: parameters.cache,
         onCompleted:(c:any)=>{                     
-            parameters.setDataRolCollection(c?.rolCollection);
+            parameters.setDataRolCollection(c?.adminRolCollection);
             parameters.dispatch(setCache({cache:'cache-first'}))           
         },onError:(error:any)=>{            
             parameters.setDataRolCollection([]);
@@ -45,7 +45,7 @@ export const processRolQuery =(parameters:{getRolLazyQuery:any,setRolQuery:any,q
         fetchPolicy: 'cache-and-network',
         onCompleted:(c:any)=>{              
             parameters.setStatusLoading(false);
-            parameters.setRolQuery(c.rol);           
+            parameters.setRolQuery(c.adminRol);           
         },onError:(error:any)=>{
             parameters.setRolQuery([]);
             parameters.setStatusLoading(false)
@@ -64,8 +64,8 @@ export const processMenuSelect =(parameters:{getMenuSelectLazyQuery:any,setDataM
         fetchPolicy: 'cache-and-network',
         onCompleted:(c:any)=>{  
             let valoresDiabled:any=[]          
-            parameters.setDataMenuSelect(c?.menuCollection?.data);
-            c?.menuCollection?.data.forEach((values:any,key:any)=>{               
+            parameters.setDataMenuSelect(c?.adminMenuCollection?.data);
+            c?.adminMenuCollection?.data.forEach((values:any,key:any)=>{               
                 valoresDiabled =[...valoresDiabled,{menu:values.titulo,disabled:true,key}]
             })          
 
@@ -85,7 +85,7 @@ export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:an
         id_rol:''
     });
     parameters.navigate("new")
-    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Rol',iconNew:'pi pi-clone'}));
+    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Nuevo Rol',iconNew:'post_add'}));
 }
 
 export const processValueForm=(parameters:{setValue:any,rolQuery:any,setEstadoForm:any,setDisabled:any,disabled:any,getValues:any})=>{
@@ -101,7 +101,7 @@ export const processValueForm=(parameters:{setValue:any,rolQuery:any,setEstadoFo
         let demoDisabled=parameters.disabled.filter((e:any,key:any)=>e.menu == data.menu.titulo);
 
         if(demoDisabled.length > 0){            
-            parameters.disabled[demoDisabled[0].key].disabled=false;
+            parameters.disabled[demoDisabled[0]?.key].disabled=false;
         }
        
         parameters.setDisabled([...parameters.disabled])
@@ -109,9 +109,11 @@ export const processValueForm=(parameters:{setValue:any,rolQuery:any,setEstadoFo
         categories.forEach((options,key1)=>{
             if(data[options.name]){
                 parameters.setValue(`accesos${key1}${data.menu.id}`,true);
-                    processDataCheck({data:data.menu,category:options,chek:true,key:demoDisabled[0].key,opt:'C',setValue:parameters.setValue,getValues:parameters.getValues})                
+                    processDataCheck({data:data.menu,category:options,chek:true,key:demoDisabled[0]?.key,opt:'C',setValue:parameters.setValue,getValues:parameters.getValues})                
             }else{
-                processDataCheck({data:data.menu,category:options,chek:false,key:demoDisabled[0].key,opt:'C',setValue:parameters.setValue,getValues:parameters.getValues})
+                if(demoDisabled.length > 0){
+                    processDataCheck({data:data.menu,category:options,chek:false,key:demoDisabled[0]?.key,opt:'C',setValue:parameters.setValue,getValues:parameters.getValues})
+                }
             }
         })
     });
@@ -127,7 +129,7 @@ export const processSubmitForm=(
 
 
    
-    let resulAcceso= (parameters.data?.menuAcceso)?(parameters.data?.menuAcceso).filter((e:any)=>e.status ==true):[];
+    let resulAcceso= (parameters.data?.menuAcceso)?(parameters.data?.menuAcceso)?.filter((e:any)=>e?.status ==true):[];
     let resulAccesoGeneral:any=[]
    
     if(resulAcceso.length >0){
@@ -190,7 +192,7 @@ const processCreateRol=(create:{data:any,toast:any,rolCreateMutation:any,navigat
        onCompleted:(c:any)=>{             
            create.navigate("record");       
            create.dispatch(setInitial({initial:1}))
-           create.dispatch(setMessage({message:c.rolCreate?.message}))
+           create.dispatch(setMessage({message:c.adminRolCreate?.message}))
        },onError:(error:any)=>{           
            create.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });   
        }
@@ -211,7 +213,7 @@ const processUpdateRol=(update:{data:any,toast:any,rolUpdateMutation:any,navigat
         },onCompleted:(c:any)=>{       
             update.navigate("record");
             update.dispatch(setInitial({initial:1}))
-            update.dispatch(setMessage({message:c.rolUpdate?.message}))
+            update.dispatch(setMessage({message:c.adminRolUpdate?.message}))
 
         },onError:(error:any)=>{
             update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });              
@@ -229,7 +231,7 @@ export const processEliminarRol=(eliminar:{data:any,toast:any,rolDeleteMutation:
             eliminar.dispatch(setCache({cache:'cache-and-network'}));  
             eliminar.navigate("record");       
             eliminar.dispatch(setInitial({initial:1}));
-            eliminar.dispatch(setMessage({message:c.rolDelete?.message}));                                              
+            eliminar.dispatch(setMessage({message:c.adminRolDelete?.message}));                                              
         },onError:(error:any)=>{
             eliminar.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });              
         }

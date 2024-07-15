@@ -39,7 +39,7 @@ export const GridRol = ({navigate}:{navigate:any}) => {
 	useEffect(()=>{
 		if(!message){
 			processRolCollection({getRolCollectionLazyQuery,setDataRolCollection,limit:pageInfo?.limit,offset:pageInfo?.offset,cache,dispatch});
-			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Rol',iconNew:'pi pi-clone'}));
+			dispatch(setLabelTab({...labelTab,labelNew:'Nuevo Rol',iconNew:'post_add'}));
 		}		
 	},[])
 

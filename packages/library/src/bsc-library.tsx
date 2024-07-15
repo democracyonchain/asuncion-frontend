@@ -5,7 +5,7 @@ import LayoutGeneral from "@components/layout/LayoutGeneral";
 import { PrimeReactProvider } from 'primereact/api';
 import { ApolloProvider } from '@apollo/client';
 import { graphqlClient } from '@infrastructure/client/graphql-client'
-import "primereact/resources/themes/lara-light-blue/theme.css";
+import "primereact/resources/themes/lara-light-green/theme.css";
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
