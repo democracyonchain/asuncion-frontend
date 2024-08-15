@@ -10,8 +10,8 @@ import { LoginLayout } from '@components/layout/LoginLayout';
 import { UtilsSpinner } from '@components/partials/Utils';
 import { useSelector } from "react-redux";
 import { RootState } from '@store/store';
-import { useAuthPerfilLazyQuery} from "@infrastructure/graphql/__generated__/graphql-types";
-import { processAuthPerfil } from '@components/service/authservice';
+import { useAuthPerfilLazyQuery,useAdminConfiguracionCollectionLazyQuery} from "@infrastructure/graphql/__generated__/graphql-types";
+import { processAuthPerfil,processAdminConfiguracion } from '@components/service/authservice';
 import { Toast } from 'primereact/toast';
 
 import "../../public/styles/general.css";
@@ -42,11 +42,13 @@ export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
 
     // Hook Graphql
     const [ setAuthPerfilLazyQuery,{loading}] = useAuthPerfilLazyQuery();
+    const [ getConfiguracionLazyQuery] = useAdminConfiguracionCollectionLazyQuery()
 
     //Hook UseEffect
     useEffect(()=>{
         if(initTokenUser && !sessionStorage.getItem('dataRolUser')){
             processAuthPerfil({setAuthPerfilLazyQuery,navigate});
+            processAdminConfiguracion({getConfiguracionLazyQuery})
             setVisibleModalAux({active:true,header:'Rol Usuario',closable:false,maximizable:true});
             setVisibleModalPass({active:false,header:'',closable:false,maximizable:true});
         }

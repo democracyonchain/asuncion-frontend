@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "declarationDir": "dist",
-    "baseUrl": "../seguridades/src/",
+    "baseUrl": "../procesos/src/",
     "strict": true,
     "paths": {
       "@presentation/*": ["presentation/*"],

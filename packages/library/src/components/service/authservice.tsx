@@ -283,3 +283,25 @@ export const coreAccesosBsc=()=>{
     return permisosBotones;
 
 }
+
+export const processAdminConfiguracion =(parameters:{getConfiguracionLazyQuery:any})=>{
+    
+    parameters.getConfiguracionLazyQuery({
+        variables:{
+            inputWhere:{
+                estado: { is: true }
+            }
+        },
+        fetchPolicy: 'cache-and-network',
+        onCompleted:(c:any)=>{            
+            const dataAdminConfig:any=c.adminConfiguracionCollection.data;
+            sessionStorage.setItem("getAdminConfig",JSON.stringify(dataAdminConfig) as any);
+           
+        },onError:(error:any)=>{            
+            localStorage.clear();
+            sessionStorage.clear();   
+            
+        }
+    })
+
+}

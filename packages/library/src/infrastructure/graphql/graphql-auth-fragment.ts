@@ -85,3 +85,15 @@ export const ESTABLECIMIENTO_SELECT_FIELDS = gql`
         }
     }
 `
+
+export const ADMIN_CONFIGURACION_FIELDS = gql`
+    fragment adminConfiguracionFields on  ConfiguracionCollectionType{
+        data {
+            codigoproceso
+            estado
+            fechaproceso
+            id
+            nombreproceso
+        }    
+    }
+`

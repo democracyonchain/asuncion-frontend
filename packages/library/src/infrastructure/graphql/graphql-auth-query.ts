@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { AUTH_LOGIN_FIELDS,AUTH_PERFIL_FIELDS,AUTH_MODULO_PERMISO_ID_FIELDS,AUTH_CAMBIO_PASSWORD,AUTH_LOGOUT,
-        PROVINCIA_SELECT_FIELDS,ESTABLECIMIENTO_SELECT_FIELDS } from '@infrastructure/graphql/graphql-auth-fragment';
+        PROVINCIA_SELECT_FIELDS,ESTABLECIMIENTO_SELECT_FIELDS,ADMIN_CONFIGURACION_FIELDS } from '@infrastructure/graphql/graphql-auth-fragment';
 
 export const GET_AUTH_LOGIN =()=>{
 
@@ -100,6 +100,26 @@ export const GET_ESTABLECIMIENTO_SELECT =()=>{
                 ){
                     ...establecimientoSelectFields
                 }
+            }
+        `
+}
+
+export const GET_CONFIGURACION_FIELDS = ()=>{
+
+    return gql`
+        ${ADMIN_CONFIGURACION_FIELDS}
+            query AdminConfiguracionCollection(
+                $inputWhere:ConfiguracionFilterInput, 
+                $inputOrder:StringOrderInput
+            ){
+                adminConfiguracionCollection( 
+                    where: $inputWhere
+                    order: $inputOrder  
+                )
+                {
+                    ...adminConfiguracionFields             
+                }
+            
             }
         `
 }

@@ -15,6 +15,7 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { useAuthlogoutLazyQuery} from "@infrastructure/graphql/__generated__/graphql-types";
 import { processAuthLogout } from '@components/service/authservice';
 import Icon from '@mui/material/Icon';
+
 export const Header = ({setVisibleModalAux,path,toast,setVisibleModalPass}:{setVisibleModalAux:any,path:string,toast:any,setVisibleModalPass:any}) => {
 	//Data Storage
 	const getUserStorage=JSON.parse(localStorage.getItem("getUserStorage") as any);

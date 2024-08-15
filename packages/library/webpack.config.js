@@ -53,6 +53,11 @@ module.exports = (webpackConfigEnv, argv) => {
 		    	}
 		  	})
 		],
+		performance: {
+			hints: process.env.NODE_ENV === 'production' ? "warning" : false,
+			maxEntrypointSize: 512000,
+			maxAssetSize: 512000
+		  },
 		optimization: {
 			splitChunks: { 
 				chunks: 'all', 
