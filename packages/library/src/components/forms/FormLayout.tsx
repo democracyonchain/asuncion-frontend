@@ -4,6 +4,7 @@ import { Constantes} from "@components/service/constantes";
 import { UtilsButton,UtilsModal,UtilsConfirm } from '@components/partials/Utils'
 import { Panel } from 'primereact/panel';
 import { Toast } from 'primereact/toast';
+import Icon from '@mui/material/Icon';
 interface IFormValues{
     children: string | JSX.Element | JSX.Element[]|any
     methods:any
@@ -134,6 +135,9 @@ export const FormCore=(
                     {(labels.btn2)&&
                         <UtilsButton  size='small' type='submit'  raised link text icon={'pi pi-check'} label= {labels.btn2} className="w-full text-sm" severity="primary" onClick={methods.handleSubmit(onSubmit)}/>
                     } 
+                    {(labels.btn3)&&
+                        <UtilsButton  size='small' type='submit'  raised link text icon={<Icon >download</Icon>} label= {labels.btn3} className="w-10rem text-sm" severity="danger" onClick={methods.handleSubmit(onSubmit)}/>
+                    }
                 </div>
              
             </div>

@@ -13,6 +13,7 @@ import { locale, addLocale } from 'primereact/api';
 import { Message } from 'primereact/message';
 import { DeleteOutlineOutlined,VisibilityOutlined,DriveFileRenameOutlineOutlined,TextSnippetOutlined,ArticleOutlined } from '@mui/icons-material/';
 import Icon from '@mui/material/Icon';
+import img from "@public/images/logo4.png";
 export const UtilsCoreToolbar=(
     {
         setVisibleModalAux,selectedGrid=false,onClickExport,onClickExportPdf,opt=false,navigate,
@@ -368,12 +369,60 @@ export const UtilsCoreDataTable =(
 
     const exportColumns = columns.map((col) => ({ title: col.header, dataKey: col.field }));
 
-	const exportPdf = () => {
+	const exportPdf = () => {       
         import('jspdf').then((jsPDF) => {
             import('jspdf-autotable').then(() => {
-                const doc:any = new jsPDF.default(0 as any, 0 as any);
+                const doc:any = new jsPDF.default('l', 0 as any, 0 as any);
+                
+                const totalPagesExp = 'total_pages_count_string' 
 
-                doc.autoTable(exportColumns, recordGrid.data);
+                doc.autoTable(exportColumns, recordGrid.data,{
+                    startY: 30,
+                    margin: { top: 30,right:10,left:10 },
+                    headStyles:{fontSize:8},
+                    bodyStyles:{fontSize:8},	
+                    willDrawPage: function (data:any) {
+                        // Header
+                        doc.setFontSize(12)
+                        doc.setTextColor(40)
+                        if (img) {
+                          doc.addImage(img, 'JPEG', data.settings.margin.left, 15, 10, 10)
+                        }
+                        doc.setFont('times','italic','bold');
+                        doc.setTextColor('#9e9e9e')
+                        doc.text('Blockchain Voting System - BSM', data.settings.margin.right + 112, 22)
+                    },
+                    didDrawPage:function (data:any) {
+                        const footer ='Blockchain Voting System | BSM';
+                        const footerAsuncion ='democracyonchain.com'
+                        let pagina = 'Página ' + doc.internal.getNumberOfPages()
+                        let pageSize = doc.internal.pageSize;
+                        let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+                    
+                        if (typeof doc.putTotalPages === 'function') {
+                            pagina = pagina + ' / ' + totalPagesExp 
+                        }
+
+                        doc.setFont('helvetica','','normal');
+                        doc.setTextColor('#9e9e9e')
+                        doc.setFontSize(9)
+
+                        doc.text(footerAsuncion, data.settings.margin.left, pageHeight - 5);
+                        doc.text(footer, data.settings.margin.left, pageHeight - 9);  
+                        doc.text(pagina,  doc.internal.pageSize.getWidth() / 2, pageHeight - 8)
+
+                        doc.saveGraphicsState();
+                        doc.setFont('helvetica','','bold');
+                        doc.setGState(new doc.GState({opacity: 0.3}));
+                        doc.setFontSize(50)
+                        doc.setTextColor('#ff0000');
+                        
+                    }
+                })
+
+                if (typeof doc.putTotalPages === 'function') { 
+                    doc.putTotalPages(totalPagesExp) 
+                }
                 doc.save(`${title}.pdf`);
             });
         });

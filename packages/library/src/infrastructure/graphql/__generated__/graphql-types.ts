@@ -33,6 +33,106 @@ export type Scalars = {
   Decimal: { input: any; output: any };
 };
 
+export type ActaDigitalizacionVoto = {
+  __typename?: "ActaDigitalizacionVoto";
+  blancos?: Maybe<Scalars["Float"]["output"]>;
+  blancoscontrol?: Maybe<Scalars["Float"]["output"]>;
+  blancosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  blancosicr?: Maybe<Scalars["Float"]["output"]>;
+  dignidad?: Maybe<DignidadDigitalizacion>;
+  dignidad_id?: Maybe<Scalars["Float"]["output"]>;
+  estado?: Maybe<Scalars["Float"]["output"]>;
+  fechacontrol?: Maybe<Scalars["DateScalar"]["output"]>;
+  fechadigitacion?: Maybe<Scalars["DateScalar"]["output"]>;
+  fechaescaneo?: Maybe<Scalars["DateScalar"]["output"]>;
+  id: Scalars["Float"]["output"];
+  junta?: Maybe<JuntaDigitalizacion>;
+  junta_id?: Maybe<Scalars["Float"]["output"]>;
+  nulos?: Maybe<Scalars["Float"]["output"]>;
+  nulosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  nulosicr?: Maybe<Scalars["Float"]["output"]>;
+  peticion?: Maybe<Scalars["Float"]["output"]>;
+  seguridad?: Maybe<Scalars["Float"]["output"]>;
+  sufragantes?: Maybe<Scalars["Float"]["output"]>;
+  sufragantescontrol?: Maybe<Scalars["Float"]["output"]>;
+  sufragantesdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  sufragantesicr?: Maybe<Scalars["Float"]["output"]>;
+  usuariocontrol?: Maybe<Scalars["Float"]["output"]>;
+  usuariodigitacion?: Maybe<Scalars["Float"]["output"]>;
+  usuarioescaneo?: Maybe<Scalars["Float"]["output"]>;
+  votos: Array<VotosDigitalizacion>;
+};
+
+export type CandidatoDigitalizacion = {
+  __typename?: "CandidatoDigitalizacion";
+  cedula?: Maybe<Scalars["String"]["output"]>;
+  dignidad?: Maybe<DignidadDigitalizacion>;
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+  orden?: Maybe<Scalars["Float"]["output"]>;
+  partido?: Maybe<PartidoDigitalizacion>;
+};
+
+export type CantonDigitalizacion = {
+  __typename?: "CantonDigitalizacion";
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+  provincia?: Maybe<ProvinciaDigitalizacion>;
+};
+
+export type CantonDigitalizacionCollectionType = {
+  __typename?: "CantonDigitalizacionCollectionType";
+  data?: Maybe<Array<CantonDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type CantonDigitalizacionFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+  provincia_id?: InputMaybe<NumberWhereInput>;
+};
+
+export type ConfiguracionAdminitracion = {
+  __typename?: "ConfiguracionAdminitracion";
+  codigoproceso: Scalars["String"]["output"];
+  estado: Scalars["Boolean"]["output"];
+  fechaproceso: Scalars["DateScalar"]["output"];
+  id: Scalars["Float"]["output"];
+  nombreproceso: Scalars["String"]["output"];
+};
+
+export type ConfiguracionCollectionType = {
+  __typename?: "ConfiguracionCollectionType";
+  data?: Maybe<Array<ConfiguracionAdminitracion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ConfiguracionFilterInput = {
+  codigoproceso?: InputMaybe<StringWhereInput>;
+  estado?: InputMaybe<StateWhereInput>;
+  nombreproceso?: InputMaybe<StringWhereInput>;
+};
+
+export type DignidadDigitalizacion = {
+  __typename?: "DignidadDigitalizacion";
+  ambito?: Maybe<Scalars["String"]["output"]>;
+  estado?: Maybe<Scalars["Float"]["output"]>;
+  id: Scalars["Float"]["output"];
+  nombre?: Maybe<Scalars["String"]["output"]>;
+  orden?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type DignidadDigitalizacionCollectionType = {
+  __typename?: "DignidadDigitalizacionCollectionType";
+  data?: Maybe<Array<DignidadDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type DignidadDigitalizacionFilterInput = {
+  ambito?: InputMaybe<StringWhereInput>;
+  estado?: InputMaybe<NumberWhereInput>;
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
 export type EstablecimientoAdminitracion = {
   __typename?: "EstablecimientoAdminitracion";
   id: Scalars["Float"]["output"];
@@ -76,10 +176,37 @@ export type GlobalResultType = {
   status: Scalars["Boolean"]["output"];
 };
 
+export type JuntaDigitalizacion = {
+  __typename?: "JuntaDigitalizacion";
+  canton?: Maybe<CantonDigitalizacion>;
+  electores: Scalars["Float"]["output"];
+  id: Scalars["Float"]["output"];
+  junta: Scalars["Float"]["output"];
+  parroquia?: Maybe<ParroquiaDigitalizacion>;
+  provincia?: Maybe<ProvinciaDigitalizacion>;
+  sexo: Scalars["String"]["output"];
+  zona_id?: Maybe<Scalars["Float"]["output"]>;
+};
+
+export type JuntaDigitalizacionCollectionType = {
+  __typename?: "JuntaDigitalizacionCollectionType";
+  data?: Maybe<Array<JuntaDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type JuntaDigitalizacionFilterInput = {
+  canton_id?: InputMaybe<NumberWhereInput>;
+  parroquia_id?: InputMaybe<NumberWhereInput>;
+  provincia_id?: InputMaybe<NumberWhereInput>;
+  sexo?: InputMaybe<StringWhereInput>;
+  zona_id?: InputMaybe<NumberWhereInput>;
+};
+
 export type Login = {
   __typename?: "Login";
   establecimiento?: Maybe<EstablecimientoAuth>;
   provincia: Scalars["String"]["output"];
+  provincia_id: Scalars["Float"]["output"];
   token: Scalars["String"]["output"];
   username: Scalars["String"]["output"];
 };
@@ -310,6 +437,32 @@ export type PaginationInput = {
   offset?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type ParroquiaDigitalizacion = {
+  __typename?: "ParroquiaDigitalizacion";
+  canton?: Maybe<CantonDigitalizacion>;
+  id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+};
+
+export type ParroquiaDigitalizacionCollectionType = {
+  __typename?: "ParroquiaDigitalizacionCollectionType";
+  data?: Maybe<Array<ParroquiaDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ParroquiaDigitalizacionFilterInput = {
+  canton_id?: InputMaybe<NumberWhereInput>;
+  nombre?: InputMaybe<StringWhereInput>;
+};
+
+export type PartidoDigitalizacion = {
+  __typename?: "PartidoDigitalizacion";
+  id: Scalars["Float"]["output"];
+  lista?: Maybe<Scalars["String"]["output"]>;
+  nombre?: Maybe<Scalars["String"]["output"]>;
+  siglas?: Maybe<Scalars["String"]["output"]>;
+};
+
 export type Permisos = {
   __typename?: "Permisos";
   crear: Scalars["Boolean"]["output"];
@@ -418,6 +571,7 @@ export type ProvinciaVerificacionFilterInput = {
 
 export type Query = {
   __typename?: "Query";
+  adminConfiguracionCollection?: Maybe<ConfiguracionCollectionType>;
   adminEstablecimiento: EstablecimientoAdminitracion;
   adminEstablecimientoCollection?: Maybe<EstablecimientoCollectionType>;
   adminMenu: MenuAdministracion;
@@ -434,12 +588,24 @@ export type Query = {
   authLogout: GlobalResultType;
   authModuloPermisosId: Array<ModuloAuth>;
   authPerfil: UsuarioAuth;
+  digtActaByJuntaList: ActaDigitalizacionVoto;
+  digtCantonCollection?: Maybe<CantonDigitalizacionCollectionType>;
+  digtDignidadCollection?: Maybe<DignidadDigitalizacionCollectionType>;
+  digtJuntaCollection?: Maybe<JuntaDigitalizacionCollectionType>;
+  digtParroquiaCollection?: Maybe<ParroquiaDigitalizacionCollectionType>;
   digtProvincia: ProvinciaDigitalizacion;
   digtProvinciaCollection?: Maybe<ProvinciaDigitalizacionCollectionType>;
+  digtZonaCollection?: Maybe<ZonaDigitalizacionCollectionType>;
   rptProvincia: ProvinciaReportes;
   rptProvinciaCollection?: Maybe<ProvinciaReportesCollectionType>;
   vrfProvinciaVerificacion: ProvinciaVerificacion;
   vrfProvinciaVerificacionCollection?: Maybe<ProvinciaVerificacionCollectionType>;
+};
+
+export type QueryAdminConfiguracionCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<ConfiguracionFilterInput>;
 };
 
 export type QueryAdminEstablecimientoArgs = {
@@ -511,6 +677,35 @@ export type QueryAuthModuloPermisosIdArgs = {
   rol_id: Scalars["Int"]["input"];
 };
 
+export type QueryDigtActaByJuntaListArgs = {
+  dignidad_id: Scalars["Int"]["input"];
+  junta_id: Scalars["Int"]["input"];
+};
+
+export type QueryDigtCantonCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<CantonDigitalizacionFilterInput>;
+};
+
+export type QueryDigtDignidadCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<DignidadDigitalizacionFilterInput>;
+};
+
+export type QueryDigtJuntaCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<JuntaDigitalizacionFilterInput>;
+};
+
+export type QueryDigtParroquiaCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<ParroquiaDigitalizacionFilterInput>;
+};
+
 export type QueryDigtProvinciaArgs = {
   id: Scalars["Int"]["input"];
 };
@@ -519,6 +714,12 @@ export type QueryDigtProvinciaCollectionArgs = {
   order?: InputMaybe<StringOrderInput>;
   pagination?: InputMaybe<PaginationInput>;
   where?: InputMaybe<ProvinciaDigitalizacionFilterInput>;
+};
+
+export type QueryDigtZonaCollectionArgs = {
+  order?: InputMaybe<StringOrderInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  where?: InputMaybe<ZonaDigitalizacionFilterInput>;
 };
 
 export type QueryRptProvinciaArgs = {
@@ -703,6 +904,35 @@ export type UsuarioUpdateInput = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type VotosDigitalizacion = {
+  __typename?: "VotosDigitalizacion";
+  candidato?: Maybe<CandidatoDigitalizacion>;
+  votos: Scalars["Float"]["output"];
+  votoscontrol: Scalars["Float"]["output"];
+  votosdigitacion: Scalars["Float"]["output"];
+  votosicr: Scalars["Float"]["output"];
+};
+
+export type ZonaDigitalizacion = {
+  __typename?: "ZonaDigitalizacion";
+  nombre: Scalars["String"]["output"];
+  parroquia?: Maybe<ParroquiaDigitalizacion>;
+  parroquia_id: Scalars["Float"]["output"];
+  zona_id: Scalars["Float"]["output"];
+};
+
+export type ZonaDigitalizacionCollectionType = {
+  __typename?: "ZonaDigitalizacionCollectionType";
+  data?: Maybe<Array<ZonaDigitalizacion>>;
+  pageInfo?: Maybe<PageInfo>;
+};
+
+export type ZonaDigitalizacionFilterInput = {
+  nombre?: InputMaybe<StringWhereInput>;
+  parroquia_id?: InputMaybe<NumberWhereInput>;
+  zona_id?: InputMaybe<NumberWhereInput>;
+};
+
 export type AuthLoginFieldsFragment = {
   __typename?: "Login";
   token: string;
@@ -779,6 +1009,18 @@ export type EstablecimientoSelectFieldsFragment = {
     __typename?: "EstablecimientoAdminitracion";
     id: number;
     nombre: string;
+  }> | null;
+};
+
+export type AdminConfiguracionFieldsFragment = {
+  __typename?: "ConfiguracionCollectionType";
+  data?: Array<{
+    __typename?: "ConfiguracionAdminitracion";
+    codigoproceso: string;
+    estado: boolean;
+    fechaproceso: any;
+    id: number;
+    nombreproceso: string;
   }> | null;
 };
 
@@ -907,6 +1149,370 @@ export type EstablecimientoSelectQuery = {
       nombre: string;
     }> | null;
   } | null;
+};
+
+export type AdminConfiguracionCollectionQueryVariables = Exact<{
+  inputWhere?: InputMaybe<ConfiguracionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type AdminConfiguracionCollectionQuery = {
+  __typename?: "Query";
+  adminConfiguracionCollection?: {
+    __typename?: "ConfiguracionCollectionType";
+    data?: Array<{
+      __typename?: "ConfiguracionAdminitracion";
+      codigoproceso: string;
+      estado: boolean;
+      fechaproceso: any;
+      id: number;
+      nombreproceso: string;
+    }> | null;
+  } | null;
+};
+
+export type ProvinciaDigtSelectFieldsFragment = {
+  __typename?: "ProvinciaDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "ProvinciaDigitalizacion";
+    id: number;
+    nombre: string;
+  }> | null;
+};
+
+export type CantonDigtSelectFieldsFragment = {
+  __typename?: "CantonDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "CantonDigitalizacion";
+    id: number;
+    nombre: string;
+  }> | null;
+};
+
+export type ParroquiaDigtSelectFieldsFragment = {
+  __typename?: "ParroquiaDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "ParroquiaDigitalizacion";
+    id: number;
+    nombre: string;
+  }> | null;
+};
+
+export type ZonaDigtSelectFieldsFragment = {
+  __typename?: "ZonaDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "ZonaDigitalizacion";
+    nombre: string;
+    zona_id: number;
+  }> | null;
+};
+
+export type JuntaDigtSelectFieldsFragment = {
+  __typename?: "JuntaDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "JuntaDigitalizacion";
+    electores: number;
+    id: number;
+    junta: number;
+    sexo: string;
+    zona_id?: number | null;
+  }> | null;
+};
+
+export type DignidadDigtSelectFieldsFragment = {
+  __typename?: "DignidadDigitalizacionCollectionType";
+  data?: Array<{
+    __typename?: "DignidadDigitalizacion";
+    id: number;
+    nombre?: string | null;
+  }> | null;
+};
+
+export type ActaDigtListFieldsFragment = {
+  __typename?: "ActaDigitalizacionVoto";
+  blancos?: number | null;
+  blancoscontrol?: number | null;
+  blancosdigitacion?: number | null;
+  blancosicr?: number | null;
+  dignidad_id?: number | null;
+  estado?: number | null;
+  fechacontrol?: any | null;
+  fechadigitacion?: any | null;
+  fechaescaneo?: any | null;
+  id: number;
+  junta_id?: number | null;
+  nulos?: number | null;
+  nulosdigitacion?: number | null;
+  nulosicr?: number | null;
+  peticion?: number | null;
+  seguridad?: number | null;
+  sufragantes?: number | null;
+  sufragantescontrol?: number | null;
+  sufragantesdigitacion?: number | null;
+  sufragantesicr?: number | null;
+  usuariocontrol?: number | null;
+  usuariodigitacion?: number | null;
+  usuarioescaneo?: number | null;
+  dignidad?: {
+    __typename?: "DignidadDigitalizacion";
+    ambito?: string | null;
+    estado?: number | null;
+    id: number;
+    nombre?: string | null;
+    orden?: number | null;
+  } | null;
+  junta?: {
+    __typename?: "JuntaDigitalizacion";
+    electores: number;
+    id: number;
+    junta: number;
+    sexo: string;
+    zona_id?: number | null;
+    canton?: {
+      __typename?: "CantonDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    parroquia?: {
+      __typename?: "ParroquiaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    provincia?: {
+      __typename?: "ProvinciaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+  } | null;
+  votos: Array<{
+    __typename?: "VotosDigitalizacion";
+    votos: number;
+    votoscontrol: number;
+    votosdigitacion: number;
+    votosicr: number;
+    candidato?: {
+      __typename?: "CandidatoDigitalizacion";
+      cedula?: string | null;
+      id: number;
+      nombre: string;
+      orden?: number | null;
+      dignidad?: {
+        __typename?: "DignidadDigitalizacion";
+        ambito?: string | null;
+        estado?: number | null;
+        id: number;
+        nombre?: string | null;
+        orden?: number | null;
+      } | null;
+      partido?: {
+        __typename?: "PartidoDigitalizacion";
+        id: number;
+        nombre?: string | null;
+        lista?: string | null;
+        siglas?: string | null;
+      } | null;
+    } | null;
+  }>;
+};
+
+export type ProvinciaDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<ProvinciaDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type ProvinciaDigtSelectQuery = {
+  __typename?: "Query";
+  digtProvinciaCollection?: {
+    __typename?: "ProvinciaDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "ProvinciaDigitalizacion";
+      id: number;
+      nombre: string;
+    }> | null;
+  } | null;
+};
+
+export type CantonDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<CantonDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type CantonDigtSelectQuery = {
+  __typename?: "Query";
+  digtCantonCollection?: {
+    __typename?: "CantonDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "CantonDigitalizacion";
+      id: number;
+      nombre: string;
+    }> | null;
+  } | null;
+};
+
+export type ParroquiaDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<ParroquiaDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type ParroquiaDigtSelectQuery = {
+  __typename?: "Query";
+  digtParroquiaCollection?: {
+    __typename?: "ParroquiaDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "ParroquiaDigitalizacion";
+      id: number;
+      nombre: string;
+    }> | null;
+  } | null;
+};
+
+export type ZonaDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<ZonaDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type ZonaDigtSelectQuery = {
+  __typename?: "Query";
+  digtZonaCollection?: {
+    __typename?: "ZonaDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "ZonaDigitalizacion";
+      nombre: string;
+      zona_id: number;
+    }> | null;
+  } | null;
+};
+
+export type JuntaDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<JuntaDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type JuntaDigtSelectQuery = {
+  __typename?: "Query";
+  digtJuntaCollection?: {
+    __typename?: "JuntaDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "JuntaDigitalizacion";
+      electores: number;
+      id: number;
+      junta: number;
+      sexo: string;
+      zona_id?: number | null;
+    }> | null;
+  } | null;
+};
+
+export type DignidadDigtSelectQueryVariables = Exact<{
+  inputWhere?: InputMaybe<DignidadDigitalizacionFilterInput>;
+  inputOrder?: InputMaybe<StringOrderInput>;
+}>;
+
+export type DignidadDigtSelectQuery = {
+  __typename?: "Query";
+  digtDignidadCollection?: {
+    __typename?: "DignidadDigitalizacionCollectionType";
+    data?: Array<{
+      __typename?: "DignidadDigitalizacion";
+      id: number;
+      nombre?: string | null;
+    }> | null;
+  } | null;
+};
+
+export type DigtActaByJuntaListQueryVariables = Exact<{
+  dignidad_id: Scalars["Int"]["input"];
+  junta_id: Scalars["Int"]["input"];
+}>;
+
+export type DigtActaByJuntaListQuery = {
+  __typename?: "Query";
+  digtActaByJuntaList: {
+    __typename?: "ActaDigitalizacionVoto";
+    blancos?: number | null;
+    blancoscontrol?: number | null;
+    blancosdigitacion?: number | null;
+    blancosicr?: number | null;
+    dignidad_id?: number | null;
+    estado?: number | null;
+    fechacontrol?: any | null;
+    fechadigitacion?: any | null;
+    fechaescaneo?: any | null;
+    id: number;
+    junta_id?: number | null;
+    nulos?: number | null;
+    nulosdigitacion?: number | null;
+    nulosicr?: number | null;
+    peticion?: number | null;
+    seguridad?: number | null;
+    sufragantes?: number | null;
+    sufragantescontrol?: number | null;
+    sufragantesdigitacion?: number | null;
+    sufragantesicr?: number | null;
+    usuariocontrol?: number | null;
+    usuariodigitacion?: number | null;
+    usuarioescaneo?: number | null;
+    dignidad?: {
+      __typename?: "DignidadDigitalizacion";
+      ambito?: string | null;
+      estado?: number | null;
+      id: number;
+      nombre?: string | null;
+      orden?: number | null;
+    } | null;
+    junta?: {
+      __typename?: "JuntaDigitalizacion";
+      electores: number;
+      id: number;
+      junta: number;
+      sexo: string;
+      zona_id?: number | null;
+      canton?: {
+        __typename?: "CantonDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      parroquia?: {
+        __typename?: "ParroquiaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      provincia?: {
+        __typename?: "ProvinciaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+    } | null;
+    votos: Array<{
+      __typename?: "VotosDigitalizacion";
+      votos: number;
+      votoscontrol: number;
+      votosdigitacion: number;
+      votosicr: number;
+      candidato?: {
+        __typename?: "CandidatoDigitalizacion";
+        cedula?: string | null;
+        id: number;
+        nombre: string;
+        orden?: number | null;
+        dignidad?: {
+          __typename?: "DignidadDigitalizacion";
+          ambito?: string | null;
+          estado?: number | null;
+          id: number;
+          nombre?: string | null;
+          orden?: number | null;
+        } | null;
+        partido?: {
+          __typename?: "PartidoDigitalizacion";
+          id: number;
+          nombre?: string | null;
+          lista?: string | null;
+          siglas?: string | null;
+        } | null;
+      } | null;
+    }>;
+  };
 };
 
 export type MenuCollectionFieldsFragment = {
@@ -1640,6 +2246,146 @@ export const EstablecimientoSelectFieldsFragmentDoc = gql`
     }
   }
 `;
+export const AdminConfiguracionFieldsFragmentDoc = gql`
+  fragment adminConfiguracionFields on ConfiguracionCollectionType {
+    data {
+      codigoproceso
+      estado
+      fechaproceso
+      id
+      nombreproceso
+    }
+  }
+`;
+export const ProvinciaDigtSelectFieldsFragmentDoc = gql`
+  fragment provinciaDigtSelectFields on ProvinciaDigitalizacionCollectionType {
+    data {
+      id
+      nombre
+    }
+  }
+`;
+export const CantonDigtSelectFieldsFragmentDoc = gql`
+  fragment cantonDigtSelectFields on CantonDigitalizacionCollectionType {
+    data {
+      id
+      nombre
+    }
+  }
+`;
+export const ParroquiaDigtSelectFieldsFragmentDoc = gql`
+  fragment parroquiaDigtSelectFields on ParroquiaDigitalizacionCollectionType {
+    data {
+      id
+      nombre
+    }
+  }
+`;
+export const ZonaDigtSelectFieldsFragmentDoc = gql`
+  fragment zonaDigtSelectFields on ZonaDigitalizacionCollectionType {
+    data {
+      nombre
+      zona_id
+    }
+  }
+`;
+export const JuntaDigtSelectFieldsFragmentDoc = gql`
+  fragment juntaDigtSelectFields on JuntaDigitalizacionCollectionType {
+    data {
+      electores
+      id
+      junta
+      sexo
+      zona_id
+    }
+  }
+`;
+export const DignidadDigtSelectFieldsFragmentDoc = gql`
+  fragment dignidadDigtSelectFields on DignidadDigitalizacionCollectionType {
+    data {
+      id
+      nombre
+    }
+  }
+`;
+export const ActaDigtListFieldsFragmentDoc = gql`
+  fragment actaDigtListFields on ActaDigitalizacionVoto {
+    blancos
+    blancoscontrol
+    blancosdigitacion
+    blancosicr
+    dignidad_id
+    estado
+    fechacontrol
+    fechadigitacion
+    fechaescaneo
+    id
+    junta_id
+    nulos
+    nulosdigitacion
+    nulosicr
+    peticion
+    seguridad
+    sufragantes
+    sufragantescontrol
+    sufragantesdigitacion
+    sufragantesicr
+    usuariocontrol
+    usuariodigitacion
+    usuarioescaneo
+    dignidad {
+      ambito
+      estado
+      id
+      nombre
+      orden
+    }
+    junta {
+      electores
+      id
+      junta
+      sexo
+      zona_id
+      canton {
+        id
+        nombre
+      }
+      parroquia {
+        id
+        nombre
+      }
+      provincia {
+        id
+        nombre
+      }
+    }
+    votos {
+      votos
+      votoscontrol
+      votosdigitacion
+      votosicr
+      candidato {
+        cedula
+        id
+        nombre
+        orden
+        dignidad {
+          ambito
+          estado
+          id
+          nombre
+          orden
+        }
+        partido {
+          id
+          nombre
+          lista
+          siglas
+        }
+      }
+    }
+  }
+`;
 export const MenuCollectionFieldsFragmentDoc = gql`
   fragment menuCollectionFields on MenuCollectionType {
     data {
@@ -2346,6 +3092,631 @@ export type EstablecimientoSelectSuspenseQueryHookResult = ReturnType<
 export type EstablecimientoSelectQueryResult = Apollo.QueryResult<
   EstablecimientoSelectQuery,
   EstablecimientoSelectQueryVariables
+>;
+export const AdminConfiguracionCollectionDocument = gql`
+  query AdminConfiguracionCollection(
+    $inputWhere: ConfiguracionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    adminConfiguracionCollection(where: $inputWhere, order: $inputOrder) {
+      ...adminConfiguracionFields
+    }
+  }
+  ${AdminConfiguracionFieldsFragmentDoc}
+`;
+
+/**
+ * __useAdminConfiguracionCollectionQuery__
+ *
+ * To run a query within a React component, call `useAdminConfiguracionCollectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdminConfiguracionCollectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdminConfiguracionCollectionQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useAdminConfiguracionCollectionQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >(AdminConfiguracionCollectionDocument, options);
+}
+export function useAdminConfiguracionCollectionLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >(AdminConfiguracionCollectionDocument, options);
+}
+export function useAdminConfiguracionCollectionSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    AdminConfiguracionCollectionQuery,
+    AdminConfiguracionCollectionQueryVariables
+  >(AdminConfiguracionCollectionDocument, options);
+}
+export type AdminConfiguracionCollectionQueryHookResult = ReturnType<
+  typeof useAdminConfiguracionCollectionQuery
+>;
+export type AdminConfiguracionCollectionLazyQueryHookResult = ReturnType<
+  typeof useAdminConfiguracionCollectionLazyQuery
+>;
+export type AdminConfiguracionCollectionSuspenseQueryHookResult = ReturnType<
+  typeof useAdminConfiguracionCollectionSuspenseQuery
+>;
+export type AdminConfiguracionCollectionQueryResult = Apollo.QueryResult<
+  AdminConfiguracionCollectionQuery,
+  AdminConfiguracionCollectionQueryVariables
+>;
+export const ProvinciaDigtSelectDocument = gql`
+  query ProvinciaDigtSelect(
+    $inputWhere: ProvinciaDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtProvinciaCollection(where: $inputWhere, order: $inputOrder) {
+      ...provinciaDigtSelectFields
+    }
+  }
+  ${ProvinciaDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useProvinciaDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useProvinciaDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProvinciaDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProvinciaDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useProvinciaDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >(ProvinciaDigtSelectDocument, options);
+}
+export function useProvinciaDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >(ProvinciaDigtSelectDocument, options);
+}
+export function useProvinciaDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ProvinciaDigtSelectQuery,
+    ProvinciaDigtSelectQueryVariables
+  >(ProvinciaDigtSelectDocument, options);
+}
+export type ProvinciaDigtSelectQueryHookResult = ReturnType<
+  typeof useProvinciaDigtSelectQuery
+>;
+export type ProvinciaDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useProvinciaDigtSelectLazyQuery
+>;
+export type ProvinciaDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useProvinciaDigtSelectSuspenseQuery
+>;
+export type ProvinciaDigtSelectQueryResult = Apollo.QueryResult<
+  ProvinciaDigtSelectQuery,
+  ProvinciaDigtSelectQueryVariables
+>;
+export const CantonDigtSelectDocument = gql`
+  query CantonDigtSelect(
+    $inputWhere: CantonDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtCantonCollection(where: $inputWhere, order: $inputOrder) {
+      ...cantonDigtSelectFields
+    }
+  }
+  ${CantonDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useCantonDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useCantonDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCantonDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCantonDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useCantonDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    CantonDigtSelectQuery,
+    CantonDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<CantonDigtSelectQuery, CantonDigtSelectQueryVariables>(
+    CantonDigtSelectDocument,
+    options
+  );
+}
+export function useCantonDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    CantonDigtSelectQuery,
+    CantonDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    CantonDigtSelectQuery,
+    CantonDigtSelectQueryVariables
+  >(CantonDigtSelectDocument, options);
+}
+export function useCantonDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    CantonDigtSelectQuery,
+    CantonDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    CantonDigtSelectQuery,
+    CantonDigtSelectQueryVariables
+  >(CantonDigtSelectDocument, options);
+}
+export type CantonDigtSelectQueryHookResult = ReturnType<
+  typeof useCantonDigtSelectQuery
+>;
+export type CantonDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useCantonDigtSelectLazyQuery
+>;
+export type CantonDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useCantonDigtSelectSuspenseQuery
+>;
+export type CantonDigtSelectQueryResult = Apollo.QueryResult<
+  CantonDigtSelectQuery,
+  CantonDigtSelectQueryVariables
+>;
+export const ParroquiaDigtSelectDocument = gql`
+  query ParroquiaDigtSelect(
+    $inputWhere: ParroquiaDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtParroquiaCollection(where: $inputWhere, order: $inputOrder) {
+      ...parroquiaDigtSelectFields
+    }
+  }
+  ${ParroquiaDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useParroquiaDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useParroquiaDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useParroquiaDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useParroquiaDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useParroquiaDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >(ParroquiaDigtSelectDocument, options);
+}
+export function useParroquiaDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >(ParroquiaDigtSelectDocument, options);
+}
+export function useParroquiaDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ParroquiaDigtSelectQuery,
+    ParroquiaDigtSelectQueryVariables
+  >(ParroquiaDigtSelectDocument, options);
+}
+export type ParroquiaDigtSelectQueryHookResult = ReturnType<
+  typeof useParroquiaDigtSelectQuery
+>;
+export type ParroquiaDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useParroquiaDigtSelectLazyQuery
+>;
+export type ParroquiaDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useParroquiaDigtSelectSuspenseQuery
+>;
+export type ParroquiaDigtSelectQueryResult = Apollo.QueryResult<
+  ParroquiaDigtSelectQuery,
+  ParroquiaDigtSelectQueryVariables
+>;
+export const ZonaDigtSelectDocument = gql`
+  query ZonaDigtSelect(
+    $inputWhere: ZonaDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtZonaCollection(where: $inputWhere, order: $inputOrder) {
+      ...zonaDigtSelectFields
+    }
+  }
+  ${ZonaDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useZonaDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useZonaDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useZonaDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useZonaDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useZonaDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ZonaDigtSelectQuery,
+    ZonaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ZonaDigtSelectQuery, ZonaDigtSelectQueryVariables>(
+    ZonaDigtSelectDocument,
+    options
+  );
+}
+export function useZonaDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ZonaDigtSelectQuery,
+    ZonaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ZonaDigtSelectQuery, ZonaDigtSelectQueryVariables>(
+    ZonaDigtSelectDocument,
+    options
+  );
+}
+export function useZonaDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ZonaDigtSelectQuery,
+    ZonaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ZonaDigtSelectQuery,
+    ZonaDigtSelectQueryVariables
+  >(ZonaDigtSelectDocument, options);
+}
+export type ZonaDigtSelectQueryHookResult = ReturnType<
+  typeof useZonaDigtSelectQuery
+>;
+export type ZonaDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useZonaDigtSelectLazyQuery
+>;
+export type ZonaDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useZonaDigtSelectSuspenseQuery
+>;
+export type ZonaDigtSelectQueryResult = Apollo.QueryResult<
+  ZonaDigtSelectQuery,
+  ZonaDigtSelectQueryVariables
+>;
+export const JuntaDigtSelectDocument = gql`
+  query JuntaDigtSelect(
+    $inputWhere: JuntaDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtJuntaCollection(where: $inputWhere, order: $inputOrder) {
+      ...juntaDigtSelectFields
+    }
+  }
+  ${JuntaDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useJuntaDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useJuntaDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useJuntaDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useJuntaDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useJuntaDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    JuntaDigtSelectQuery,
+    JuntaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<JuntaDigtSelectQuery, JuntaDigtSelectQueryVariables>(
+    JuntaDigtSelectDocument,
+    options
+  );
+}
+export function useJuntaDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    JuntaDigtSelectQuery,
+    JuntaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    JuntaDigtSelectQuery,
+    JuntaDigtSelectQueryVariables
+  >(JuntaDigtSelectDocument, options);
+}
+export function useJuntaDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    JuntaDigtSelectQuery,
+    JuntaDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    JuntaDigtSelectQuery,
+    JuntaDigtSelectQueryVariables
+  >(JuntaDigtSelectDocument, options);
+}
+export type JuntaDigtSelectQueryHookResult = ReturnType<
+  typeof useJuntaDigtSelectQuery
+>;
+export type JuntaDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useJuntaDigtSelectLazyQuery
+>;
+export type JuntaDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useJuntaDigtSelectSuspenseQuery
+>;
+export type JuntaDigtSelectQueryResult = Apollo.QueryResult<
+  JuntaDigtSelectQuery,
+  JuntaDigtSelectQueryVariables
+>;
+export const DignidadDigtSelectDocument = gql`
+  query DignidadDigtSelect(
+    $inputWhere: DignidadDigitalizacionFilterInput
+    $inputOrder: StringOrderInput
+  ) {
+    digtDignidadCollection(where: $inputWhere, order: $inputOrder) {
+      ...dignidadDigtSelectFields
+    }
+  }
+  ${DignidadDigtSelectFieldsFragmentDoc}
+`;
+
+/**
+ * __useDignidadDigtSelectQuery__
+ *
+ * To run a query within a React component, call `useDignidadDigtSelectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDignidadDigtSelectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDignidadDigtSelectQuery({
+ *   variables: {
+ *      inputWhere: // value for 'inputWhere'
+ *      inputOrder: // value for 'inputOrder'
+ *   },
+ * });
+ */
+export function useDignidadDigtSelectQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >(DignidadDigtSelectDocument, options);
+}
+export function useDignidadDigtSelectLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >(DignidadDigtSelectDocument, options);
+}
+export function useDignidadDigtSelectSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    DignidadDigtSelectQuery,
+    DignidadDigtSelectQueryVariables
+  >(DignidadDigtSelectDocument, options);
+}
+export type DignidadDigtSelectQueryHookResult = ReturnType<
+  typeof useDignidadDigtSelectQuery
+>;
+export type DignidadDigtSelectLazyQueryHookResult = ReturnType<
+  typeof useDignidadDigtSelectLazyQuery
+>;
+export type DignidadDigtSelectSuspenseQueryHookResult = ReturnType<
+  typeof useDignidadDigtSelectSuspenseQuery
+>;
+export type DignidadDigtSelectQueryResult = Apollo.QueryResult<
+  DignidadDigtSelectQuery,
+  DignidadDigtSelectQueryVariables
+>;
+export const DigtActaByJuntaListDocument = gql`
+  query DigtActaByJuntaList($dignidad_id: Int!, $junta_id: Int!) {
+    digtActaByJuntaList(dignidad_id: $dignidad_id, junta_id: $junta_id) {
+      ...actaDigtListFields
+    }
+  }
+  ${ActaDigtListFieldsFragmentDoc}
+`;
+
+/**
+ * __useDigtActaByJuntaListQuery__
+ *
+ * To run a query within a React component, call `useDigtActaByJuntaListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDigtActaByJuntaListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDigtActaByJuntaListQuery({
+ *   variables: {
+ *      dignidad_id: // value for 'dignidad_id'
+ *      junta_id: // value for 'junta_id'
+ *   },
+ * });
+ */
+export function useDigtActaByJuntaListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  > &
+    (
+      | { variables: DigtActaByJuntaListQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  >(DigtActaByJuntaListDocument, options);
+}
+export function useDigtActaByJuntaListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  >(DigtActaByJuntaListDocument, options);
+}
+export function useDigtActaByJuntaListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    DigtActaByJuntaListQuery,
+    DigtActaByJuntaListQueryVariables
+  >(DigtActaByJuntaListDocument, options);
+}
+export type DigtActaByJuntaListQueryHookResult = ReturnType<
+  typeof useDigtActaByJuntaListQuery
+>;
+export type DigtActaByJuntaListLazyQueryHookResult = ReturnType<
+  typeof useDigtActaByJuntaListLazyQuery
+>;
+export type DigtActaByJuntaListSuspenseQueryHookResult = ReturnType<
+  typeof useDigtActaByJuntaListSuspenseQuery
+>;
+export type DigtActaByJuntaListQueryResult = Apollo.QueryResult<
+  DigtActaByJuntaListQuery,
+  DigtActaByJuntaListQueryVariables
 >;
 export const MenuUpdateDocument = gql`
   mutation MenuUpdate($inputUpdate: MenuUpdateInput!) {
@@ -3761,6 +5132,14 @@ export const namedOperations = {
     Authlogout: "Authlogout",
     ProvinciaSelect: "ProvinciaSelect",
     EstablecimientoSelect: "EstablecimientoSelect",
+    AdminConfiguracionCollection: "AdminConfiguracionCollection",
+    ProvinciaDigtSelect: "ProvinciaDigtSelect",
+    CantonDigtSelect: "CantonDigtSelect",
+    ParroquiaDigtSelect: "ParroquiaDigtSelect",
+    ZonaDigtSelect: "ZonaDigtSelect",
+    JuntaDigtSelect: "JuntaDigtSelect",
+    DignidadDigtSelect: "DignidadDigtSelect",
+    DigtActaByJuntaList: "DigtActaByJuntaList",
     MenuCollection: "MenuCollection",
     Menu: "Menu",
     MenuSelect: "MenuSelect",
@@ -3796,6 +5175,14 @@ export const namedOperations = {
     authLogout: "authLogout",
     provinciaSelectFields: "provinciaSelectFields",
     establecimientoSelectFields: "establecimientoSelectFields",
+    adminConfiguracionFields: "adminConfiguracionFields",
+    provinciaDigtSelectFields: "provinciaDigtSelectFields",
+    cantonDigtSelectFields: "cantonDigtSelectFields",
+    parroquiaDigtSelectFields: "parroquiaDigtSelectFields",
+    zonaDigtSelectFields: "zonaDigtSelectFields",
+    juntaDigtSelectFields: "juntaDigtSelectFields",
+    dignidadDigtSelectFields: "dignidadDigtSelectFields",
+    actaDigtListFields: "actaDigtListFields",
     menuCollectionFields: "menuCollectionFields",
     menuIdFields: "menuIdFields",
     menuCrudFields: "menuCrudFields",

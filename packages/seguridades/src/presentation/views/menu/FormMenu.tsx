@@ -87,7 +87,7 @@ export const FormMenu = ({navigate}:{navigate:any}) => {
 			<div className="formgrid grid">
                 <div className='field col-12 md:col-4 mb-4'>
                     <TextInput disabled={false} label='Nombre *' name='titulo_menu' placeholder="Ingrese el Nombre" 
-					methods={methods} keyfilter='alpha' maxLength={20}
+					methods={methods}  maxLength={20}
 					/>
                 </div>
                 <div className='field col-12 md:col-4'>
