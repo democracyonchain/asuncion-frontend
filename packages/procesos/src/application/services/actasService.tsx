@@ -5,7 +5,8 @@ export const processSubmitForm=(
     parameters:
     {
         setVisible:any,toast:any,data:any,labels:any,
-        navigate:any,dispatch:any,listActaLazyQuery:any,setLabelQr:any
+        navigate:any,dispatch:any,listActaLazyQuery:any,setLabelQr:any,
+        setLabelQrAux:any
 })=>{
 
    parameters.listActaLazyQuery({
@@ -15,24 +16,39 @@ export const processSubmitForm=(
         },
         fetchPolicy: 'cache-and-network',
         onCompleted:(c:any)=>{ 
-            let datos = c?.digtActaByJuntaList;           
-            dataPdf(datos,parameters.data.idZona_acta.nombre);           
-            parameters.setLabelQr(
-                JSON.stringify(
-                    {
-                        codigo:datos.id,seguridad:datos.seguridad,provincia:parameters.data.idProvincia_acta.id,
-                        canton:parameters.data.idCanton_acta.id, parroquia:parameters.data.idParroquia_acta.id,
-                        zona:parameters.data.idZona_acta.id, junta:datos.junta.junta, sexo:datos.junta.sexo,
-                        dignidad:datos.dignidad.id
-                    })
-            );
+            let datos = c?.digtActaByJuntaList;          
+                       
+            let itemsPerPage = 8;
+            let valores=datos?.votos.length;
+            let parteEntera=Math.trunc(valores/itemsPerPage);
+            let resto=valores%itemsPerPage
+            let numPaginas=parteEntera + (resto>0?1:0);
+           
+
+            let numPaginasMap:any=[];
+            let numPaginasMapAux:any[string]=[]
+           
+
+            for (let aux=1; aux <= numPaginas; aux++){
+                numPaginasMap=[...numPaginasMap,{id:'qrcode_'+aux,pagina:'pagina ' + aux + '->' + tratamientoValues(datos,parameters.data)}];
+                 numPaginasMapAux['qrcode_'+aux]=''
+                for (var i = 0; i < datos?.votos.length; i++) {
+                    if (i >= (aux - 1) * itemsPerPage && i < aux * itemsPerPage) {
+                        numPaginasMapAux['qrcode_'+aux]=[...numPaginasMapAux['qrcode_'+aux], datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.orden] 
+                    }
+                }
+            }
+            parameters.setLabelQr(numPaginasMap);
+            parameters.setLabelQrAux(numPaginasMapAux);
+            dataPdf(datos,parameters.data.idZona_acta.nombre,numPaginas); 
+
         },onError:(error:any)=>{            
             //parameters.setDataJuntaSelect([]);
         }
     })
 }
 
-const dataPdf=(datos:any,zona:string)=>{
+export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
 
     const getAdminConfig=JSON.parse(sessionStorage.getItem('getAdminConfig') as any)
     const fecha = new Date(getAdminConfig[0].fechaproceso).toLocaleDateString('es',{ year: 'numeric', month: 'long',day: 'numeric'});
@@ -41,55 +57,20 @@ const dataPdf=(datos:any,zona:string)=>{
         import('jspdf-autotable').then(() => {
             const doc:any = new jsPDF.default('p', 'cm', 0 as any,true);           
             const totalPagesExp = 'total_pages_count_string';   
-            const img = document.querySelector('canvas#qr_code');           
-            
-             //Sección 1
-            doc.setFont('helvetica','','bold');
-            doc.setFontSize(9)
-            doc.text( `PROVINCIA:`,3,3,{align:'left'});
-            doc.text( `PARROQUIA:`,12,3,{align:'left'});
-
-            doc.setFont('helvetica','','normal');
-            doc.setFontSize(8)
-            doc.text( datos.junta.provincia.nombre,5,3,{align:'left'});
-            doc.text( datos.junta.parroquia.nombre,14.2,3,{align:'left'});
-
-            //Seccion 2
-            doc.setFont('helvetica','','bold');
-            doc.setFontSize(9)
-            doc.text( `CANTON:`,3,3.5,{align:'left'});
-            doc.text( `ZONA:`,12,3.5,{align:'left'});
-
-            doc.setFont('helvetica','','normal');
-            doc.setFontSize(8)
-            doc.text( datos.junta.canton.nombre,4.5,3.5,{align:'left'});
-            doc.text( zona,13.2,3.5,{align:'left'});
-
-            //Seccion 3
-            doc.setFont('helvetica','','bold');
-            doc.setFontSize(9)
-            doc.text( `CIRCUNSCRIPCIÓN:`,3,4,{align:'left'});
-            doc.text( `JUNTA N°:`,12,4,{align:'left'});
-
-            doc.setFont('helvetica','','normal');
-            doc.setFontSize(8)
-            doc.text( ' ',6.5,4,{align:'left'});
-            doc.text( datos.junta.junta + ' - ' + datos.junta.sexo ,14,4,{align:'left'});
-
-
+                
             doc.autoTable([
                 {title:'Lista',key:"lista"},{title:'Candidato',key:"candidato"},
                 {title:'Total en Letras',key:"valoresLetras"},{title:'Total en Números',key:"valoresNum"}
             ],tratamientoData(datos.votos),
                 {
                     startY: 5,
-                    margin: { top: 3,right:1,left:2.5 },
+                    margin: { top: 5.5,right:1,left:1 },
                     headStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01},
-                    bodyStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01,minCellHeight:2,valign:'middle'},	
+                    bodyStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01,minCellHeight:1.9,valign:'middle'},	
                     theme:'grid',
                     columnStyles: {  
                         lista: { cellWidth:1.5,halign: 'center',fillColor: [255, 255, 255],valign:'middle'},
-                        candidato: { cellWidth:3.5,halign: 'center',fillColor: [255, 255, 255]},
+                        candidato: { cellWidth:4,halign: 'center',fillColor: [255, 255, 255]},
                         valoresLetras: { cellWidth:7,halign: 'center',fillColor: [255, 255, 255]},
                     },
                     head:[
@@ -169,11 +150,6 @@ const dataPdf=(datos:any,zona:string)=>{
                             x: data.settings.margin.right + 9,
                             y: 1.7,
                           })
-                         
-                          doc.addImage(img, 'JPEG', 0.5, 5, 2, 2);
-                          if (imgAux) {
-                            doc.addImage(imgAux, 'JPEG', data.settings.margin.left - 0.5, 0.2, 2, 2)
-                          }
 
                         //Header
                         doc.setFontSize(10);
@@ -202,6 +178,40 @@ const dataPdf=(datos:any,zona:string)=>{
                         doc.text((datos.id).toString(), data.settings.margin.right + 10.6, 2)
                         doc.text((datos.seguridad).toString(), data.settings.margin.right + 16.3, 2)
 
+                         //Sección 1
+                        doc.setFont('helvetica','','bold');
+                        doc.setFontSize(9)
+                        doc.text( `PROVINCIA:`,4,3,{align:'left'});
+                        doc.text( `PARROQUIA:`,12,3,{align:'left'});
+
+                        doc.setFont('helvetica','','normal');
+                        doc.setFontSize(8)
+                        doc.text( datos.junta.provincia.nombre,6,3,{align:'left'});
+                        doc.text( datos.junta.parroquia.nombre,14.2,3,{align:'left'});
+
+                        //Seccion 2
+                        doc.setFont('helvetica','','bold');
+                        doc.setFontSize(9)
+                        doc.text( `CANTON:`,4,3.5,{align:'left'});
+                        doc.text( `ZONA:`,12,3.5,{align:'left'});
+
+                        doc.setFont('helvetica','','normal');
+                        doc.setFontSize(8)
+                        doc.text( datos.junta.canton.nombre,5.5,3.5,{align:'left'});
+                        doc.text( zona,13.2,3.5,{align:'left'});
+
+                        //Seccion 3
+                        doc.setFont('helvetica','','bold');
+                        doc.setFontSize(9)
+                        doc.text( `CIRCUNSCRIPCIÓN:`,4,4,{align:'left'});
+                        doc.text( `JUNTA N°:`,12,4,{align:'left'});
+
+                        doc.setFont('helvetica','','normal');
+                        doc.setFontSize(8)
+                        doc.text( ' ',6.5,4,{align:'left'});
+                        doc.text( datos.junta.junta + ' - ' + datos.junta.sexo ,14,4,{align:'left'});
+            
+
                       },
                     didDrawPage:function (data:any) {
                         const footer ='Blockchain Voting System | BSM';
@@ -221,17 +231,20 @@ const dataPdf=(datos:any,zona:string)=>{
                         doc.text(footerAsuncion, data.settings.margin.left, pageHeight - 0.5);
                         doc.text(footer, data.settings.margin.left, pageHeight - 0.9);  
                         doc.text(pagina,  doc.internal.pageSize.getWidth() / 2, pageHeight - 0.8)
-
-                        doc.saveGraphicsState();
                         doc.setFont('helvetica','','bold');
-                        doc.setGState(new doc.GState({opacity: 0.3}));
                         doc.setFontSize(50)
-                        doc.setTextColor('#ff0000');
                         
-                    },
+                     },
                     showHead:'firstPage'
                 }
             )
+
+            for (let aux=1; aux <= numPaginas; aux++){                
+                let img = document.querySelector('canvas#qrcode_'+aux);  
+                doc.setTextColor('#000000')
+                doc.setPage(aux)               
+                doc.addImage(img, 'JPEG', 0.2, 0, 3.8, 3.8)               
+            }
 
             if (typeof doc.putTotalPages === 'function') { 
                 doc.putTotalPages(totalPagesExp) 
@@ -240,8 +253,6 @@ const dataPdf=(datos:any,zona:string)=>{
         })
     })
 }
-
-
 
 const tratamientoData =(datos:any)=>{
     
@@ -256,6 +267,16 @@ const tratamientoData =(datos:any)=>{
     })
 
     return valores;
+}
+
+
+const tratamientoValues=(datos:any,formData:any)=>{
+
+    let objValues= datos.id + ',' + datos.seguridad + ',' + formData.idProvincia_acta.id + ',' +
+        formData.idCanton_acta.id + ',' + formData.idParroquia_acta.id + ',' +
+        formData.idZona_acta.id + ','+ datos.junta.junta + ',' + datos.junta.sexo + ',' +
+        datos.dignidad.id
+    return JSON.stringify(objValues)
 }
 
 export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:any,labelTab:any,setLabelTab:any,navigate:any})=>{

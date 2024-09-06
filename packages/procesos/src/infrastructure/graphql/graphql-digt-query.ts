@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { PROVINCIA_DIGT_SELECT_FIELDS,CANTON_DIGT_SELECT_FIELDS,PARROQUIA_DIGT_SELECT_FIELDS,ZONA_DIGT_SELECT_FIELDS,
-        JUNTA_DIGT_SELECT_FIELDS,DIGNIDAD_DIGT_SELECT_FIELDS, ACTA_DIGT_LIST_FIELDS } from '@infrastructure/graphql/graphql-digt-fragment';
+        JUNTA_DIGT_SELECT_FIELDS,DIGNIDAD_DIGT_SELECT_FIELDS, ACTA_DIGT_LIST_FIELDS,ACTA_DIGITALIZACION_LIST_FIELDS } from '@infrastructure/graphql/graphql-digt-fragment';
         
 export const GET_PROVINCIA_DIGT_SELECT =()=>{
 
@@ -127,5 +127,17 @@ export const GET_ACTA_DIGT_SELECT =()=>{
                     ...actaDigtListFields
                 }
             }
+    `
+}
+
+export const  GET_ACTA_DIGITALIZACION = ()=>{
+    return  gql`
+        ${ACTA_DIGITALIZACION_LIST_FIELDS}
+            query DigtActaByDignidadList($dignidad_id: Int!){
+                digtActaByDignidadList(dignidad_id:$dignidad_id){
+                ...actaByDigititalizacionListFields                
+                }
+            }
+    
     `
 }

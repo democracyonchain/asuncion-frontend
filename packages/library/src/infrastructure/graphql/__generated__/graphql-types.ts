@@ -35,32 +35,45 @@ export type Scalars = {
 
 export type ActaDigitalizacionVoto = {
   __typename?: "ActaDigitalizacionVoto";
-  blancos?: Maybe<Scalars["Float"]["output"]>;
-  blancoscontrol?: Maybe<Scalars["Float"]["output"]>;
   blancosdigitacion?: Maybe<Scalars["Float"]["output"]>;
-  blancosicr?: Maybe<Scalars["Float"]["output"]>;
   dignidad?: Maybe<DignidadDigitalizacion>;
   dignidad_id?: Maybe<Scalars["Float"]["output"]>;
   estado?: Maybe<Scalars["Float"]["output"]>;
-  fechacontrol?: Maybe<Scalars["DateScalar"]["output"]>;
-  fechadigitacion?: Maybe<Scalars["DateScalar"]["output"]>;
-  fechaescaneo?: Maybe<Scalars["DateScalar"]["output"]>;
   id: Scalars["Float"]["output"];
   junta?: Maybe<JuntaDigitalizacion>;
   junta_id?: Maybe<Scalars["Float"]["output"]>;
-  nulos?: Maybe<Scalars["Float"]["output"]>;
   nulosdigitacion?: Maybe<Scalars["Float"]["output"]>;
-  nulosicr?: Maybe<Scalars["Float"]["output"]>;
   peticion?: Maybe<Scalars["Float"]["output"]>;
   seguridad?: Maybe<Scalars["Float"]["output"]>;
-  sufragantes?: Maybe<Scalars["Float"]["output"]>;
-  sufragantescontrol?: Maybe<Scalars["Float"]["output"]>;
   sufragantesdigitacion?: Maybe<Scalars["Float"]["output"]>;
-  sufragantesicr?: Maybe<Scalars["Float"]["output"]>;
-  usuariocontrol?: Maybe<Scalars["Float"]["output"]>;
-  usuariodigitacion?: Maybe<Scalars["Float"]["output"]>;
-  usuarioescaneo?: Maybe<Scalars["Float"]["output"]>;
   votos: Array<VotosDigitalizacion>;
+};
+
+export type ActaDigitalizacionVotoImagen = {
+  __typename?: "ActaDigitalizacionVotoImagen";
+  blancosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  dignidad?: Maybe<DignidadDigitalizacion>;
+  dignidad_id?: Maybe<Scalars["Float"]["output"]>;
+  estado?: Maybe<Scalars["Float"]["output"]>;
+  id: Scalars["Float"]["output"];
+  junta?: Maybe<JuntaDigitalizacion>;
+  junta_id?: Maybe<Scalars["Float"]["output"]>;
+  nulosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  peticion?: Maybe<Scalars["Float"]["output"]>;
+  seguridad?: Maybe<Scalars["Float"]["output"]>;
+  sufragantesdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  votos: Array<VotosDigitalizacionAleatorio>;
+};
+
+export type ActaUpdateInput = {
+  blancos: Scalars["Int"]["input"];
+  id: Scalars["Int"]["input"];
+  imagenacta: ImagenActaUpdateInput;
+  imagensegmento: Array<ImagenSegmentoUpdateInput>;
+  nulos: Scalars["Int"]["input"];
+  sufragantes: Scalars["Int"]["input"];
+  votos: Array<VotosUpdateInput>;
+  votosicr?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type CandidatoDigitalizacion = {
@@ -174,6 +187,31 @@ export type GlobalResultType = {
   __typename?: "GlobalResultType";
   message: Scalars["String"]["output"];
   status: Scalars["Boolean"]["output"];
+};
+
+export type ImagenActaUpdateInput = {
+  hash?: InputMaybe<Scalars["String"]["input"]>;
+  imagen: Scalars["String"]["input"];
+  nombre: Scalars["String"]["input"];
+  pagina?: InputMaybe<Scalars["String"]["input"]>;
+  pathipfs?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type ImagenSegmentoDigitalizacionAleatorio = {
+  __typename?: "ImagenSegmentoDigitalizacionAleatorio";
+  candidato_id: Scalars["Float"]["output"];
+  dignidad_id: Scalars["Float"]["output"];
+  imagen?: Maybe<Scalars["String"]["output"]>;
+  junta_id: Scalars["Float"]["output"];
+  nombre: Scalars["String"]["output"];
+};
+
+export type ImagenSegmentoUpdateInput = {
+  candidato_id: Scalars["Int"]["input"];
+  hash?: InputMaybe<Scalars["String"]["input"]>;
+  imagen: Scalars["String"]["input"];
+  nombre: Scalars["String"]["input"];
+  pathipfs?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type JuntaDigitalizacion = {
@@ -340,6 +378,8 @@ export type Mutation = {
   adminUsuarioDelete: GlobalResultType;
   adminUsuarioUpdate: GlobalResultType;
   authCambioPassword: GlobalResultType;
+  digtActaUpdate: GlobalResultType;
+  digtVotosUpdate: GlobalResultType;
 };
 
 export type MutationAdminEstablecimientoCreateArgs = {
@@ -405,6 +445,14 @@ export type MutationAdminUsuarioUpdateArgs = {
 export type MutationAuthCambioPasswordArgs = {
   id?: InputMaybe<Scalars["Int"]["input"]>;
   password: Scalars["String"]["input"];
+};
+
+export type MutationDigtActaUpdateArgs = {
+  dataInput: ActaUpdateInput;
+};
+
+export type MutationDigtVotosUpdateArgs = {
+  dataInput: VotosDigitacionUpdateInput;
 };
 
 /** Filtros para cuando los filtros son de tipo numero */
@@ -588,6 +636,7 @@ export type Query = {
   authLogout: GlobalResultType;
   authModuloPermisosId: Array<ModuloAuth>;
   authPerfil: UsuarioAuth;
+  digtActaByDignidadList: ActaDigitalizacionVotoImagen;
   digtActaByJuntaList: ActaDigitalizacionVoto;
   digtCantonCollection?: Maybe<CantonDigitalizacionCollectionType>;
   digtDignidadCollection?: Maybe<DignidadDigitalizacionCollectionType>;
@@ -675,6 +724,10 @@ export type QueryAuthLoginArgs = {
 
 export type QueryAuthModuloPermisosIdArgs = {
   rol_id: Scalars["Int"]["input"];
+};
+
+export type QueryDigtActaByDignidadListArgs = {
+  dignidad_id: Scalars["Int"]["input"];
 };
 
 export type QueryDigtActaByJuntaListArgs = {
@@ -904,6 +957,17 @@ export type UsuarioUpdateInput = {
   username?: InputMaybe<Scalars["String"]["input"]>;
 };
 
+export type VotosDigitacionUpdateBasicInput = {
+  candidato_id: Scalars["Int"]["input"];
+  cifrado?: InputMaybe<Scalars["String"]["input"]>;
+  votosdigitacion: Scalars["Int"]["input"];
+};
+
+export type VotosDigitacionUpdateInput = {
+  acta_id: Scalars["Int"]["input"];
+  votos: Array<VotosDigitacionUpdateBasicInput>;
+};
+
 export type VotosDigitalizacion = {
   __typename?: "VotosDigitalizacion";
   candidato?: Maybe<CandidatoDigitalizacion>;
@@ -911,6 +975,18 @@ export type VotosDigitalizacion = {
   votoscontrol: Scalars["Float"]["output"];
   votosdigitacion: Scalars["Float"]["output"];
   votosicr: Scalars["Float"]["output"];
+};
+
+export type VotosDigitalizacionAleatorio = {
+  __typename?: "VotosDigitalizacionAleatorio";
+  candidato?: Maybe<CandidatoDigitalizacion>;
+  imagensegmento?: Maybe<ImagenSegmentoDigitalizacionAleatorio>;
+  votosdigitacion: Scalars["Float"]["output"];
+};
+
+export type VotosUpdateInput = {
+  candidato_id: Scalars["Int"]["input"];
+  votosicr: Scalars["Int"]["input"];
 };
 
 export type ZonaDigitalizacion = {
@@ -1230,29 +1306,15 @@ export type DignidadDigtSelectFieldsFragment = {
 
 export type ActaDigtListFieldsFragment = {
   __typename?: "ActaDigitalizacionVoto";
-  blancos?: number | null;
-  blancoscontrol?: number | null;
   blancosdigitacion?: number | null;
-  blancosicr?: number | null;
   dignidad_id?: number | null;
   estado?: number | null;
-  fechacontrol?: any | null;
-  fechadigitacion?: any | null;
-  fechaescaneo?: any | null;
   id: number;
   junta_id?: number | null;
-  nulos?: number | null;
   nulosdigitacion?: number | null;
-  nulosicr?: number | null;
   peticion?: number | null;
   seguridad?: number | null;
-  sufragantes?: number | null;
-  sufragantescontrol?: number | null;
   sufragantesdigitacion?: number | null;
-  sufragantesicr?: number | null;
-  usuariocontrol?: number | null;
-  usuariodigitacion?: number | null;
-  usuarioescaneo?: number | null;
   dignidad?: {
     __typename?: "DignidadDigitalizacion";
     ambito?: string | null;
@@ -1311,6 +1373,65 @@ export type ActaDigtListFieldsFragment = {
         lista?: string | null;
         siglas?: string | null;
       } | null;
+    } | null;
+  }>;
+};
+
+export type ActaByDigititalizacionListFieldsFragment = {
+  __typename?: "ActaDigitalizacionVotoImagen";
+  blancosdigitacion?: number | null;
+  dignidad_id?: number | null;
+  estado?: number | null;
+  id: number;
+  junta_id?: number | null;
+  nulosdigitacion?: number | null;
+  peticion?: number | null;
+  seguridad?: number | null;
+  sufragantesdigitacion?: number | null;
+  dignidad?: {
+    __typename?: "DignidadDigitalizacion";
+    ambito?: string | null;
+    estado?: number | null;
+    id: number;
+    nombre?: string | null;
+    orden?: number | null;
+  } | null;
+  junta?: {
+    __typename?: "JuntaDigitalizacion";
+    electores: number;
+    id: number;
+    junta: number;
+    sexo: string;
+    zona_id?: number | null;
+  } | null;
+  votos: Array<{
+    __typename?: "VotosDigitalizacionAleatorio";
+    votosdigitacion: number;
+    candidato?: {
+      __typename?: "CandidatoDigitalizacion";
+      cedula?: string | null;
+      id: number;
+      nombre: string;
+      orden?: number | null;
+      dignidad?: {
+        __typename?: "DignidadDigitalizacion";
+        ambito?: string | null;
+        estado?: number | null;
+        id: number;
+        nombre?: string | null;
+        orden?: number | null;
+      } | null;
+      partido?: {
+        __typename?: "PartidoDigitalizacion";
+        lista?: string | null;
+        nombre?: string | null;
+      } | null;
+    } | null;
+    imagensegmento?: {
+      __typename?: "ImagenSegmentoDigitalizacionAleatorio";
+      imagen?: string | null;
+      junta_id: number;
+      nombre: string;
     } | null;
   }>;
 };
@@ -1429,29 +1550,15 @@ export type DigtActaByJuntaListQuery = {
   __typename?: "Query";
   digtActaByJuntaList: {
     __typename?: "ActaDigitalizacionVoto";
-    blancos?: number | null;
-    blancoscontrol?: number | null;
     blancosdigitacion?: number | null;
-    blancosicr?: number | null;
     dignidad_id?: number | null;
     estado?: number | null;
-    fechacontrol?: any | null;
-    fechadigitacion?: any | null;
-    fechaescaneo?: any | null;
     id: number;
     junta_id?: number | null;
-    nulos?: number | null;
     nulosdigitacion?: number | null;
-    nulosicr?: number | null;
     peticion?: number | null;
     seguridad?: number | null;
-    sufragantes?: number | null;
-    sufragantescontrol?: number | null;
     sufragantesdigitacion?: number | null;
-    sufragantesicr?: number | null;
-    usuariocontrol?: number | null;
-    usuariodigitacion?: number | null;
-    usuarioescaneo?: number | null;
     dignidad?: {
       __typename?: "DignidadDigitalizacion";
       ambito?: string | null;
@@ -1510,6 +1617,72 @@ export type DigtActaByJuntaListQuery = {
           lista?: string | null;
           siglas?: string | null;
         } | null;
+      } | null;
+    }>;
+  };
+};
+
+export type DigtActaByDignidadListQueryVariables = Exact<{
+  dignidad_id: Scalars["Int"]["input"];
+}>;
+
+export type DigtActaByDignidadListQuery = {
+  __typename?: "Query";
+  digtActaByDignidadList: {
+    __typename?: "ActaDigitalizacionVotoImagen";
+    blancosdigitacion?: number | null;
+    dignidad_id?: number | null;
+    estado?: number | null;
+    id: number;
+    junta_id?: number | null;
+    nulosdigitacion?: number | null;
+    peticion?: number | null;
+    seguridad?: number | null;
+    sufragantesdigitacion?: number | null;
+    dignidad?: {
+      __typename?: "DignidadDigitalizacion";
+      ambito?: string | null;
+      estado?: number | null;
+      id: number;
+      nombre?: string | null;
+      orden?: number | null;
+    } | null;
+    junta?: {
+      __typename?: "JuntaDigitalizacion";
+      electores: number;
+      id: number;
+      junta: number;
+      sexo: string;
+      zona_id?: number | null;
+    } | null;
+    votos: Array<{
+      __typename?: "VotosDigitalizacionAleatorio";
+      votosdigitacion: number;
+      candidato?: {
+        __typename?: "CandidatoDigitalizacion";
+        cedula?: string | null;
+        id: number;
+        nombre: string;
+        orden?: number | null;
+        dignidad?: {
+          __typename?: "DignidadDigitalizacion";
+          ambito?: string | null;
+          estado?: number | null;
+          id: number;
+          nombre?: string | null;
+          orden?: number | null;
+        } | null;
+        partido?: {
+          __typename?: "PartidoDigitalizacion";
+          lista?: string | null;
+          nombre?: string | null;
+        } | null;
+      } | null;
+      imagensegmento?: {
+        __typename?: "ImagenSegmentoDigitalizacionAleatorio";
+        imagen?: string | null;
+        junta_id: number;
+        nombre: string;
       } | null;
     }>;
   };
@@ -2310,29 +2483,15 @@ export const DignidadDigtSelectFieldsFragmentDoc = gql`
 `;
 export const ActaDigtListFieldsFragmentDoc = gql`
   fragment actaDigtListFields on ActaDigitalizacionVoto {
-    blancos
-    blancoscontrol
     blancosdigitacion
-    blancosicr
     dignidad_id
     estado
-    fechacontrol
-    fechadigitacion
-    fechaescaneo
     id
     junta_id
-    nulos
     nulosdigitacion
-    nulosicr
     peticion
     seguridad
-    sufragantes
-    sufragantescontrol
     sufragantesdigitacion
-    sufragantesicr
-    usuariocontrol
-    usuariodigitacion
-    usuarioescaneo
     dignidad {
       ambito
       estado
@@ -2382,6 +2541,58 @@ export const ActaDigtListFieldsFragmentDoc = gql`
           lista
           siglas
         }
+      }
+    }
+  }
+`;
+export const ActaByDigititalizacionListFieldsFragmentDoc = gql`
+  fragment actaByDigititalizacionListFields on ActaDigitalizacionVotoImagen {
+    blancosdigitacion
+    dignidad_id
+    estado
+    id
+    junta_id
+    nulosdigitacion
+    peticion
+    seguridad
+    sufragantesdigitacion
+    dignidad {
+      ambito
+      estado
+      id
+      nombre
+      orden
+    }
+    junta {
+      electores
+      id
+      junta
+      sexo
+      zona_id
+    }
+    votos {
+      votosdigitacion
+      candidato {
+        cedula
+        id
+        nombre
+        orden
+        dignidad {
+          ambito
+          estado
+          id
+          nombre
+          orden
+        }
+        partido {
+          lista
+          nombre
+        }
+      }
+      imagensegmento {
+        imagen
+        junta_id
+        nombre
       }
     }
   }
@@ -3717,6 +3928,84 @@ export type DigtActaByJuntaListSuspenseQueryHookResult = ReturnType<
 export type DigtActaByJuntaListQueryResult = Apollo.QueryResult<
   DigtActaByJuntaListQuery,
   DigtActaByJuntaListQueryVariables
+>;
+export const DigtActaByDignidadListDocument = gql`
+  query DigtActaByDignidadList($dignidad_id: Int!) {
+    digtActaByDignidadList(dignidad_id: $dignidad_id) {
+      ...actaByDigititalizacionListFields
+    }
+  }
+  ${ActaByDigititalizacionListFieldsFragmentDoc}
+`;
+
+/**
+ * __useDigtActaByDignidadListQuery__
+ *
+ * To run a query within a React component, call `useDigtActaByDignidadListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDigtActaByDignidadListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDigtActaByDignidadListQuery({
+ *   variables: {
+ *      dignidad_id: // value for 'dignidad_id'
+ *   },
+ * });
+ */
+export function useDigtActaByDignidadListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  > &
+    (
+      | { variables: DigtActaByDignidadListQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  >(DigtActaByDignidadListDocument, options);
+}
+export function useDigtActaByDignidadListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  >(DigtActaByDignidadListDocument, options);
+}
+export function useDigtActaByDignidadListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    DigtActaByDignidadListQuery,
+    DigtActaByDignidadListQueryVariables
+  >(DigtActaByDignidadListDocument, options);
+}
+export type DigtActaByDignidadListQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadListQuery
+>;
+export type DigtActaByDignidadListLazyQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadListLazyQuery
+>;
+export type DigtActaByDignidadListSuspenseQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadListSuspenseQuery
+>;
+export type DigtActaByDignidadListQueryResult = Apollo.QueryResult<
+  DigtActaByDignidadListQuery,
+  DigtActaByDignidadListQueryVariables
 >;
 export const MenuUpdateDocument = gql`
   mutation MenuUpdate($inputUpdate: MenuUpdateInput!) {
@@ -5140,6 +5429,7 @@ export const namedOperations = {
     JuntaDigtSelect: "JuntaDigtSelect",
     DignidadDigtSelect: "DignidadDigtSelect",
     DigtActaByJuntaList: "DigtActaByJuntaList",
+    DigtActaByDignidadList: "DigtActaByDignidadList",
     MenuCollection: "MenuCollection",
     Menu: "Menu",
     MenuSelect: "MenuSelect",
@@ -5183,6 +5473,7 @@ export const namedOperations = {
     juntaDigtSelectFields: "juntaDigtSelectFields",
     dignidadDigtSelectFields: "dignidadDigtSelectFields",
     actaDigtListFields: "actaDigtListFields",
+    actaByDigititalizacionListFields: "actaByDigititalizacionListFields",
     menuCollectionFields: "menuCollectionFields",
     menuIdFields: "menuIdFields",
     menuCrudFields: "menuCrudFields",

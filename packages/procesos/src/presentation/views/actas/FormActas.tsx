@@ -5,7 +5,7 @@ import { FormCore,graphql,UtilsSpinner,SelectInput } from "@bsc/library";
 import { formActa} from '@application/components/form'
 import { 
         processResetForm,processSubmitForm,processProvinciaSelect,processCantonSelect,processParroquiaSelect,processZonaSelect,
-        processJuntaSelect,processDignidadSelect } from "@application/services/actasService"
+        processJuntaSelect,processDignidadSelect,dataPdf as exporPDF } from "@application/services/actasService"
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 import QRCode from 'qrcode.react';
@@ -25,7 +25,8 @@ export const FormActas = ({navigate}:{navigate:any}) => {
 	const { setValue, clearErrors,reset,getValues } = methods;
 
 	//Hook State
-	const [ labelQr, setLabelQr] = useState<string|null>(null)
+	const [ labelQr, setLabelQr] = useState<string|null|any>(null)
+    const [ labelQrAux, setLabelQrAux] = useState<string|null|any>(false)
 	const [ visible,setVisible] =useState<{status:boolean,mensaje:string,accept?:any,reject?:any}>(
 		{
 			status:false,mensaje:'',accept:()=>{},reject:()=>{}
@@ -62,7 +63,7 @@ export const FormActas = ({navigate}:{navigate:any}) => {
 			<UtilsSpinner visible={loadingActa}/>
 			<FormCore 
 				labels={labels} 
-				onSubmit={(data:any)=>{processSubmitForm({data,setVisible,toast,labels,navigate,dispatch,listActaLazyQuery,setLabelQr})}} 
+				onSubmit={(data:any)=>{processSubmitForm({data,setVisible,toast,labels,navigate,dispatch,listActaLazyQuery,setLabelQr,setLabelQrAux})}} 
 				onReset={()=>processResetForm({clearErrors,reset,dispatch,labelTab,setLabelTab,navigate})}
 				methods={methods}
 				visible={visible}
@@ -175,7 +176,9 @@ export const FormActas = ({navigate}:{navigate:any}) => {
                     />
 				</div>			
 			</div>
-            {(labelQr)&&<QRCode value={labelQr} id='qr_code' className='hidden'  includeMargin/>}
+            {(labelQr)&&labelQr.map((items:any, key:any)=>{             
+               return <div key={key}>{(labelQrAux !==null)? <QRCode value={ items.pagina + JSON.stringify(labelQrAux[items.id])} id={items.id} className='hidden'  includeMargin />:''}  {items.id}</div>
+            })}
             
 			</FormCore>
 		</>
