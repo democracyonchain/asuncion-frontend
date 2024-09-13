@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>Blockchain Voting</title><script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script><meta name="importmap-type" content="systemjs-importmap"/><style>.lds-ring {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -50px;
+			margin-left: -50px;
+			width: 90px;
+			height: 90px;
+		}
+		.lds-ring div {
+			box-sizing: border-box;
+			display: block;
+			position: absolute;
+			width: 90px;
+			height: 90px;
+			margin: 9px;
+			border: 9px solid #5543bb;
+			border-radius: 50%;
+			animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+			border-color: #6366f1 transparent transparent transparent;
+		}
+		.lds-ring div:nth-child(1) {
+		  	animation-delay: -0.45s;
+		}
+		.lds-ring div:nth-child(2) {
+		  	animation-delay: -0.3s;
+		}
+		.lds-ring div:nth-child(3) {
+		  	animation-delay: -0.15s;
+		}
+		@keyframes lds-ring {
+		  0% {
+			transform: rotate(0deg);
+		  }
+		  100% {
+			transform: rotate(360deg);
+		  }
+		}</style><script type="systemjs-importmap">{
+		"imports": {
+			"single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
+			"react":  "https://unpkg.com/react@18.2.0/umd/react.production.min.js",
+			"react-dom": "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"
+		}
+		}</script><link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script"><script id="env-import-map">var params = new URLSearchParams(window.location.search);
+		var environmentUrl= '';
+		var environment= 'dev';
+		const impMaps_version= '1.0.1' 
+		
+		var script = document.createElement('script');
+
+		if(environment != "local"){
+			script.setAttribute('src', environmentUrl + '/importmap.' + environment + '.json?V='+impMaps_version)
+			script.setAttribute('type', 'systemjs-importmap');
+			document.querySelector('#env-import-map').after(script);
+		}</script><script src="https://cdn.jsdelivr.net/npm/import-map-overrides@2.2.0/dist/import-map-overrides.js"></script><script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/system.min.js"></script><script src="https://cdn.jsdelivr.net/npm/systemjs@6.8.3/dist/extras/amd.min.js"></script></head><body><noscript>You need to enable JavaScript to run this app.</noscript><script>System.import('@bsc/root-config');
+		System.import('@bsc/library');</script><import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full></body></html>
