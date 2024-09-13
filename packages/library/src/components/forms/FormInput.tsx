@@ -28,7 +28,7 @@ interface IReactHookFormTextProps {
     placeholder?:string
     disabled?:boolean
     actionBoton?:boolean
-    value?:string
+    value?:any
     isBoton?:boolean
     textoBoton?:string
     onClick?: (e: MouseEvent<HTMLButtonElement>)=>void
@@ -84,6 +84,7 @@ interface IReactHookFormTextProps {
     toggleMask?:boolean
     header?:string|null|JSX.Element|JSX.Element[]
     footer?:string|null|JSX.Element|JSX.Element[]
+   
 }
 export const TextInput = ( 
     {   
@@ -91,8 +92,9 @@ export const TextInput = (
         onClick,methods,onChange,onBlur,onChangeDate,useGrouping=true,feedback=false,
         maxLength,minLength,readOnly=false,optInput,buttonLayout,toggleMask=true,
         defaultValue,prefix,dateFormat='yy-mm-dd',mask,ischecked=false,header='',footer='',
-        minDate,maxDate,locales='en-US', mode=null , currency=null, suffix, showButtons=false,
-        rows=4, cols=30, autoResize=false, keyfilter,showTime=false,timeOnly=false,selectionMode='single'
+        minDate,maxDate,locales='en-US', mode=undefined , currency=undefined, suffix, showButtons=false,
+        rows=4, cols=30, autoResize=false, keyfilter,showTime=false,timeOnly=false,selectionMode='single',
+        value=0
     }:
     IReactHookFormTextProps) => {
 
@@ -266,7 +268,8 @@ export const TextInput = (
                 <>
                     <Controller
                     name={name}
-                    control={control}								
+                    control={control}
+                    defaultValue={defaultValue}								
                     render={({ field, fieldState }) => (
                         <>
                             <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label> 
@@ -297,7 +300,8 @@ export const TextInput = (
                 <>
                     <Controller
                     name={name}
-                    control={control}								
+                    control={control}
+                    defaultValue={defaultValue}								
                     render={({ field, fieldState }) => (
                         <>
                             <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label> 
@@ -323,7 +327,8 @@ export const TextInput = (
                 <>
                      <Controller
                         name={name}
-                        control={control}								
+                        control={control}			
+                        defaultValue={defaultValue}					
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
@@ -360,7 +365,8 @@ export const TextInput = (
                 <>
                      <Controller
                         name={name}
-                        control={control}								
+                        control={control}
+                        defaultValue={defaultValue}								
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
@@ -422,7 +428,8 @@ export const TextInput = (
                 <>
                     <Controller
                         name={name}
-                        control={control}								
+                        control={control}	
+                        defaultValue={defaultValue}							
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold'}`}>{label}</label>                            
@@ -458,12 +465,13 @@ export const TextInput = (
                 <>
                     <Controller
                         name={name}
-                        control={control}								
+                        control={control}
+                        defaultValue={defaultValue} 								
                         render={({ field, fieldState }) => (
-                            <>
+                            <>                              
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold block mb-2' }`}>{label}</label>                            
                                 <InputText id={field.name} value={field.value}  className={' w-full p-inputtext-sm  text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}} 
-                                onChange={(e) => field.onChange(e.target.value)} placeholder={placeholder} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
+                                onChange={(e:any) => {field.onChange(e.target.value); (onChange)?onChange(e.target.value):null}} placeholder={placeholder} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
                                 maxLength={maxLength} minLength={minLength} keyfilter={keyfilter}  invalid={(errors[field.name]?.message)?true:false}
                                 />										
                             

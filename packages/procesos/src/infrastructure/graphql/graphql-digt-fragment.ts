@@ -125,54 +125,20 @@ export const ACTA_DIGT_LIST_FIELDS = gql`
 
 export const ACTA_DIGITALIZACION_LIST_FIELDS = gql`
     fragment actaByDigititalizacionListFields on ActaDigitalizacionVotoImagen{
-        blancosdigitacion
-        dignidad_id
-        estado
         id
-        junta_id
-        nulosdigitacion
-        peticion
-        seguridad
-        sufragantesdigitacion
-        dignidad {
-            ambito
-            estado
-            id
-            nombre
-            orden
-        }
-        junta {
-            electores
-            id
-            junta
-            sexo
-            zona_id
-        }
         votos {
             votosdigitacion
-            candidato {
-                cedula
-                id
-                nombre
-                orden
-                dignidad {
-                    ambito
-                    estado
-                    id
-                    nombre
-                    orden
-                }
-                partido {
-                    lista
-                    nombre
-                }
-            }
             imagensegmento {
                 imagen
-                junta_id
-                nombre
+                candidato_id               
             }
         }
     }
+`
+export const ACTADIGITA_CRUD_FIELDS =  gql`
 
+    fragment actaDigitaCrudFields on GlobalResultType{
+        message
+        status
+    }
 `

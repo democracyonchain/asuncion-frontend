@@ -8,3 +8,9 @@ export const schemaActas = Yup.object().shape({
     idDignidad_acta:Yup.mixed().required('Este campo Dignidad es requerido'),
     idJunta_acta:Yup.mixed().required('Este campo Junta es requerido'),
 })
+
+export const schemaActaDigita = Yup.object().shape({
+   
+    idDignidad_acta:Yup.mixed().required('Este campo Dignidad es requerido'),
+   
+})

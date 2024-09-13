@@ -1,6 +1,5 @@
-import imgAux from "@presentation/images/logo4.png";
 import "jspdf-barcode";
-
+import { setCache,setInitial,setMessage } from '@presentation/actions';
 export const processSubmitForm=(
     parameters:
     {
@@ -447,4 +446,101 @@ export const processDignidadSelect =(parameters:{getDignidadLazyQuery:any,setDat
             parameters.setDataDignidadSelect([]);
         }
     })
+}
+
+export const processActaDignidad=(
+    parameters:
+    {
+        toast:any,data:any,listActaDigitaLazyQuery:any,setDataDigita:any,setStatusLoading:any
+})=>{
+    parameters.setStatusLoading(true);
+    parameters.listActaDigitaLazyQuery({
+            variables:{   
+                dignidad_id: parameters.data.idDignidad_acta.id,
+            },
+            fetchPolicy: 'cache-and-network',
+            onCompleted:(c:any)=>{ 
+                parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
+                parameters.setDataDigita(c.digtActaByDignidadList);
+                parameters.setStatusLoading(false);
+            },onError:(error:any)=>{
+                parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });  
+                parameters.setStatusLoading(false); 
+            }
+        })
+}
+
+export const processSaveDigita=async (parameters:{setVisible:any,toast:any,data:any,digtVotosUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
+    
+    let dataFaltante=parameters.data.atributoRecorte.filter((x:any)=>x === null);
+    if(dataFaltante.length >0){
+        parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail:'Registre todos los valores del listado Acta', life: 3000 });    
+        return false;
+    }
+
+    parameters.setVisible(
+        {
+            status:true,mensaje:`Esta seguro que desea Procesar esta Acta?`,
+            accept:()=>{
+                processUpdateDigitaVoto(
+                    {
+                        data:parameters.data,toast:parameters.toast,
+                        digtVotosUpdateMutation:parameters.digtVotosUpdateMutation,
+                        navigate:parameters.navigate,setStatusLoading:parameters.setStatusLoading,
+                        dispatch:parameters.dispatch,
+                    }
+                )
+            },reject:()=>{}
+        }
+    );
+    
+}
+
+const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
+    try{
+   
+        const CryptoTS = require("crypto-ts");
+        const iv =  CryptoTS.enc.Utf8.parse('algorithmencript');
+        const key = 'asuncionbackalgorithmencript2024';
+                
+        let dataRecorte=update.data.atributoRecorte;
+        let dataCandidato=update.data.dataGeneral.candidatoId   
+        let dataSave:{candidato_id:number,votosdigitacion:number,cifrado:string}[]=[];
+                
+        dataRecorte.forEach((element:any,x:number) => {   
+            dataSave=[...dataSave,{
+                candidato_id:dataCandidato[x],
+                votosdigitacion:parseInt(element),
+                cifrado: CryptoTS.AES.encrypt(JSON.stringify(
+                    {candidato_id:dataCandidato[x],votosdigitacion:element}),  key,
+                        {
+                            mode: CryptoTS.mode.CBC,
+                            iv: iv,  
+                        }
+                    ).toString()
+                }
+            ]
+        });
+        update.setStatusLoading(true);
+        update.digtVotosUpdateMutation({
+            variables:{
+                inputUpdate: {
+                    acta_id:update.data.actaId,
+                   votos:dataSave
+               }
+            },onCompleted:(c:any)=>{      
+                update.navigate("record");
+                update.dispatch(setInitial({initial:1}))
+                update.dispatch(setMessage({message:c.digtVotosUpdate?.message}))
+                update.setStatusLoading(false);
+            },onError:(error:any)=>{
+                update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });   
+                update.setStatusLoading(false);           
+           }
+        })
+    
+    
+        }catch(e:any){
+            update.setStatusLoading(false);
+        }
 }
