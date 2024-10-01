@@ -1,11 +1,11 @@
-import { FC, ReactNode,MouseEvent, KeyboardEvent, useState, useEffect, useRef } from 'react';
+import { FC, ReactNode,MouseEvent, KeyboardEvent, useState, useEffect } from 'react';
 import { InputText } from "primereact/inputtext";
 import { Controller } from "react-hook-form";
 import { classNames } from 'primereact/utils';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { locale, addLocale, updateLocaleOption, updateLocaleOptions, localeOption, localeOptions } from 'primereact/api';
+import { locale, addLocale } from 'primereact/api';
 import { Calendar } from 'primereact/calendar';
 import { Editor, EditorTextChangeEvent } from "primereact/editor";
 import { Checkbox } from "primereact/checkbox";
@@ -15,7 +15,7 @@ import { InputSwitch,InputSwitchChangeEvent } from 'primereact/inputswitch';
 import { MultiSelect, MultiSelectChangeEvent } from 'primereact/multiselect';
 import { Password } from 'primereact/password';
 import { Message } from 'primereact/message';
-import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
+import { RadioButton } from "primereact/radiobutton";
 interface IReactHookFormTextProps {
     type?:string
     variant?:string |undefined 
@@ -28,7 +28,7 @@ interface IReactHookFormTextProps {
     placeholder?:string
     disabled?:boolean
     actionBoton?:boolean
-    value?:string
+    value?:any
     isBoton?:boolean
     textoBoton?:string
     onClick?: (e: MouseEvent<HTMLButtonElement>)=>void
@@ -84,15 +84,66 @@ interface IReactHookFormTextProps {
     toggleMask?:boolean
     header?:string|null|JSX.Element|JSX.Element[]
     footer?:string|null|JSX.Element|JSX.Element[]
+   
 }
+/**
+ * TextInput component that renders different types of input fields based on the `optInput` prop.
+ * 
+ * @param {Object} props - The properties object.
+ * @param {string} props.label - The label for the input field.
+ * @param {string} props.name - The name attribute for the input field.
+ * @param {string} [props.size] - The size of the input field.
+ * @param {string} [props.placeholder] - The placeholder text for the input field.
+ * @param {boolean} [props.disabled] - Whether the input field is disabled.
+ * @param {number} [props.minFractionDigits] - Minimum number of fraction digits for number input.
+ * @param {number} [props.maxFractionDigits] - Maximum number of fraction digits for number input.
+ * @param {function} [props.onClick] - Click event handler.
+ * @param {Object} props.methods - Methods provided by react-hook-form.
+ * @param {function} [props.onChange] - Change event handler.
+ * @param {function} [props.onBlur] - Blur event handler.
+ * @param {function} [props.onChangeDate] - Change event handler for date input.
+ * @param {boolean} [props.useGrouping=true] - Whether to use grouping for number input.
+ * @param {boolean} [props.feedback=false] - Whether to show feedback for password input.
+ * @param {number} [props.maxLength] - Maximum length for text input.
+ * @param {number} [props.minLength] - Minimum length for text input.
+ * @param {boolean} [props.readOnly=false] - Whether the input field is read-only.
+ * @param {string} [props.optInput] - The type of input field to render.
+ * @param {string} [props.buttonLayout] - Layout for buttons in number input.
+ * @param {boolean} [props.toggleMask=true] - Whether to toggle mask for password input.
+ * @param {any} [props.defaultValue] - Default value for the input field.
+ * @param {string} [props.prefix] - Prefix for number input.
+ * @param {string} [props.dateFormat='yy-mm-dd'] - Date format for calendar input.
+ * @param {string} [props.mask] - Mask pattern for masked input.
+ * @param {boolean} [props.ischecked=false] - Whether the switch is checked.
+ * @param {string} [props.header=''] - Header for password input.
+ * @param {string} [props.footer=''] - Footer for password input.
+ * @param {Date} [props.minDate] - Minimum date for calendar input.
+ * @param {Date} [props.maxDate] - Maximum date for calendar input.
+ * @param {string} [props.locales='en-US'] - Locale for number input.
+ * @param {string} [props.mode=undefined] - Mode for number input.
+ * @param {string} [props.currency=undefined] - Currency for number input.
+ * @param {string} [props.suffix] - Suffix for number input.
+ * @param {boolean} [props.showButtons=false] - Whether to show buttons for number input.
+ * @param {number} [props.rows=4] - Number of rows for textarea input.
+ * @param {number} [props.cols=30] - Number of columns for textarea input.
+ * @param {boolean} [props.autoResize=false] - Whether to auto-resize textarea input.
+ * @param {string} [props.keyfilter] - Key filter for input.
+ * @param {boolean} [props.showTime=false] - Whether to show time in calendar input.
+ * @param {boolean} [props.timeOnly=false] - Whether to show only time in calendar input.
+ * @param {string} [props.selectionMode='single'] - Selection mode for calendar input.
+ * @param {number} [props.value=0] - Value for the input field.
+ * 
+ * @returns {JSX.Element} The rendered input field based on the `optInput` prop.
+ */
 export const TextInput = ( 
     {   
         label,name, size,  placeholder, disabled,minFractionDigits,maxFractionDigits,
         onClick,methods,onChange,onBlur,onChangeDate,useGrouping=true,feedback=false,
         maxLength,minLength,readOnly=false,optInput,buttonLayout,toggleMask=true,
         defaultValue,prefix,dateFormat='yy-mm-dd',mask,ischecked=false,header='',footer='',
-        minDate,maxDate,locales='en-US', mode=null , currency=null, suffix, showButtons=false,
-        rows=4, cols=30, autoResize=false, keyfilter,showTime=false,timeOnly=false,selectionMode='single'
+        minDate,maxDate,locales='en-US', mode=undefined , currency=undefined, suffix, showButtons=false,
+        rows=4, cols=30, autoResize=false, keyfilter,showTime=false,timeOnly=false,selectionMode='single',
+        value=0
     }:
     IReactHookFormTextProps) => {
 
@@ -263,10 +314,11 @@ export const TextInput = (
 
         case 'N'://Number
             input = 
-                <>
+                <div>
                     <Controller
                     name={name}
-                    control={control}								
+                    control={control}
+                    defaultValue={defaultValue}								
                     render={({ field, fieldState }) => (
                         <>
                             <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label> 
@@ -288,16 +340,17 @@ export const TextInput = (
                         </>
                     )}
                     />    
-                </>
+                </div>
 
         break
 
         case 'A': //TextArea
             input = 
-                <>
+                <div>
                     <Controller
                     name={name}
-                    control={control}								
+                    control={control}
+                    defaultValue={defaultValue}								
                     render={({ field, fieldState }) => (
                         <>
                             <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label> 
@@ -316,14 +369,15 @@ export const TextInput = (
                         </>
                     )}
                     />
-                </>
+                </div>
             break;
         case 'C': //Calendar
             input = 
-                <>
+                <div>
                      <Controller
                         name={name}
-                        control={control}								
+                        control={control}			
+                        defaultValue={defaultValue}					
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
@@ -353,14 +407,15 @@ export const TextInput = (
                         )}
                     />    
 
-                </>
+                </div>
         break
         case 'M': //Mascara
             input =
-                <>
+                <div>
                      <Controller
                         name={name}
-                        control={control}								
+                        control={control}
+                        defaultValue={defaultValue}								
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-gray-700'}`}>{label}</label>                            
@@ -385,12 +440,12 @@ export const TextInput = (
                             </>
                         )}
                     />    
-                </>
+                </div>
         break
         
         case 'S': //switch
             input =
-                <>
+                <div>
                     <Controller
                         name={name}
                         control={control}								
@@ -414,15 +469,16 @@ export const TextInput = (
                             </>
                         )}
                     />    
-                </>
+                </div>
         break
         
         case 'P'://Password
             input =
-                <>
+                <div>
                     <Controller
                         name={name}
-                        control={control}								
+                        control={control}	
+                        defaultValue={defaultValue}							
                         render={({ field, fieldState }) => (
                             <>
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold'}`}>{label}</label>                            
@@ -450,20 +506,21 @@ export const TextInput = (
                             </>
                         )}
                     />    
-                </>                    
+                </div>                    
         break
 
         default :        
             input =        
-                <>
+                <div>
                     <Controller
                         name={name}
-                        control={control}								
+                        control={control}
+                        defaultValue={defaultValue} 								
                         render={({ field, fieldState }) => (
-                            <>
+                            <>                              
                                 <label htmlFor={field.name} className={`${errors[field.name]?.message?'text-sm p-error':'text-sm text-600 font-semibold block mb-2' }`}>{label}</label>                            
                                 <InputText id={field.name} value={field.value}  className={' w-full p-inputtext-sm  text-sm '+ classNames({ 'p-invalid': fieldState.error }) + {size}} 
-                                onChange={(e) => field.onChange(e.target.value)} placeholder={placeholder} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
+                                onChange={(e:any) => {field.onChange(e.target.value); (onChange)?onChange(e.target.value):null}} placeholder={placeholder} defaultValue={defaultValue} readOnly={readOnly} disabled={disabled}
                                 maxLength={maxLength} minLength={minLength} keyfilter={keyfilter}  invalid={(errors[field.name]?.message)?true:false}
                                 />										
                             
@@ -476,7 +533,7 @@ export const TextInput = (
                             </>
                         )}
                     />    
-                </>
+                </div>
         
         break;       
     }
@@ -503,6 +560,23 @@ interface IReactHookFormSelectProps {
 }
 
 
+/**
+ * SelectInput component for rendering a dropdown input within a form.
+ * 
+ * @param {IReactHookFormSelectProps} props - The properties for the SelectInput component.
+ * @param {string} props.name - The name of the input field.
+ * @param {string} props.label - The label for the input field.
+ * @param {Array} props.data - The data to populate the dropdown options.
+ * @param {object} props.methods - The methods provided by react-hook-form.
+ * @param {boolean} [props.isDisabled] - Flag to disable the dropdown.
+ * @param {function} [props.onChangeSelect] - Callback function to handle change events.
+ * @param {string} [props.placeholder='--Seleccione--'] - Placeholder text for the dropdown.
+ * @param {any} [props.defaultValue] - Default value for the dropdown.
+ * @param {boolean} [props.isObject=false] - Flag to determine if the value is an object.
+ * @param {boolean} [props.loading=false] - Flag to show loading state.
+ * 
+ * @returns {JSX.Element} The rendered SelectInput component.
+ */
 export const SelectInput: FC<IReactHookFormSelectProps> = (
     {
         name, label, data, methods, isDisabled, onChangeSelect, placeholder='--Seleccione--',defaultValue,
@@ -526,7 +600,7 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
         },[data])
 
         return (
-            <>
+            <div>
             
             <Controller
                 name={name}
@@ -568,7 +642,7 @@ export const SelectInput: FC<IReactHookFormSelectProps> = (
                 )}
             />    
 
-            </>
+            </div>
         )
 }
 
@@ -581,11 +655,37 @@ interface IReactHookEditorProps{
 }
 
 
+/**
+ * EditorInput component renders a controlled text editor input field using React Hook Form's Controller.
+ * 
+ * @param {boolean} [readOnly=false] - Determines if the editor is read-only.
+ * @param {object} [style={ height: '320px' }] - Custom styles for the editor component.
+ * @param {object} methods - Methods provided by React Hook Form.
+ * @param {string} label - Label for the editor input.
+ * @param {string} name - Name of the field being controlled.
+ * 
+ * @returns {JSX.Element} The rendered EditorInput component.
+ * 
+ * @component
+ * 
+ * @example
+ * const methods = useForm();
+ * 
+ * return (
+ *   <EditorInput
+ *     readOnly={false}
+ *     style={{ height: '320px' }}
+ *     methods={methods}
+ *     label="Description"
+ *     name="description"
+ *   />
+ * );
+ */
 export const EditorInput =({readOnly=false,style={ height: '320px' },methods,label,name}:IReactHookEditorProps)=>{
     
     const { formState: { errors }, control} = methods;
     return (
-        <>
+        <div>
             <Controller
                 name={name}
                 control={control}								
@@ -602,10 +702,23 @@ export const EditorInput =({readOnly=false,style={ height: '320px' },methods,lab
                     </>
                 )}
             />    
-        </>
+        </div>
     )
 }
 
+/**
+ * CheckBoxInput component renders a checkbox input field with validation and error handling.
+ *
+ * @param {Object} props - The properties object.
+ * @param {boolean} [props.disabled=false] - Indicates if the checkbox is disabled.
+ * @param {any} props.methods - Methods provided by react-hook-form for form handling.
+ * @param {string} props.label - The label for the checkbox input.
+ * @param {string} props.name - The name of the checkbox input field.
+ * @param {any} props.value - The value of the checkbox input.
+ * @param {function} [props.onChangeCheck=()=>{}] - Optional callback function to handle change events.
+ *
+ * @returns {JSX.Element} The rendered checkbox input component.
+ */
 export const CheckBoxInput=({disabled=false,methods,label,name,value,onChangeCheck=()=>{}}:{
         disabled:boolean, methods:any, label:string,  name: string,value:any
         onChangeCheck?:(e: MouseEvent<HTMLButtonElement>)=>void
@@ -615,7 +728,7 @@ export const CheckBoxInput=({disabled=false,methods,label,name,value,onChangeChe
     const { formState: { errors }, control} = methods;
     
     return (
-        <>
+        <div>
             <Controller
                 name={name}
                 control={control}								
@@ -639,11 +752,25 @@ export const CheckBoxInput=({disabled=false,methods,label,name,value,onChangeChe
                     </>
                 )}
             />    
-        </>
+        </div>
     )
 } 
 
 
+/**
+ * InputGroup component renders an input field with a button and error message.
+ *
+ * @param {Object} props - The properties object.
+ * @param {Object} props.methods - The methods object containing form methods.
+ * @param {string} props.name - The name of the input field.
+ * @param {string} props.label - The label for the button.
+ * @param {string} [props.icon='pi pi-search'] - The icon for the button.
+ * @param {string} [props.placeholder='Keyword'] - The placeholder text for the input field.
+ * @param {boolean} [props.readOnly=false] - Whether the input field is read-only.
+ * @param {Function} props.onClick - The function to call when the button is clicked.
+ *
+ * @returns {JSX.Element} The rendered InputGroup component.
+ */
 export const InputGroup=(
         {methods, name,label, icon='pi pi-search',placeholder="Keyword",readOnly=false,onClick}:
         {methods:any,name: string,label:string, icon:string,placeholder:string,readOnly:boolean,onClick:any})=>{
@@ -667,6 +794,34 @@ export const InputGroup=(
     )
 }
 
+/**
+ * MultiSelectInput is a functional component that renders a multi-select input field
+ * using React Hook Form's Controller for form state management.
+ *
+ * @param {IReactHookFormSelectProps} props - The properties for the MultiSelectInput component.
+ * @param {string} props.name - The name of the form field.
+ * @param {string} props.label - The label for the form field.
+ * @param {Array<{id: any, nombre: any}> | undefined} props.data - The data options for the multi-select input.
+ * @param {object} props.methods - The methods provided by React Hook Form.
+ * @param {boolean} [props.isDisabled] - Flag to disable the multi-select input.
+ * @param {function} [props.onChangeSelect] - Callback function to handle change events.
+ * @param {string} [props.placeholder] - Placeholder text for the multi-select input.
+ * @param {any} [props.defaultValue] - Default value for the multi-select input.
+ * @param {boolean} [props.loading] - Flag to show loading state for the multi-select input.
+ *
+ * @returns {JSX.Element} The rendered multi-select input component.
+ *
+ * @example
+ * <MultiSelectInput
+ *   name="example"
+ *   label="Example Label"
+ *   data={[{ id: 1, nombre: 'Option 1' }, { id: 2, nombre: 'Option 2' }]}
+ *   methods={methods}
+ *   isDisabled={false}
+ *   placeholder="Select options"
+ *   loading={false}
+ * />
+ */
 export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
     {
         name, label, data, methods, isDisabled, onChangeSelect, placeholder,defaultValue,loading
@@ -690,7 +845,7 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
         },[data])
 
         return (
-            <>
+            <div>
             
             <Controller
                 name={name}
@@ -719,11 +874,25 @@ export const MultiSelectInput: FC<IReactHookFormSelectProps> = (
                 )}
             />    
 
-            </>
+            </div>
         )
 }
 
 
+/**
+ * RadioButtonInput component renders a radio button input field with validation and error handling.
+ *
+ * @param {Object} props - The properties object.
+ * @param {boolean} props.disabled - Indicates if the radio button should be disabled.
+ * @param {any} props.methods - Methods provided by react-hook-form for form handling.
+ * @param {string} props.label - The label text for the radio button.
+ * @param {string} props.name - The name attribute for the radio button.
+ * @param {any} props.value - The value of the radio button.
+ * @param {string} [props.inputId=''] - The id attribute for the radio button input.
+ * @param {any} [props.setValue] - Optional function to set the value of the radio button.
+ *
+ * @returns {JSX.Element} The rendered RadioButtonInput component.
+ */
 export const RadioButtonInput=({disabled=false,methods,label,name,value,inputId='',setValue}:{
     disabled:boolean, methods:any, label:string,  name: string,value:any, inputId:string,setValue?:any
 
@@ -733,13 +902,13 @@ const { formState: { errors }, control } = methods;
 const [valueRadio, setValueRadio] = useState<any>(setValue);
 
 return (
-    <>
+    <div>
         <Controller
             name={name}
             control={control}		
             defaultValue={valueRadio}						
             render={({ field, fieldState }) => (
-                <>                                              
+                <div>                                              
                     <RadioButton                                              
                         disabled={disabled} 
                         inputId={inputId} 
@@ -759,9 +928,9 @@ return (
                             {errors[field.name]?.message}
                         </small>
                     }
-                </>
+                </div>
             )}
         />    
-    </>
+    </div>
 )
 } 

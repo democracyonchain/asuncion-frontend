@@ -1,6 +1,23 @@
 import { setEtiqueta,setLoadView } from '@store/slices/';
 import { Badge } from 'primereact/badge';
 import Icon from '@mui/material/Icon';
+/**
+ * Función para manejar el evento de guardar autenticación.
+ * 
+ * @param metodos - Objeto que contiene los métodos y datos necesarios para la autenticación.
+ * @param metodos.dataForm - Datos del formulario de autenticación.
+ * @param metodos.dispatch - Función para despachar acciones al estado global.
+ * @param metodos.setAuthloginLazyQuery - Función para ejecutar la consulta de autenticación.
+ * @param metodos.trigger - (Opcional) Función adicional para disparar eventos.
+ * @param metodos.navigate - Función para navegar a diferentes rutas.
+ * 
+ * La función realiza las siguientes acciones:
+ * 1. Despacha una acción para mostrar una vista de carga.
+ * 2. Despacha una acción para resetear la etiqueta de mensaje.
+ * 3. Ejecuta la consulta de autenticación con los datos del formulario.
+ * 4. En caso de éxito, guarda el token de usuario en el localStorage y navega a la ruta de seguridades.
+ * 5. En caso de error, despacha una acción para mostrar el mensaje de error y oculta la vista de carga.
+ */
 export const onClikSaveAuth =(
     metodos:{dataForm:any,dispatch:any,setAuthloginLazyQuery:any,trigger?:any,navigate:any}
 )=>{
@@ -26,6 +43,18 @@ export const onClikSaveAuth =(
     )
 }
 
+/**
+ * Procesa la autenticación del perfil del usuario.
+ *
+ * @param parameters - Un objeto que contiene las siguientes propiedades:
+ * @param parameters.setAuthPerfilLazyQuery - Función para establecer la consulta perezosa del perfil de autenticación.
+ * @param parameters.navigate - Función para navegar a una ruta específica.
+ *
+ * La función realiza una consulta perezosa para obtener el perfil de autenticación del usuario. 
+ * Si la consulta se completa con éxito, almacena los datos del usuario en el localStorage y el rol del usuario en el sessionStorage, 
+ * y luego navega a la ruta "/app/seguridades". 
+ * Si ocurre un error durante la consulta, limpia el localStorage y el sessionStorage, y navega a la misma ruta.
+ */
 export const processAuthPerfil =(parameters:{setAuthPerfilLazyQuery:any,navigate:any})=>{
     
     parameters.setAuthPerfilLazyQuery({
@@ -54,6 +83,18 @@ export const processAuthPerfil =(parameters:{setAuthPerfilLazyQuery:any,navigate
 
 }
 
+/**
+ * Envía los datos del rol seleccionado y procesa los permisos de autenticación del módulo.
+ *
+ * @param parameters - Objeto que contiene los parámetros necesarios para la función.
+ * @param parameters.data - Datos relacionados con el rol.
+ * @param parameters.getRolSession - Función para obtener la sesión del rol.
+ * @param parameters.setVisible - Función para establecer la visibilidad.
+ * @param parameters.toast - Función para mostrar notificaciones.
+ * @param parameters.setAuthModuloPermisosIdLazyQuery - Función para establecer la consulta perezosa de permisos de módulo de autenticación.
+ * @param parameters.dispatch - Función para despachar acciones.
+ * @param parameters.navigate - Función para navegar entre rutas.
+ */
 export const onSubmitRol=(parameters:{data:any,getRolSession:any,setVisible:any,toast:any,setAuthModuloPermisosIdLazyQuery:any,dispatch:any,navigate:any})=>{
        
     const dataAuxRol=parameters.getRolSession[parameters.data.roles]
@@ -68,6 +109,18 @@ export const onSubmitRol=(parameters:{data:any,getRolSession:any,setVisible:any,
     processAuthModuloPermisosId(parameters,dataAuxRol);
 }
 
+/**
+ * Envía la nueva contraseña y maneja la respuesta del servidor.
+ *
+ * @param parameters - Objeto que contiene los parámetros necesarios para la función.
+ * @param parameters.data - Datos que contienen la nueva contraseña.
+ * @param parameters.setVisible - Función para establecer la visibilidad de algún componente.
+ * @param parameters.toast - Referencia al componente de notificación.
+ * @param parameters.setAuthAuthCambioPasswordLazyQuery - Función para ejecutar la consulta de cambio de contraseña.
+ * @param parameters.dispatch - Función para despachar acciones al store de Redux.
+ * @param parameters.navigate - Función para navegar a diferentes rutas.
+ * @param parameters.setAuthlogoutLazyQuery - Función para ejecutar la consulta de cierre de sesión.
+ */
 export const onSubmitPass=(parameters:{data:any,setVisible:any,toast:any,setAuthAuthCambioPasswordLazyQuery:any,dispatch:any,navigate:any,setAuthlogoutLazyQuery:any})=>{
     parameters.dispatch(setLoadView(true));
     parameters.setAuthAuthCambioPasswordLazyQuery(
@@ -87,6 +140,26 @@ export const onSubmitPass=(parameters:{data:any,setVisible:any,toast:any,setAuth
         }
     )
 }
+/**
+ * Procesa la autorización del módulo y permisos por ID.
+ *
+ * @param {any} parameters - Objeto que contiene los parámetros necesarios para la función.
+ * @param {any} dataAuxRol - Objeto que contiene la información del rol auxiliar.
+ *
+ * La función realiza las siguientes acciones:
+ * 1. Despacha una acción para establecer la vista de carga a verdadero.
+ * 2. Establece una consulta perezosa para obtener los permisos del módulo por ID del rol.
+ * 3. En caso de éxito, realiza las siguientes acciones:
+ *    - Despacha una acción para establecer la vista de carga a falso.
+ *    - Elimina el elemento 'dataMenuUser' del sessionStorage.
+ *    - Establece el elemento 'getModuloSession' en el sessionStorage con los datos obtenidos.
+ *    - Establece la visibilidad de ciertos parámetros.
+ *    - Navega a la ruta "/app/seguridades".
+ *    - Muestra un mensaje de éxito utilizando un componente de toast.
+ * 4. En caso de error, realiza las siguientes acciones:
+ *    - Muestra un mensaje de error utilizando un componente de toast.
+ *    - Despacha una acción para establecer la vista de carga a falso.
+ */
 export const processAuthModuloPermisosId=(parameters:any,dataAuxRol:any)=>{
     
     parameters.dispatch(setLoadView(true));
@@ -124,12 +197,38 @@ export const processAuthModuloPermisosId=(parameters:any,dataAuxRol:any)=>{
     )
 } 
 
+/**
+ * Función que maneja la navegación y almacenamiento de datos del menú de usuario en la sesión.
+ *
+ * @param {Object} parameters - Parámetros para la función.
+ * @param {any} parameters.dataMenuUser - Datos del menú de usuario.
+ * @param {string} parameters.modulo - Nombre del módulo.
+ * @param {any} parameters.navigate - Función de navegación.
+ * @param {string} parameters.url - URL a la que se debe navegar.
+ *
+ * @returns {void}
+ */
 export const coreMenuUser=(parameters:{dataMenuUser:any,modulo:string,navigate:any,url:string})=>{
     parameters.navigate(parameters.url);
     sessionStorage.setItem("dataMenuUser",JSON.stringify({dataMenuUser:parameters.dataMenuUser,modulo:parameters.modulo}) as any);
     
 }
 
+/**
+ * Genera un menú genérico basado en los parámetros proporcionados.
+ * 
+ * @param parameters - Objeto que contiene los datos necesarios para generar el menú.
+ * @param parameters.dataAuxMenu - Datos auxiliares del menú que se utilizarán para construir los elementos del menú.
+ * @param parameters.dataMenuUser - Datos del menú del usuario (no utilizado en la función actual).
+ * @param parameters.navigate - Función de navegación para redirigir a diferentes rutas.
+ * 
+ * @returns Un array de objetos que representan los elementos del menú.
+ * 
+ * La función `coreMenuModulo` construye un menú genérico utilizando los datos proporcionados en `parameters.dataAuxMenu`.
+ * Si `dataAuxMenu` está presente, se mapea para crear elementos del menú con etiquetas, íconos y comandos específicos.
+ * Cada elemento del menú puede tener una plantilla personalizada y un comando que se ejecuta al hacer clic.
+ * La función también incluye un elemento de plantilla estático y un separador.
+ */
 export const coreMenuModulo=(parameters:{dataAuxMenu:any,dataMenuUser:any,navigate:any})=>{
 
     const itemRenderer = (item:any) => (
@@ -200,6 +299,21 @@ export const coreMenuModulo=(parameters:{dataAuxMenu:any,dataMenuUser:any,naviga
 }
 
 
+/**
+ * Procesa el cierre de sesión de autenticación.
+ *
+ * @param {Object} parameters - Parámetros necesarios para el proceso de cierre de sesión.
+ * @param {Function} parameters.dispatch - Función para despachar acciones al store.
+ * @param {Function} parameters.setAuthlogoutLazyQuery - Función para ejecutar la consulta de cierre de sesión.
+ * @param {Function} parameters.navigate - Función para navegar a diferentes rutas.
+ * @param {Object} parameters.toast - Referencia al componente de notificación para mostrar mensajes.
+ *
+ * Esta función realiza las siguientes acciones:
+ * 1. Despacha una acción para mostrar una vista de carga.
+ * 2. Ejecuta la consulta de cierre de sesión con una política de caché y red.
+ * 3. En caso de éxito, oculta la vista de carga, navega a la ruta de seguridades y limpia el almacenamiento local y de sesión.
+ * 4. En caso de error, oculta la vista de carga, muestra un mensaje de error, navega a la ruta de seguridades y limpia el almacenamiento local y de sesión.
+ */
 export const processAuthLogout=(parameters:{dispatch:any,setAuthlogoutLazyQuery:any,navigate:any,toast:any})=>{
 
     parameters.dispatch(setLoadView(true));
@@ -242,6 +356,22 @@ interface IpermisosValues  {
         initRead?:number
     }
 };
+/**
+ * Función que obtiene y procesa los accesos almacenados en el sessionStorage bajo la clave "accesosBsc".
+ * 
+ * @returns {IpermisosValues} Un objeto que contiene los permisos de botones y el conteo de accesos.
+ * 
+ * El objeto retornado tiene la siguiente estructura:
+ * - `onView`: Indica si el usuario tiene permiso para ver.
+ * - `onEdit`: Indica si el usuario tiene permiso para editar.
+ * - `onDelete`: Indica si el usuario tiene permiso para eliminar.
+ * - `onPrint`: Indica si el usuario tiene permiso para imprimir.
+ * - `onAdd`: Indica si el usuario tiene permiso para crear.
+ * - `conteo`: Un objeto que contiene la configuración inicial basada en los permisos:
+ *   - `initDefault`: Puede ser 'new' o 'record' dependiendo de los permisos.
+ *   - `initCreate`: Indica el estado inicial de creación.
+ *   - `initRead`: Indica el estado inicial de lectura.
+ */
 export const coreAccesosBsc=()=>{
     const accesos=JSON.parse(sessionStorage.getItem("accesosBsc") as any);
     let getAccesos={};
@@ -284,6 +414,27 @@ export const coreAccesosBsc=()=>{
 
 }
 
+/**
+ * Procesa la configuración de administrador.
+ *
+ * @param parameters - Un objeto que contiene la consulta `getConfiguracionLazyQuery`.
+ * @param parameters.getConfiguracionLazyQuery - Función de consulta que obtiene la configuración.
+ *
+ * Esta función ejecuta la consulta `getConfiguracionLazyQuery` con las variables necesarias para
+ * obtener la configuración del administrador. Utiliza una política de obtención de datos de 
+ * 'cache-and-network'. 
+ *
+ * - En caso de éxito (`onCompleted`), guarda los datos de configuración del administrador en 
+ *   `sessionStorage` bajo la clave "getAdminConfig".
+ * - En caso de error (`onError`), limpia tanto `localStorage` como `sessionStorage`.
+ *
+ * @example
+ * ```typescript
+ * processAdminConfiguracion({
+ *   getConfiguracionLazyQuery: someLazyQueryFunction
+ * });
+ * ```
+ */
 export const processAdminConfiguracion =(parameters:{getConfiguracionLazyQuery:any})=>{
     
     parameters.getConfiguracionLazyQuery({

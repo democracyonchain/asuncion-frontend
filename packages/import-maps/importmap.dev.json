@@ -1,0 +1,8 @@
+{
+    "imports": {
+        "@bsc/root-config": "http://localhost/bsc-root-config.js?V=1.0.0",
+        "@bsc/seguridades": "http://localhost/@bsc/seguridades/1.0.0/main.js?V=1.0.0",
+        "@bsc/library": "http://localhost/@bsc/library/1.0.0/main.js?V=1.0.0",
+        "@bsc/procesos": "http://localhost/@bsc/procesos/1.0.0/main.js?V=1.0.0"
+    }
+}

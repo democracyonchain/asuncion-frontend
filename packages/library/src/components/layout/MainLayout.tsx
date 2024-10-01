@@ -1,8 +1,37 @@
 import { coreMenuUser } from '@components/service/authservice';
 import { useNavigate } from "react-router-dom";
 import { Card } from 'primereact/card';
-import { UtilsButton } from '@components/partials/Utils';
+
 import Icon from '@mui/material/Icon';
+/**
+ * Componente `MainLayout`.
+ * 
+ * Este componente representa el diseño principal de la aplicación. 
+ * Recupera la sesión del módulo desde el almacenamiento de la sesión y 
+ * muestra una lista de tarjetas con información del módulo.
+ * 
+ * @returns {JSX.Element} El diseño principal de la aplicación.
+ * 
+ * Variables Generales:
+ * - `getModuloSession`: Recupera y analiza la sesión del módulo desde el almacenamiento de la sesión.
+ * 
+ * Hooks:
+ * - `useNavigate`: Hook de navegación para redirigir a diferentes rutas.
+ * 
+ * Estructura del Componente:
+ * - Contenedor principal con clases de estilo.
+ * - Encabezado con el nombre de la aplicación.
+ * - Lista de tarjetas generadas dinámicamente a partir de `getModuloSession`.
+ * 
+ * Cada tarjeta contiene:
+ * - Título del módulo.
+ * - Subtítulo con información adicional.
+ * - Ícono representativo del módulo.
+ * 
+ * Eventos:
+ * - `onClick`: Llama a la función `coreMenuUser` con los datos del menú del usuario, 
+ *   nombre del módulo, función de navegación y URL del módulo.
+ */
 export const MainLayout = () => {
     //Varibles Generales
     const getModuloSession=JSON.parse(sessionStorage.getItem("getModuloSession") as any);

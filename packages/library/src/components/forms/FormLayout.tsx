@@ -15,6 +15,33 @@ interface IFormValues{
     visible?:any
     toast?:any
 }
+/**
+ * Componente `FormLayout` que proporciona un diseño de formulario utilizando `FormProvider` y `UtilsModal`.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {string | JSX.Element | JSX.Element[]} props.children - Elementos hijos que se renderizarán dentro del formulario.
+ * @param {any} props.methods - Métodos proporcionados por `react-hook-form`.
+ * @param {any} props.onSubmit - Función que se ejecuta al enviar el formulario.
+ * @param {Object} props.labels - Etiquetas para los botones del formulario.
+ * @param {string} props.labels.btn1 - Etiqueta del primer botón (por defecto 'Cancelar').
+ * @param {string} props.labels.btn2 - Etiqueta del segundo botón (por defecto 'Guardar').
+ * @param {string} [props.labels.btn3] - Etiqueta del tercer botón (opcional).
+ * @param {string} [props.labels.btn4] - Etiqueta del cuarto botón (opcional).
+ * @param {boolean} props.labels.icon - Indicador de si se deben mostrar iconos en los botones.
+ * @param {boolean} props.labels.btnload - Indicador de si los botones deben mostrar un estado de carga.
+ * @param {string} [props.opt=Constantes.NUEVO_REGISTRO] - Opción actual del formulario (por defecto `Constantes.NUEVO_REGISTRO`).
+ * @param {any} props.onReset - Función que se ejecuta al resetear el formulario.
+ * @param {any} props.visibleModal - Propiedades de visibilidad del modal.
+ * @param {boolean} props.visibleModal.closable - Indicador de si el modal se puede cerrar.
+ * @param {boolean} props.visibleModal.closeOnEscape - Indicador de si el modal se cierra al presionar la tecla Escape.
+ * @param {JSX.Element} props.visibleModal.header - Elemento de cabecera del modal.
+ * @param {boolean} props.visibleModal.active - Indicador de si el modal está activo.
+ * @param {Dispatch<any>} [props.setVisibleModal] - Función para cambiar la visibilidad del modal.
+ * @param {boolean} props.visibleModal.maximizable - Indicador de si el modal se puede maximizar.
+ * @param {string} [props.width='50rem'] - Ancho del modal (por defecto '50rem').
+ * 
+ * @returns {JSX.Element} El componente `FormLayout` renderizado.
+ */
 export const FormLayout = (
     { 
         children,methods,onSubmit,labels={btn1:'Cancelar',btn2:'Guardar',btn3:'',btn4:'',icon:true,btnload:false},
@@ -87,6 +114,24 @@ export const FormLayout = (
 }
 
 
+/**
+ * Componente `FormLayoutInit` que proporciona un diseño de formulario utilizando `FormProvider` de React Hook Form.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Elementos hijos que se renderizarán dentro del formulario.
+ * @param {Object} props.methods - Métodos proporcionados por React Hook Form.
+ * @param {Function} props.onSubmit - Función que se ejecuta al enviar el formulario.
+ * @param {Object} [props.labels] - Etiquetas para los botones del formulario.
+ * @param {string} [props.labels.btn1='Cancelar'] - Etiqueta para el primer botón (Cancelar).
+ * @param {string} [props.labels.btn2='Guardar'] - Etiqueta para el segundo botón (Guardar).
+ * @param {string} [props.labels.btn3=''] - Etiqueta para el tercer botón (opcional).
+ * @param {string} [props.labels.btn4=''] - Etiqueta para el cuarto botón (opcional).
+ * @param {boolean} [props.labels.icon=true] - Indicador de si se debe mostrar un icono en los botones.
+ * @param {boolean} [props.labels.btnload=false] - Indicador de si se debe mostrar un cargador en los botones.
+ * @param {Function} props.onReset - Función que se ejecuta al hacer clic en el botón de restablecer.
+ * 
+ * @returns {JSX.Element} El componente `FormLayoutInit`.
+ */
 export const FormLayoutInit = (
     { 
         children,methods,onSubmit,labels={btn1:'Cancelar',btn2:'Guardar',btn3:'',btn4:'',icon:true,btnload:false},onReset
@@ -115,6 +160,27 @@ export const FormLayoutInit = (
         )
 }
 
+/**
+ * Componente `FormCore` que proporciona una estructura de formulario con encabezado y pie de página personalizados.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Elementos hijos que se renderizarán dentro del formulario.
+ * @param {Object} props.methods - Métodos proporcionados por `react-hook-form` para manejar el formulario.
+ * @param {Function} props.onSubmit - Función que se ejecuta al enviar el formulario.
+ * @param {Object} [props.labels] - Etiquetas para los botones del formulario.
+ * @param {string} [props.labels.btn1='Cancelar'] - Etiqueta del primer botón.
+ * @param {string} [props.labels.btn2='Guardar'] - Etiqueta del segundo botón.
+ * @param {string} [props.labels.btn3=''] - Etiqueta del tercer botón.
+ * @param {string} [props.labels.btn4=''] - Etiqueta del cuarto botón.
+ * @param {boolean} [props.labels.icon=true] - Indica si se debe mostrar un icono en los botones.
+ * @param {boolean} [props.labels.btnload=false] - Indica si se debe mostrar un indicador de carga en los botones.
+ * @param {Function} props.onReset - Función que se ejecuta al restablecer el formulario.
+ * @param {Function} props.setVisible - Función para establecer la visibilidad del componente de confirmación.
+ * @param {Object} props.visible - Estado de visibilidad del componente de confirmación.
+ * @param {Object} props.toast - Referencia al componente `Toast` para mostrar mensajes.
+ * 
+ * @returns {JSX.Element} El componente `FormCore`.
+ */
 export const FormCore=(
     { 
         children,methods,onSubmit,labels={btn1:'Cancelar',btn2:'Guardar',btn3:'',btn4:'',icon:true,btnload:false},

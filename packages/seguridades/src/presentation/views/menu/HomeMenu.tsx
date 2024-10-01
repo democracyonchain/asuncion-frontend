@@ -6,6 +6,23 @@ import { setInitial,setLabelTab,resetAction } from '@presentation/actions';
 import { GridMenu, FormMenu} from '@presentation/views/menu';
 import { useEffect } from "react";
 
+/**
+ * Componente `HomeMenu` que representa el menú principal de la aplicación.
+ * 
+ * Este componente utiliza Redux para gestionar el estado y react-router para la navegación.
+ * 
+ * @returns {JSX.Element} El componente `HomeMenu`.
+ * 
+ * @remarks
+ * - Utiliza `useSelector` para obtener el estado inicial y las etiquetas del menú desde el estado de Redux.
+ * - Utiliza `useDispatch` para despachar acciones que resetean el estado y establecen nuevas etiquetas para el menú.
+ * - Utiliza `useEffect` para despachar acciones cuando el componente se monta.
+ * 
+ * @example
+ * ```tsx
+ * <HomeMenu />
+ * ```
+ */
 export const HomeMenu = () => {
     const navigate = useNavigate();
     
@@ -19,7 +36,7 @@ export const HomeMenu = () => {
     },[])
    
     return (
-        <>            
+        <div>            
             <UtilsCoreTabMenu 
                 model={{labelNew:labelTab?.labelNew,labelGrid:labelTab.labelGrid,iconNew:labelTab.iconNew,iconGrid:labelTab.iconGrid}}                
                 useRoutes={useRoutes}
@@ -30,6 +47,6 @@ export const HomeMenu = () => {
                 setInitial={setInitial}
                 dispatch={dispatch}
             />
-        </>
+        </div>
     )
 }

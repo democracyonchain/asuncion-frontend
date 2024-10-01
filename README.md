@@ -10,7 +10,9 @@
 
 ## Actores
 
-* **Juan Guanolema** / Responsable Técnico / juan.guanolema@democracyonchain.com
+* **David Tacuri**
+* **Juan Guanolema**
+* **Luis Nuñez**
 
 ## Fases
 - [X] Planificación

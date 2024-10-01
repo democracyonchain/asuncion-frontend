@@ -7,6 +7,53 @@ import { processResetForm,processMenuQuery,processValueForm,processSubmitForm,pr
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 
+/**
+ * Componente FormMenu
+ * 
+ * Este componente representa un formulario para la gestión de menús en la aplicación.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación para redirigir a otras vistas.
+ * 
+ * @returns {JSX.Element} - Retorna el componente de formulario.
+ * 
+ * @example
+ * <FormMenu navigate={navigateFunction} />
+ * 
+ * @remarks
+ * Utiliza varios hooks de React y Redux para manejar el estado y las operaciones del formulario.
+ * 
+ * @hook
+ * - useLocation: Obtiene el estado de la ubicación actual.
+ * - useSelector: Selecciona el estado de Redux.
+ * - useDispatch: Despacha acciones a Redux.
+ * - useRef: Crea una referencia mutable.
+ * - useState: Maneja el estado local del componente.
+ * - useEffect: Ejecuta efectos secundarios en el componente.
+ * 
+ * @graphql
+ * - useMenuLazyQuery: Consulta perezosa para obtener datos del menú.
+ * - useMenuCreateMutation: Mutación para crear un nuevo menú.
+ * - useMenuUpdateMutation: Mutación para actualizar un menú existente.
+ * - useModuloSelectLazyQuery: Consulta perezosa para obtener datos del módulo.
+ * 
+ * @method
+ * - onSwitch: Cambia el estado del formulario.
+ * 
+ * @component
+ * - UtilsSpinner: Muestra un spinner de carga.
+ * - FormCore: Componente principal del formulario.
+ * - TextInput: Componente de entrada de texto.
+ * - SelectInput: Componente de selección.
+ * 
+ * @state
+ * - estadoForm: Estado del formulario (activo/inactivo).
+ * - menuQuery: Datos de la consulta del menú.
+ * - statusLoading: Estado de carga.
+ * - visible: Estado de visibilidad del formulario.
+ * - labels: Etiquetas de los botones del formulario.
+ * - dataModuloSelect: Datos de la selección del módulo.
+ */
 export const FormMenu = ({navigate}:{navigate:any}) => {
 	// Location Hook
 	const { state } = useLocation();

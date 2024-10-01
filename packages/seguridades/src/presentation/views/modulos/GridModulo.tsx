@@ -16,6 +16,28 @@ interface Modulo{
 	icono: string | null
 	color:  string | null
 }
+/**
+ * Componente GridModulo
+ * 
+ * Este componente representa una vista de tabla de datos para los módulos. Utiliza varios hooks de React y Redux para gestionar el estado y las operaciones de datos.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación para redirigir a otras vistas.
+ * 
+ * @returns {JSX.Element} - Retorna un elemento JSX que contiene la tabla de datos y un componente de confirmación.
+ * 
+ * @hook useState - Hook para gestionar el estado local del componente.
+ * @hook useLocation - Hook para obtener el estado de la ubicación actual.
+ * @hook useRef - Hook para crear una referencia mutable que persiste durante todo el ciclo de vida del componente.
+ * @hook useEffect - Hook para realizar efectos secundarios en el componente.
+ * 
+ * @function onSubmit - Función que maneja el evento de envío para eliminar un registro.
+ * 
+ * @component
+ * 
+ * @example
+ * <GridModulo navigate={navigateFunction} />
+ */
 export const GridModulo = ({navigate}:{navigate:any}) => {
   	
 	//Hook useState

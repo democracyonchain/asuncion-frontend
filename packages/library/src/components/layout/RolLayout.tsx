@@ -7,6 +7,32 @@ import { useAuthModuloPermisosIdLazyQuery} from "@infrastructure/graphql/__gener
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente `RolLayout` que renderiza un formulario para la selección de roles.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.setVisible - Función para cambiar la visibilidad del modal.
+ * @param {boolean} props.visibleModal - Estado de visibilidad del modal.
+ * @param {any} props.toast - Componente de notificación.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa el layout del rol.
+ * 
+ * Variables Generales:
+ * - `getRolSession`: Datos de la sesión del rol obtenidos del sessionStorage.
+ * - `dataRolUser`: Datos del usuario del rol obtenidos del sessionStorage.
+ * 
+ * Hooks:
+ * - `useAuthModuloPermisosIdLazyQuery`: Hook de GraphQL para obtener permisos de módulos.
+ * - `formLayoutRol`: Hook para manejar el formulario.
+ * - `useState`: Hook para manejar el estado de los labels.
+ * - `useDispatch`: Hook para manejar el dispatch de Redux.
+ * - `useNavigate`: Hook para manejar la navegación.
+ * 
+ * El componente utiliza el componente `FormLayout` para renderizar el formulario y el componente `RadioButtonInput` para renderizar las opciones de roles.
+ * 
+ * @example
+ * <RolLayout setVisible={setVisible} visibleModal={visibleModal} toast={toast} />
+ */
 export const RolLayout = ({setVisible,visibleModal,toast}:{setVisible:any,visibleModal:any,toast:any}) => {
 
     //Variables Generales
@@ -29,7 +55,7 @@ export const RolLayout = ({setVisible,visibleModal,toast}:{setVisible:any,visibl
 	const navigate = useNavigate();
 
     return (
-        <>        
+        <div>        
             <FormLayout 
                 methods={methods} onSubmit={(data:any)=>{onSubmitRol({data,getRolSession,setVisible,toast,setAuthModuloPermisosIdLazyQuery,dispatch,navigate})}} labels={labels} 
                 onReset={()=>{setVisible({active:false,header:'',closable:false,maximizable:true})}} 
@@ -54,6 +80,6 @@ export const RolLayout = ({setVisible,visibleModal,toast}:{setVisible:any,visibl
                    
                 </div>
             </FormLayout>
-        </>
+        </div>
     )
 }

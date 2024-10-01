@@ -3,21 +3,46 @@ import { formLogin } from '@components/forms/';
 import { FormLayoutInit } from "@components/forms/FormLayout"
 import { TextInput} from "@components/forms/FormInput"
 import { SubmitHandler } from 'react-hook-form';
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAuthloginLazyQuery} from "@infrastructure/graphql/__generated__/graphql-types";
 import { onClikSaveAuth } from '@components/service/authservice';
 import { UtilsMessages } from '@components/partials/Utils'
-import { useSelector } from "react-redux";
 import { RootState } from '@store/store';
 import layout from "@public/images/login1.svg";
+/**
+ * Componente `LoginLayout` que representa la estructura de la página de inicio de sesión.
+ * 
+ * @returns {JSX.Element} La estructura del componente de inicio de sesión.
+ * 
+ * @remarks
+ * Este componente utiliza varios hooks de React y Redux para manejar el estado y las operaciones de autenticación.
+ * 
+ * @hook
+ * - `formLogin`: Hook personalizado para manejar el formulario de inicio de sesión.
+ * - `useAuthloginLazyQuery`: Hook de GraphQL para manejar la consulta de inicio de sesión.
+ * - `useState`: Hook de React para manejar el estado local del componente.
+ * - `useSelector`: Hook de Redux para seleccionar el estado de la tienda.
+ * - `useNavigate`: Hook de React Router para la navegación.
+ * - `useDispatch`: Hook de Redux para despachar acciones.
+ * 
+ * @function
+ * - `onSubmitLogin`: Función que se ejecuta al enviar el formulario de inicio de sesión. Llama a `onClikSaveAuth` con los datos del formulario y otros parámetros necesarios.
+ * 
+ * @returns {JSX.Element} La estructura del componente de inicio de sesión.
+ * 
+ * @example
+ * ```tsx
+ * <LoginLayout />
+ * ```
+ */
 export const LoginLayout = () => {
 
     //Form Hook
 	const methods = formLogin();
 
     // Hook Graphql
-    const [ setAuthloginLazyQuery,{loading}] = useAuthloginLazyQuery();
+    const [ setAuthloginLazyQuery] = useAuthloginLazyQuery();
 
     //Hook UseState    
     const [ labels, setLabels ] = useState<{ btn1: string, btn2: string, icon: boolean, btnload: boolean }>({ btn1: '', btn2: 'Ingresar', icon: true, btnload: false });

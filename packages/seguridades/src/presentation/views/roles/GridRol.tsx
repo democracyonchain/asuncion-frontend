@@ -14,6 +14,46 @@ interface Rol{
 	nombre: string | null
 }
 
+/**
+ * Componente GridRol
+ * 
+ * Este componente muestra una tabla de roles y permite realizar operaciones como eliminar un rol.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación para redirigir a otras vistas.
+ * 
+ * @returns {JSX.Element} - Retorna el componente GridRol.
+ * 
+ * @component
+ * 
+ * @example
+ * <GridRol navigate={navigateFunction} />
+ * 
+ * @remarks
+ * Utiliza hooks de React como useState y useEffect para manejar el estado y los efectos secundarios.
+ * También utiliza Redux para gestionar el estado global y GraphQL para realizar consultas y mutaciones.
+ * 
+ * @hook
+ * @name useState
+ * @description Maneja el estado local del componente.
+ * 
+ * @hook
+ * @name useEffect
+ * @description Ejecuta efectos secundarios en el ciclo de vida del componente.
+ * 
+ * @hook
+ * @name useRef
+ * @description Crea una referencia mutable que persiste durante el ciclo de vida del componente.
+ * 
+ * @function
+ * @name onSubmit
+ * @description Maneja el evento de envío para eliminar un rol.
+ * 
+ * @param {any} data - Datos del rol a eliminar.
+ * @param {any} toast - Referencia al componente de notificación.
+ * 
+ * @returns {void}
+ */
 export const GridRol = ({navigate}:{navigate:any}) => {
     //Hook useState
 	const [ dataRolCollection,setDataRolCollection ] = useState<any[]>();

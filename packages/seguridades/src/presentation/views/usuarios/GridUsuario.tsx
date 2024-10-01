@@ -15,6 +15,31 @@ interface Usuario{
 	estado:boolean
 	provincia:  string | null
 }
+/**
+ * Componente GridUsuario
+ * 
+ * Este componente es responsable de mostrar una tabla de usuarios con funcionalidades de selección, eliminación y notificaciones.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación para redirigir a otras vistas.
+ * 
+ * @returns {JSX.Element} - Retorna un elemento JSX que contiene la tabla de usuarios y componentes auxiliares.
+ * 
+ * @hook useState - Maneja el estado de la colección de usuarios, el usuario seleccionado y la visibilidad de confirmaciones.
+ * @hook useRef - Referencia para el componente de notificaciones (toast).
+ * @hook useEffect - Efecto para cargar la colección de usuarios al montar el componente y mostrar mensajes de notificación.
+ * 
+ * @method onSubmit - Método para manejar la eliminación de un usuario, mostrando una confirmación antes de proceder.
+ * 
+ * @redux useSelector - Obtiene el estado de la aplicación desde Redux.
+ * @redux useDispatch - Despacha acciones a Redux.
+ * 
+ * @graphql useUsuarioCollectionLazyQuery - Consulta perezosa para obtener la colección de usuarios.
+ * @graphql useUsuarioDeleteMutation - Mutación para eliminar un usuario.
+ * 
+ * @component UtilsConfirm - Componente para mostrar confirmaciones de acciones.
+ * @component UtilsCoreDataTable - Componente para mostrar la tabla de datos de usuarios.
+ */
 export const GridUsuario = ({navigate}:{navigate:any}) => {
    //Hook useState
 	const [ dataUsuarioCollection,setDataUsuarioCollection ] = useState<any[]>();

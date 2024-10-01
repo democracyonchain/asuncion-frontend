@@ -7,6 +7,56 @@ import { processResetForm,processUsuarioQuery,processValueForm,processSubmitForm
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 
+/**
+ * Componente FormUsuario
+ * 
+ * Este componente representa un formulario para la gestión de usuarios. Utiliza varios hooks y métodos para manejar el estado del formulario, realizar consultas y mutaciones GraphQL, y gestionar la navegación.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación.
+ * 
+ * @returns {JSX.Element} - Retorna el componente de formulario de usuario.
+ * 
+ * @hook useLocation - Hook para obtener el estado de la ubicación actual.
+ * @hook useSelector - Hook para seleccionar el estado de Redux.
+ * @hook useDispatch - Hook para despachar acciones de Redux.
+ * @hook useRef - Hook para crear una referencia mutable.
+ * @hook useState - Hook para manejar el estado local del componente.
+ * @hook useEffect - Hook para manejar efectos secundarios.
+ * 
+ * @method formUsuario - Hook personalizado para manejar el formulario de usuario.
+ * @method setValue - Método para establecer valores en el formulario.
+ * @method clearErrors - Método para limpiar errores del formulario.
+ * @method reset - Método para reiniciar el formulario.
+ * 
+ * @method useUsuarioLazyQuery - Método para realizar una consulta perezosa de usuario.
+ * @method useUsuarioCreateMutation - Método para realizar una mutación de creación de usuario.
+ * @method useUsuarioUpdateMutation - Método para realizar una mutación de actualización de usuario.
+ * @method useRolSelectLazyQuery - Método para realizar una consulta perezosa de roles.
+ * @method useProvinciaSelectLazyQuery - Método para realizar una consulta perezosa de provincias.
+ * @method useEstablecimientoSelectLazyQuery - Método para realizar una consulta perezosa de establecimientos.
+ * 
+ * @function onSwitch - Función para manejar el cambio de estado del formulario.
+ * 
+ * @effect - Efecto para procesar los valores del formulario cuando cambia `usuarioQuery`.
+ * @effect - Efecto para inicializar los datos del formulario y realizar consultas cuando cambia `state`.
+ * 
+ * @component UtilsSpinner - Componente para mostrar un spinner de carga.
+ * @component FormCore - Componente principal del formulario.
+ * @component TextInput - Componente de entrada de texto.
+ * @component SelectInput - Componente de selección.
+ * @component MultiSelectInput - Componente de selección múltiple.
+ * 
+ * @param {Object} labels - Etiquetas y configuraciones del formulario.
+ * @param {boolean} statusLoading - Estado de carga del formulario.
+ * @param {Object} visible - Estado de visibilidad del formulario.
+ * @param {Object} toast - Referencia para mostrar mensajes de toast.
+ * @param {Object} estadoForm - Estado del formulario.
+ * @param {any} usuarioQuery - Consulta de usuario.
+ * @param {any[]} dataRolSelect - Datos de roles.
+ * @param {any[]} dataProvinciaSelect - Datos de provincias.
+ * @param {any[]} dataEstablecimientoSelect - Datos de establecimientos.
+ */
 export const FormUsuario = ({navigate}:{navigate:any}) => {
     // Location Hook
 	const { state } = useLocation();

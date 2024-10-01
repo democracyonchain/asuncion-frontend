@@ -14,6 +14,20 @@ import { Message } from 'primereact/message';
 import { DeleteOutlineOutlined,VisibilityOutlined,DriveFileRenameOutlineOutlined,TextSnippetOutlined,ArticleOutlined } from '@mui/icons-material/';
 import Icon from '@mui/material/Icon';
 import img from "@public/images/logo4.png";
+/**
+ * Componente `UtilsCoreToolbar` que renderiza una barra de herramientas con botones de acción.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} [props.setVisibleModalAux] - Función para establecer la visibilidad del modal auxiliar.
+ * @param {boolean} [props.selectedGrid=false] - Indica si hay una fila seleccionada en la cuadrícula.
+ * @param {Function} [props.onClickExport] - Función que se ejecuta al hacer clic en el botón de exportar.
+ * @param {Function} [props.onClickExportPdf] - Función que se ejecuta al hacer clic en el botón de exportar a PDF.
+ * @param {boolean} [props.opt=false] - Opción adicional para mostrar el botón "Nuevo".
+ * @param {Function} props.navigate - Función de navegación.
+ * @param {Object} props.dataGrid - Datos de la cuadrícula.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la barra de herramientas.
+ */
 export const UtilsCoreToolbar=(
     {
         setVisibleModalAux,selectedGrid=false,onClickExport,onClickExportPdf,opt=false,navigate,
@@ -79,6 +93,29 @@ export const UtilsCoreToolbar=(
     )
 }
 
+/**
+ * Componente `UtilsCoreTabMenu` que renderiza un menú de pestañas y rutas basadas en accesos y estado inicial.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Object} props.model - Modelo de configuración del menú.
+ * @param {string} props.model.labelNew - Etiqueta para la pestaña de nuevo elemento.
+ * @param {string} props.model.labelGrid - Etiqueta para la pestaña de vista de datos.
+ * @param {string} props.model.iconNew - Icono para la pestaña de nuevo elemento.
+ * @param {string} props.model.iconGrid - Icono para la pestaña de vista de datos.
+ * @param {Object} [props.model.newItem] - Configuración opcional para un nuevo elemento.
+ * @param {string} props.model.newItem.labelNew - Etiqueta para el nuevo elemento.
+ * @param {string} props.model.newItem.iconNew - Icono para el nuevo elemento.
+ * @param {string} props.model.newItem.path - Ruta para el nuevo elemento.
+ * @param {string | JSX.Element | JSX.Element[] | undefined} props.viewForm - Vista del formulario.
+ * @param {string | JSX.Element | JSX.Element[] | undefined} props.viewGrid - Vista de los datos.
+ * @param {any} props.useRoutes - Hook para definir rutas.
+ * @param {any} props.navigate - Función para navegar entre rutas.
+ * @param {number} props.init - Estado inicial del índice activo del menú.
+ * @param {any} props.setInitial - Acción para establecer el estado inicial.
+ * @param {any} props.dispatch - Función de despacho para acciones de estado.
+ * 
+ * @returns {JSX.Element} Componente de menú de pestañas y rutas.
+ */
 export const UtilsCoreTabMenu =(
     {
         model={labelNew:'Nuevo',labelGrid:'Grid',iconNew:'post_add',iconGrid:'desktop_landscape'},
@@ -164,6 +201,49 @@ interface ColumnMeta {
     footer?:any
 }
 
+/**
+ * Componente `UtilsCoreDataTable` que renderiza una tabla de datos con diversas funcionalidades.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {ColumnMeta[]} props.columns - Columnas de la tabla.
+ * @param {Object} [props.status={estado:'estado',header:'Estado'}] - Estado y encabezado de la columna de estado.
+ * @param {any} props.selectedGrid - Fila seleccionada en la tabla.
+ * @param {Function} props.setselectedGrid - Función para actualizar la fila seleccionada.
+ * @param {boolean} [props.recordStatus=false] - Estado de carga de los registros.
+ * @param {any} props.recordGrid - Datos de la tabla.
+ * @param {string} [props.title='Listado'] - Título de la tabla.
+ * @param {Function} props.setPageInfo - Función para actualizar la información de la página.
+ * @param {Object} props.pageInfo - Información de la página (límite, offset, conteo).
+ * @param {Function} props.dispatch - Función de despacho para acciones de estado.
+ * @param {string|null|JSX.Element|JSX.Element[]|any} [props.ContenidoView=''] - Contenido de la vista.
+ * @param {Function} props.navigate - Función de navegación.
+ * @param {Function} [props.onSubmit] - Función de envío de datos.
+ * @param {any} props.toast - Referencia al componente de notificación.
+ * @param {Function} props.setMessage - Función para actualizar el mensaje.
+ * @param {Function} props.setCache - Función para actualizar la caché.
+ * 
+ * @returns {JSX.Element} - Retorna el componente de tabla de datos.
+ * 
+ * @example
+ * <UtilsCoreDataTable
+ *   columns={columns}
+ *   status={{estado: 'estado', header: 'Estado'}}
+ *   selectedGrid={selectedGrid}
+ *   setselectedGrid={setselectedGrid}
+ *   recordStatus={recordStatus}
+ *   recordGrid={recordGrid}
+ *   title="Listado"
+ *   setPageInfo={setPageInfo}
+ *   pageInfo={pageInfo}
+ *   dispatch={dispatch}
+ *   ContenidoView={ContenidoView}
+ *   navigate={navigate}
+ *   onSubmit={onSubmit}
+ *   toast={toast}
+ *   setMessage={setMessage}
+ *   setCache={setCache}
+ * />
+ */
 export const UtilsCoreDataTable =(
     {
         columns,

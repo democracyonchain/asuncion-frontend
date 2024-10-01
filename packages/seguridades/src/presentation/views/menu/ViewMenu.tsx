@@ -3,6 +3,35 @@ import { graphql,UtilsSpinner } from "@bsc/library";
 import { processMenuQuery } from "@application/services/menuService";
 import { Divider } from 'primereact/divider';
 import Icon from '@mui/material/Icon';
+/**
+ * Componente `ViewMenu` que muestra la información de un menú basado en los datos proporcionados.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.dataGrid - Datos del menú que se mostrarán.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la vista del menú.
+ * 
+ * @remarks
+ * Este componente utiliza GraphQL para obtener los datos del menú y los muestra en una estructura de cuadrícula.
+ * 
+ * @example
+ * ```tsx
+ * <ViewMenu dataGrid={data} />
+ * ```
+ * 
+ * @component
+ * 
+ * @hook
+ * - `useMenuLazyQuery`: Hook de GraphQL para obtener los datos del menú.
+ * - `useState`: Hook de React para manejar el estado del componente.
+ * - `useEffect`: Hook de React para ejecutar efectos secundarios.
+ * 
+ * @dependencies
+ * - `graphql`: Módulo para realizar consultas GraphQL.
+ * - `UtilsSpinner`: Componente para mostrar un spinner de carga.
+ * - `Divider`: Componente para mostrar un divisor.
+ * - `Icon`: Componente para mostrar un icono.
+ */
 export const ViewMenu = ({dataGrid}:{dataGrid:any}) => {
 
     //Metodos Graphql

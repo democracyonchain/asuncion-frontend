@@ -1,5 +1,23 @@
 import * as Yup from 'yup'
 
+/**
+ * Esquema de validación para el objeto `schemaUsuario` utilizando Yup.
+ * 
+ * @constant
+ * @type {Yup.ObjectSchema}
+ * 
+ * @property {Yup.StringSchema} username_usuario - Campo de tipo string requerido para el nombre de usuario.
+ * @property {Yup.StringSchema} nombres_usuario - Campo de tipo string requerido para los nombres del usuario.
+ * @property {Yup.StringSchema} apellidos_usuario - Campo de tipo string requerido para los apellidos del usuario.
+ * @property {Yup.StringSchema} correo_usuario - Campo de tipo string requerido para el correo electrónico del usuario, con validación de formato de email.
+ * @property {Yup.StringSchema} contrasenia_usuario - Campo de tipo string para la contraseña del usuario. Es requerido si `opt_usuario` es 'N', de lo contrario es nullable.
+ * @property {Yup.MixedSchema} idRol_usuario - Campo mixto requerido para el rol del usuario.
+ * @property {Yup.BooleanSchema} estado_usuario - Campo de tipo booleano para el estado del usuario.
+ * @property {Yup.BooleanSchema} roles_usuario - Campo de tipo booleano para los roles del usuario.
+ * @property {Yup.StringSchema} opt_usuario - Campo de tipo string nullable para opciones del usuario.
+ * @property {Yup.MixedSchema} idProvincia_usuario - Campo mixto requerido para la provincia del usuario.
+ * @property {Yup.MixedSchema} idEstablecimiento_usuario - Campo mixto requerido para el establecimiento del usuario.
+ */
 export const schemaUsuario = Yup.object().shape({
     
     username_usuario:Yup.string().required('El campo username es requerido'),   
