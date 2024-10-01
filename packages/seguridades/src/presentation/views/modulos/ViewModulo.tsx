@@ -3,11 +3,43 @@ import { graphql,UtilsSpinner } from "@bsc/library";
 import { processModuloQuery } from "@application/services/moduloService";
 import { Divider } from 'primereact/divider';
 import Icon from '@mui/material/Icon';
+/**
+ * Componente `ViewModulo` que muestra la información de un módulo específico.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.dataGrid - Datos del módulo a mostrar.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la vista del módulo.
+ * 
+ * @remarks
+ * Este componente utiliza GraphQL para obtener los datos del módulo y los muestra en una interfaz de usuario.
+ * 
+ * @example
+ * ```tsx
+ * <ViewModulo dataGrid={{ id: 1 }} />
+ * ```
+ * 
+ * @component
+ * 
+ * @example
+ * ```tsx
+ * // Uso del componente ViewModulo
+ * <ViewModulo dataGrid={{ id: 1 }} />
+ * ```
+ * 
+ * @remarks
+ * El componente utiliza los siguientes hooks:
+ * - `useModuloLazyQuery`: Hook para realizar consultas GraphQL de manera perezosa.
+ * - `useState`: Hook para manejar el estado local del componente.
+ * - `useEffect`: Hook para ejecutar efectos secundarios en el componente.
+ * 
+ * El componente muestra un spinner de carga mientras se obtienen los datos y luego muestra la información del módulo en una cuadrícula.
+ */
 export const ViewModulo = ({dataGrid}:{dataGrid:any}) => {
 
 	//Metodos Graphql
 	const { useModuloLazyQuery } = graphql
-  	const [ getModuloLazyQuery,{loading}] = useModuloLazyQuery();
+  	const [ getModuloLazyQuery] = useModuloLazyQuery();
 
 	//Hook UseState
 	const [ moduloQuery,setModuloQuery] = useState<any>()

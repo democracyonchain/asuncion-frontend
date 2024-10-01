@@ -1,10 +1,29 @@
-import React,{useRef} from 'react'
+import {useRef} from 'react'
 import { Sidebar } from 'primereact/sidebar';
 import { StyleClass } from 'primereact/styleclass';
 import { Ripple } from 'primereact/ripple';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Icon from '@mui/material/Icon';
+/**
+ * Componente `SidebarLayout` que representa un diseño de barra lateral.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {boolean} props.active - Estado que indica si la barra lateral está activa o no.
+ * @param {Function} props.setActive - Función para cambiar el estado de la barra lateral.
+ * @param {any} props.path - Ruta actual de la aplicación.
+ * 
+ * @returns {JSX.Element} - Retorna el componente de la barra lateral.
+ * 
+ * @remarks
+ * Este componente utiliza Redux para gestionar el estado y React Router para la navegación.
+ * La barra lateral muestra un menú basado en los datos almacenados en `sessionStorage`.
+ * 
+ * @example
+ * ```tsx
+ * <SidebarLayout active={true} setActive={setActiveFunction} path={currentPath} />
+ * ```
+ */
 export const SidebarLayout = ({active,setActive,path}:{active:boolean,setActive:any,path:any}) => {
     //Data Storage
 	const dataMenuUser=JSON.parse(sessionStorage.getItem("dataMenuUser") as any);

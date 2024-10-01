@@ -4,8 +4,7 @@ import { Sidebar } from '@components/layout/Sidebar';
 import { MainLayout } from '@components/layout/MainLayout';
 import { RolLayout} from '@components/layout/RolLayout';
 import { PasswordLayout } from '@components/layout/PasswordLayout'
-import { useNavigate } from "react-router-dom";
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes,useNavigate } from 'react-router-dom';
 import { LoginLayout } from '@components/layout/LoginLayout';
 import { UtilsSpinner } from '@components/partials/Utils';
 import { useSelector } from "react-redux";
@@ -20,6 +19,26 @@ interface IlayoutProps {
     children:ReactNode  
     path:string 
 }
+/**
+ * Componente `LayoutGeneral` que gestiona la estructura general de la aplicación.
+ * 
+ * @param {IlayoutProps} props - Propiedades del componente.
+ * @param {React.ReactNode} props.children - Elementos hijos que serán renderizados dentro del layout.
+ * @param {string} props.path - Ruta actual de la aplicación.
+ * 
+ * @returns {JSX.Element} - Retorna el layout general de la aplicación.
+ * 
+ * @description
+ * Este componente se encarga de:
+ * - Obtener el token del usuario desde el `localStorage`.
+ * - Gestionar la navegación utilizando `useNavigate`.
+ * - Definir y manejar los estados de visibilidad de los modales auxiliares y de contraseña.
+ * - Utilizar el estado global de Redux para cargar vistas.
+ * - Ejecutar consultas GraphQL para obtener el perfil de autenticación y la configuración administrativa.
+ * - Utilizar `useEffect` para procesar la autenticación del perfil y la configuración administrativa al cargar el componente.
+ * - Renderizar el layout general con el encabezado, barra lateral, contenido principal y pie de página.
+ * - Mostrar modales de rol de usuario y de contraseña según sea necesario.
+ */
 export const LayoutGeneral:FC<IlayoutProps> = ({children,path}) => {
     
     //Varibles Generales

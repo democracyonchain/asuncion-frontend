@@ -1,5 +1,4 @@
 import { useEffect,useState,useRef } from 'react'
-import { useLocation } from 'react-router-dom';
 import { setLabelTab } from '@presentation/actions';
 import { FormCore,graphql,UtilsSpinner,SelectInput,UtilsButton,UtilsPanel,TextInput } from "@bsc/library";
 import { formActaDigita} from '@application/components/form'
@@ -11,9 +10,31 @@ import { Divider } from 'primereact/divider';
 import { Image } from 'primereact/image';
 import { useFieldArray } from "react-hook-form";
 
+/**
+ * Componente FormDigitacion
+ * 
+ * Este componente es responsable de manejar la digitación de actas en el proceso electoral.
+ * Utiliza Redux para gestionar el estado global y react-hook-form para manejar el formulario.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación.
+ * 
+ * @returns {JSX.Element} - Retorna el componente de digitación de actas.
+ * 
+ * @example
+ * <FormDigitacion navigate={navigateFunction} />
+ * 
+ * @remarks
+ * - Utiliza `useSelector` para obtener el estado `labelTab` del store de Redux.
+ * - Utiliza `useDispatch` para despachar acciones a Redux.
+ * - Utiliza `useRef` para crear una referencia mutable para el componente `toast`.
+ * - Utiliza `formActaDigita` para manejar el formulario con react-hook-form.
+ * - Utiliza `useFieldArray` para manejar arreglos de campos en el formulario.
+ * - Utiliza `useState` para manejar varios estados locales como `visible`, `labels`, `dataDignidadSelect`, `statusLoading` y `dataDigita`.
+ */
 export const FormDigitacion = ({navigate}:{navigate:any}) => {
     //Gestor estados Redux
-	const { labelTab,cache }:any= useSelector<RootState>( (state) => state.procesos);
+	const { labelTab }:any= useSelector<RootState>( (state) => state.procesos);
 	const dispatch = useDispatch();
 
 	//hook UseRef
@@ -21,7 +42,7 @@ export const FormDigitacion = ({navigate}:{navigate:any}) => {
 
 	//Form Hook
 	const methods = formActaDigita();
-	const { setValue, clearErrors,reset,getValues,handleSubmit,control } = methods;
+	const {  clearErrors,reset,handleSubmit,control } = methods;
     useFieldArray({ control, name: `atributoRecorte`});  
     useFieldArray({ control, name: `dataGeneral`});
 
@@ -124,7 +145,7 @@ export const FormDigitacion = ({navigate}:{navigate:any}) => {
     //Metodos Graphql
 	const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadListLazyQuery,useDigtVotosUpdateMutation } = graphql
   	const [ getDignidadLazyQuery,{loading:loadingDign} ] = useDignidadDigtSelectLazyQuery();	
-    const [ listActaDigitaLazyQuery,{loading:loadingActaDigita} ] = useDigtActaByDignidadListLazyQuery();
+    const [ listActaDigitaLazyQuery] = useDigtActaByDignidadListLazyQuery();
 	const [ digtVotosUpdateMutation ] = useDigtVotosUpdateMutation();
 
     useEffect(()=>{        

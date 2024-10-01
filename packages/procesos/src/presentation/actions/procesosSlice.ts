@@ -59,6 +59,82 @@ export const initialState:IArguments = {
     }
 }
 
+/**
+ * Slice de Redux para gestionar el estado de los procesos.
+ * 
+ * @module procesosSlice
+ */
+
+/**
+ * Restablece el estado a sus valores iniciales.
+ * 
+ * @function resetAction
+ * @param {Object} state - El estado actual del slice.
+ */
+
+/**
+ * Establece el valor de la notificación en el estado.
+ * 
+ * @function setAction
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{notificacion: boolean}>} action - La acción que contiene el valor de la notificación.
+ */
+
+/**
+ * Establece el valor inicial en el estado.
+ * 
+ * @function setInitial
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{initial: number}>} action - La acción que contiene el valor inicial.
+ */
+
+/**
+ * Establece la información de la paginación en el estado.
+ * 
+ * @function setPageInfo
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{limit: number, offset: number}>} action - La acción que contiene los valores de limit y offset.
+ */
+
+/**
+ * Establece las etiquetas y los iconos de las pestañas en el estado.
+ * 
+ * @function setLabelTab
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{labelNew: string, labelGrid: string, iconNew?: string, iconGrid?: string}>} action - La acción que contiene las etiquetas y los iconos.
+ */
+
+/**
+ * Establece la visibilidad y las propiedades del modal en el estado.
+ * 
+ * @function setVisibleModal
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{dataGrid?: any, active: boolean, header: string, opt?: string, closable: boolean, maximizable: boolean, closeOnEscape: boolean}>} action - La acción que contiene las propiedades del modal.
+ */
+
+/**
+ * Establece el valor de la caché en el estado.
+ * 
+ * @function setCache
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{cache: string}>} action - La acción que contiene el valor de la caché.
+ */
+
+/**
+ * Establece el mensaje en el estado.
+ * 
+ * @function setMessage
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{message: string}>} action - La acción que contiene el mensaje.
+ */
+
+/**
+ * Establece los datos del grid en el estado.
+ * 
+ * @function setDataGrid
+ * @param {Object} state - El estado actual del slice.
+ * @param {PayloadAction<{data: any}>} action - La acción que contiene los datos del grid.
+ */
 export const procesosSlice = createSlice({ 
 
     name: 'seguridades',
@@ -69,13 +145,13 @@ export const procesosSlice = createSlice({
             state.notificacion =false;
             state.initial=0;
             
-            state.visibleModal.dataGrid={},
-            state.visibleModal.active=false,
-            state.visibleModal.header='',
-            state.visibleModal.opt='',
-            state.visibleModal.closable=false,
-            state.visibleModal.maximizable=true,
-            state.visibleModal.closeOnEscape=false,
+            state.visibleModal.dataGrid={}
+            state.visibleModal.active=false
+            state.visibleModal.header=''
+            state.visibleModal.opt=''
+            state.visibleModal.closable=false
+            state.visibleModal.maximizable=true
+            state.visibleModal.closeOnEscape=false
 
             state.labelTab.labelGrid='';
             state.labelTab.labelNew='';
@@ -130,4 +206,18 @@ export const procesosSlice = createSlice({
 })
 
 
+/**
+ * Exporta varias acciones del slice de procesos.
+ * 
+ * Acciones exportadas:
+ * - `resetAction`: Acción para reiniciar el estado.
+ * - `setAction`: Acción para establecer un valor específico.
+ * - `setInitial`: Acción para establecer el estado inicial.
+ * - `setPageInfo`: Acción para establecer la información de la página.
+ * - `setLabelTab`: Acción para establecer la etiqueta de la pestaña.
+ * - `setVisibleModal`: Acción para establecer la visibilidad del modal.
+ * - `setCache`: Acción para establecer la caché.
+ * - `setMessage`: Acción para establecer un mensaje.
+ * - `setDataGrid`: Acción para establecer los datos de la cuadrícula.
+ */
 export const { resetAction,setAction, setInitial,setPageInfo,setLabelTab,setVisibleModal,setCache,setMessage,setDataGrid } = procesosSlice.actions

@@ -17,6 +17,56 @@ interface Menu{
 	modulo:  string | null
 }
 
+/**
+ * Componente GridMenu
+ * 
+ * Este componente presenta una tabla de datos de menú y permite la eliminación de registros.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.navigate - Función de navegación.
+ * 
+ * @returns {JSX.Element} - Retorna un elemento JSX que contiene la tabla de datos del menú.
+ * 
+ * @component
+ * 
+ * @example
+ * <GridMenu navigate={navigateFunction} />
+ * 
+ * @remarks
+ * Utiliza hooks de estado para manejar la colección de datos del menú, el elemento seleccionado, y la visibilidad de un mensaje de confirmación.
+ * 
+ * @hook
+ * @name useState
+ * @description Maneja el estado de la colección de datos del menú, el elemento seleccionado y la visibilidad del mensaje de confirmación.
+ * 
+ * @hook
+ * @name useRef
+ * @description Referencia para mostrar mensajes de notificación.
+ * 
+ * @hook
+ * @name useEffect
+ * @description Efecto para cargar la colección de datos del menú al montar el componente y para mostrar mensajes de notificación cuando cambian.
+ * 
+ * @function
+ * @name onSubmit
+ * @description Maneja la confirmación de eliminación de un registro del menú.
+ * 
+ * @graphql
+ * @name useMenuCollectionLazyQuery
+ * @description Consulta perezosa para obtener la colección de datos del menú.
+ * 
+ * @graphql
+ * @name useMenuDeleteMutation
+ * @description Mutación para eliminar un registro del menú.
+ * 
+ * @redux
+ * @name useSelector
+ * @description Selecciona el estado de la aplicación desde el store de Redux.
+ * 
+ * @redux
+ * @name useDispatch
+ * @description Despacha acciones al store de Redux.
+ */
 export const GridMenu = ({navigate}:{navigate:any}) => {
   	//Hook useState
 	const [ dataMenuCollection,setDataMenuCollection ] = useState<any[]>();

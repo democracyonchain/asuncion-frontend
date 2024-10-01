@@ -5,6 +5,32 @@ import { Provider } from 'react-redux';
 import { store } from '@presentation/stores';
 
 
+/**
+ * Componente principal de la aplicación de procesos.
+ * 
+ * Este componente configura las rutas y el enrutamiento de la aplicación utilizando `BrowserRouter`.
+ * 
+ * @returns {JSX.Element} El componente principal de la aplicación.
+ * 
+ * @component
+ * 
+ * @example
+ * // Uso del componente Root
+ * <Root />
+ * 
+ * @remarks
+ * Este componente envuelve las rutas dentro de un `Provider` de Redux para proporcionar el estado global a la aplicación.
+ * 
+ * @see {@link BrowserRouter}
+ * @see {@link Layout}
+ * @see {@link Provider}
+ * @see {@link Routes}
+ * @see {@link Route}
+ * @see {@link Utils404}
+ * @see {@link HomeActas}
+ * @see {@link HomeProcesos}
+ * @see {@link HomeDigitacion}
+ */
 export default function Root() {
 
 	return (

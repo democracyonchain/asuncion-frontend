@@ -3,6 +3,32 @@ import { graphql,UtilsSpinner,UtilsPanel } from "@bsc/library";
 import { processRolQuery } from "@application/services/rolService";
 import { Divider } from 'primereact/divider';
 import Icon from '@mui/material/Icon';
+/**
+ * Componente `ViewRol` que muestra la información detallada de un rol específico.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.dataGrid - Datos del grid que contienen la información del rol.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la vista del rol.
+ * 
+ * @remarks
+ * Este componente utiliza hooks de React como `useState` y `useEffect` para manejar el estado y los efectos secundarios.
+ * También utiliza una consulta GraphQL para obtener los datos del rol basado en el `id` proporcionado en `dataGrid`.
+ * 
+ * @example
+ * ```tsx
+ * <ViewRol dataGrid={dataGrid} />
+ * ```
+ * 
+ * @component
+ * 
+ * @example
+ * ```tsx
+ * // Ejemplo de uso:
+ * const dataGrid = { id: 1 };
+ * <ViewRol dataGrid={dataGrid} />
+ * ```
+ */
 export const ViewRol = ({dataGrid}:{dataGrid:any}) => {
         //Metodos Graphql
 	const { useRolLazyQuery } = graphql

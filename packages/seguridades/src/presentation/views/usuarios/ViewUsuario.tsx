@@ -3,6 +3,27 @@ import { graphql,UtilsSpinner,UtilsPanel } from "@bsc/library";
 import { processUsuarioQuery } from "@application/services/usuarioService";
 import { Divider } from 'primereact/divider';
 
+/**
+ * Componente `ViewUsuario` que muestra la información detallada de un usuario.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.dataGrid - Datos del usuario seleccionados en el grid.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la vista detallada del usuario.
+ * 
+ * @remarks
+ * Este componente utiliza GraphQL para obtener los datos del usuario basado en el `id` proporcionado en `dataGrid`.
+ * Utiliza hooks de React como `useState` y `useEffect` para manejar el estado y los efectos secundarios.
+ * 
+ * @example
+ * ```tsx
+ * <ViewUsuario dataGrid={dataGrid} />
+ * ```
+ * 
+ * @component
+ * 
+ * @category Views
+ */
 export const ViewUsuario = ({dataGrid}:{dataGrid:any}) => {
 
      //Metodos Graphql

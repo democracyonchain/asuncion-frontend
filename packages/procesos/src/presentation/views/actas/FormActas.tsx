@@ -1,20 +1,74 @@
 import { useEffect,useState,useRef } from 'react'
-import { useLocation } from 'react-router-dom';
 import { setLabelTab } from '@presentation/actions';
 import { FormCore,graphql,UtilsSpinner,SelectInput } from "@bsc/library";
 import { formActa} from '@application/components/form'
 import { 
         processResetForm,processSubmitForm,processProvinciaSelect,processCantonSelect,processParroquiaSelect,processZonaSelect,
-        processJuntaSelect,processDignidadSelect,dataPdf as exporPDF } from "@application/services/actasService"
+        processJuntaSelect,processDignidadSelect } from "@application/services/actasService"
 import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 import QRCode from 'qrcode.react';
 
+/**
+ * Componente `FormActas` que representa un formulario para la gestión de actas.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa el formulario de actas.
+ * 
+ * @remarks
+ * Este componente utiliza varios hooks de React y Redux para manejar el estado y las consultas GraphQL.
+ * 
+ * @example
+ * ```tsx
+ * <FormActas navigate={navigateFunction} />
+ * ```
+ * 
+ * @hook
+ * - `useSelector` para seleccionar el estado de Redux.
+ * - `useDispatch` para despachar acciones de Redux.
+ * - `useRef` para crear una referencia mutable.
+ * - `useState` para manejar el estado local del componente.
+ * - `useEffect` para ejecutar efectos secundarios.
+ * 
+ * @graphql
+ * - `useDignidadDigtSelectLazyQuery` para obtener la lista de dignidades.
+ * - `useDigtActaByJuntaListLazyQuery` para obtener la lista de actas por junta.
+ * - `useProvinciaDigtSelectLazyQuery` para obtener la lista de provincias.
+ * - `useCantonDigtSelectLazyQuery` para obtener la lista de cantones.
+ * - `useParroquiaDigtSelectLazyQuery` para obtener la lista de parroquias.
+ * - `useZonaDigtSelectLazyQuery` para obtener la lista de zonas.
+ * - `useJuntaDigtSelectLazyQuery` para obtener la lista de juntas.
+ * 
+ * @componentes
+ * - `UtilsSpinner` para mostrar un spinner de carga.
+ * - `FormCore` para manejar el formulario principal.
+ * - `SelectInput` para los campos de selección.
+ * - `QRCode` para generar códigos QR.
+ * 
+ * @estado
+ * - `labelQr` para manejar las etiquetas QR.
+ * - `labelQrAux` para manejar las etiquetas QR auxiliares.
+ * - `visible` para manejar la visibilidad de ciertos elementos.
+ * - `labels` para manejar las etiquetas de los botones y otros elementos.
+ * - `dataProvinciaSelect`, `dataCantonSelect`, `dataParroquiaSelect`, `dataZonaSelect`, `dataJuntaSelect`, `dataDignidadSelect` para manejar los datos de selección.
+ * 
+ * @metodos
+ * - `processProvinciaSelect` para procesar la selección de provincias.
+ * - `processDignidadSelect` para procesar la selección de dignidades.
+ * - `processCantonSelect` para procesar la selección de cantones.
+ * - `processParroquiaSelect` para procesar la selección de parroquias.
+ * - `processZonaSelect` para procesar la selección de zonas.
+ * - `processJuntaSelect` para procesar la selección de juntas.
+ * - `processSubmitForm` para manejar el envío del formulario.
+ * - `processResetForm` para manejar el reinicio del formulario.
+ */
 export const FormActas = ({navigate}:{navigate:any}) => {
 
 
 	//Gestor estados Redux
-	const { labelTab,cache }:any= useSelector<RootState>( (state) => state.procesos);
+	const { labelTab }:any= useSelector<RootState>( (state) => state.procesos);
 	const dispatch = useDispatch();
 
 	//hook UseRef
@@ -176,9 +230,9 @@ export const FormActas = ({navigate}:{navigate:any}) => {
                     />
 				</div>			
 			</div>
-            {(labelQr)&&labelQr.map((items:any, key:any)=>{             
-               return <div key={key}>{(labelQrAux !==null)? <QRCode value={ items.pagina + JSON.stringify(labelQrAux[items.id])} id={items.id} className='hidden'  includeMargin />:''}  {items.id}</div>
-            })}
+            {labelQr?.map((items:any, key:any)=>{             
+                           return <div key={key}>{labelQrAux ? <QRCode value={ items.pagina + JSON.stringify(labelQrAux[items.id])} id={items.id} className='hidden'  includeMargin />:''}  {items.id}</div>
+                        })}
             
 			</FormCore>
 		</>

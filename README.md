@@ -10,7 +10,7 @@
 
 ## Actores
 
-* **JDavid Tacuri**
+* **David Tacuri**
 * **Juan Guanolema**
 * **Luis Nuñez**
 

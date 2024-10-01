@@ -9,6 +9,38 @@ import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 import Icon from '@mui/material/Icon';
 
+/**
+ * Componente `FormRol` para la gestión de roles en la aplicación.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {any} props.navigate - Función de navegación.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa el formulario de roles.
+ * 
+ * @remarks
+ * Este componente utiliza varios hooks de React y Redux para manejar el estado y las operaciones de GraphQL.
+ * 
+ * @hook
+ * - `useLocation` para obtener el estado de la ubicación.
+ * - `useSelector` y `useDispatch` para interactuar con el estado de Redux.
+ * - `useRef` para crear una referencia mutable para el toast.
+ * - `useState` para manejar múltiples estados locales.
+ * - `useEffect` para ejecutar efectos secundarios en función de cambios en el estado.
+ * 
+ * @graphql
+ * - `useRolLazyQuery`, `useRolCreateMutation`, `useRolUpdateMutation`, `useMenuSelectLazyQuery` para realizar operaciones de GraphQL.
+ * 
+ * @function
+ * - `onSwitch` para manejar el cambio de estado del rol.
+ * 
+ * @returns
+ * - Renderiza un formulario con varios campos de entrada y componentes personalizados como `UtilsSpinner`, `FormCore`, `TextInput`, `UtilsPanel` y `UtilsMessages`.
+ * 
+ * @example
+ * ```tsx
+ * <FormRol navigate={navigateFunction} />
+ * ```
+ */
 export const FormRol = ({navigate}:{navigate:any}) => {
   // Location Hook
 	const { state } = useLocation();

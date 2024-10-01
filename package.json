@@ -12,7 +12,9 @@
     "start:local": "export NODE_ENV=local && lerna run build-dev --scope=@bsc/library && node ./scripts/start.js",
     "clean": "lerna clean && lerna run clean --parallel && lerna bootstrap",
     "generateDirectoryStructure": "node ./scripts/generateDirectoryStructure.js",
-    "build:library": "lerna run build --scope=@bsc/library"
+    "build:dev": "export NODE_ENV=dev && lerna run build --parallel && node ./scripts/genImpMapDev.js",
+    "build:library": "lerna run build --scope=@bsc/library",
+    "deploy:dev": "./scripts/deploy-dev.sh"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",

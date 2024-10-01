@@ -8,14 +8,37 @@ import { MenuItem } from 'primereact/menuitem';
 import { SidebarLayout } from '@components/layout/SidebarLayout'
 import { useNavigate } from "react-router-dom";
 import { setNavegacion } from '@store/slices/';
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { RootState } from '@store/store';
 import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { useAuthlogoutLazyQuery} from "@infrastructure/graphql/__generated__/graphql-types";
 import { processAuthLogout } from '@components/service/authservice';
 import Icon from '@mui/material/Icon';
 
+/**
+ * Componente Header que representa la cabecera de la aplicación.
+ * 
+ * @param {Object} props - Propiedades del componente.
+ * @param {Function} props.setVisibleModalAux - Función para mostrar el modal auxiliar.
+ * @param {string} props.path - Ruta actual de la aplicación.
+ * @param {Object} props.toast - Objeto para mostrar notificaciones.
+ * @param {Function} props.setVisibleModalPass - Función para mostrar el modal de cambio de contraseña.
+ * 
+ * @returns {JSX.Element} - Elemento JSX que representa la cabecera.
+ * 
+ * @remarks
+ * Este componente utiliza varios hooks de React y Redux, así como componentes de PrimeReact para construir la interfaz de usuario.
+ * 
+ * @example
+ * ```tsx
+ * <Header 
+ *   setVisibleModalAux={setVisibleModalAux} 
+ *   path="/home" 
+ *   toast={toast} 
+ *   setVisibleModalPass={setVisibleModalPass} 
+ * />
+ * ```
+ */
 export const Header = ({setVisibleModalAux,path,toast,setVisibleModalPass}:{setVisibleModalAux:any,path:string,toast:any,setVisibleModalPass:any}) => {
 	//Data Storage
 	const getUserStorage=JSON.parse(localStorage.getItem("getUserStorage") as any);
