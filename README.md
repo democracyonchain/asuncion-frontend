@@ -1,3 +1,234 @@
+
+<div align="center">
+  <a href="https://single-spa.js.org/" target="_blank">
+    <img src="https://single-spa.js.org/img/single-spa-mark-magenta.svg" width="150" alt="Nest Logo" />
+  </a>
+</div>
+<div align="center">  
+  <a href=""https://single-spa.js.org/" target="_blank">
+    <img src="https://img.shields.io/badge/singlespa-6.0.0-pink" alt="single-spa">
+  </a>
+</div>
+
+### English Version
+
+# Frontend Project for Blockchain Voting System  
+**STATUS**: ACTIVE
+
+### Table of Contents  
+1. [Actors](#actors)  
+2. [Project Phases](#project-phases)  
+3. [Functional Aspects](#functional-aspects)  
+4. [Technical Aspects](#technical-aspects)  
+5. [Installation Procedure](#installation-procedure)  
+6. [Other Documents](#other-documents)
+
+## Actors
+
+* **David Tacuri**
+* **Juan Guanolema**
+* **Luis Nuñez**
+
+## Project Phases
+- [X] Planning
+- [X] Implementation
+- [ ] Production
+
+### Objective:
+
+The Blockchain voting system aims to integrate a ballot-based vote counting system (manual scrutiny system) with blockchain.
+
+### Architecture
+
+- Microfrontend
+
+The internal file organization in each microfrontend follows a Clean Architecture approach and uses design patterns recommended by React.js, such as Flux, HOC, Children, dispatchEvent, among others, which are described in detail later.
+
+### Tools
+
+Programming language: JavaScript / TypeScript
+
+- Framework: Single-spa with React.js
+
+### Target Audience:
+
+Developers
+
+## Technical Aspects
+
+### Prerequisites
+
+*   Node.js: 18.13.0 LTS
+*   Npm: 8.19.3
+*   Yarn
+*   Lerna
+*   Single-spa 4.1.3
+
+1. Install Lerna [Lerna](https://lerna.js.org/)
+```plaintext
+$ yarn global add lerna
+```
+
+2. Install the single-spa framework [https://single-spa.js.org/](https://single-spa.js.org/)
+```plaintext
+$ yarn global add create-single-spa
+```
+
+### Fix Unable to Run Yarn in Windows Terminal – PowerShell
+If you encounter problems running Yarn on a Windows operating system, open PowerShell as an administrator and run:
+```plaintext
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+```
+
+### Clone the project
+```plaintext
+$ git clone https://github.com/democracyonchain/asuncion-frontend.git
+```
+
+### Install project dependencies
+```plaintext
+$ yarn bootstrap
+```
+
+### Naming Conventions and Standards for Files and Components
+
+- ***PascalCase for components***  Example: IngresosComponent
+- ***CamelCase for non-component files***  Example: bscUtility
+- ***Folders in plural:*** To group related files
+- ***barrel*** Create an index file in each folder. Example: In `Component`, create an `Index.js` file
+- ***HOC design pattern*** These components should start with `with`, for example: `withForm`
+
+### Create a new application (Example: Maintenance App)
+
+1.- Create
+
+```plaintext
+$ npx create-single-spa
+```
+
+2.- Answer the following questions:
+
+In the following example, it corresponds to the Maintenance submodule
+
+Directory for new project? A: packages/maintenance  
+What type to generate? A: single-spa application / parcel  
+Which framework would you like to use? A: react  
+Which package manager would you like to use? A: yarn  
+Will this project use Typescript? | y  
+Organization name | bsc  
+Project name | maintenance  
+
+3.- Delete unnecessary files
+
+Ignore the following error. It is caused because the assistant creates a separate repository, which is not necessary because we are using monorepo.
+
+The following files and folders are not needed because we are using a monorepo with Lerna:
+
+They should be deleted:
+*   .husky  
+*   .prettierignore  
+*   .gitignore  
+*   .eslintrc  
+
+You should also delete all dependencies.
+
+4.- Configure the package.json file of the new maintenance submodule  
+...change in line 4
+
+```plaintext
+"scripts": {
+-    "start": "webpack serve",
++    "start": "webpack serve --port 9001",
+```
+
+5.- Configure the packages/app-root/src/index.ejs file
+
+---add the following line
+```plaintext
+<% if (isLocal) { %>
+  <script type="systemjs-importmap">
+    {
+      "imports": {
+        "@bsc/root-config": "//localhost:9000/bsc-root-config.js",++     
+      }
+    }
+  </script>
+<% } %>
+```
+
+6.- Configure the packages/app-root/src/bsc-root-config.ts file
+
+7.- Delete the git repository from the new submodule
+
+```plaintext
+$ rm -rf  packages/header/.git
+```
+
+## Start the application
+```plaintext
+$ yarn bootstrap
+```
+
+# Deploy to the server --DEV
+
+## Steps to deploy a Microfrontend:
+- Test and build the application code (build, test, lint, store artifacts)
+- Upload static files to the server
+- Update the paths of the new JavaScript libraries (import map)
+
+###  Build the application code
+
+It is recommended to delete the compiled code during development and testing.
+
+- Delete dependencies and download them again
+```plaintext
+$ yarn clean
+```
+
+- Build the code
+```plaintext
+$ yarn build
+```
+
+### Upload static files to the server
+
+To automate the uploading of static files to the GitLab repository, it is necessary to store credentials on the local computer.
+
+The following commands can be used in a Linux environment.
+
+```plaintext
+# Cache for one hour
+git config --global credential.helper "cache --timeout=3600"
+
+# Cache for one day
+git config --global credential.helper "cache --timeout=86400"
+
+# Cache for one week
+git config --global credential.helper "cache --timeout=604800"
+```
+
+#### Command to upload static files to GitLab
+
+```plaintext
+$ yarn deploy:dev
+$ yarn deploy:test
+$ yarn deploy:prod
+```
+
+#### Branches used to deploy according to the environment
+
+- static_dev  
+- static_test  
+- static_prod  
+
+### Update the paths of the new JavaScript libraries
+
+There are two files where these libraries need to be updated in the root of the application according to the environment:
+
+- importmap.stg.json (dev and test)
+- importmap.prod.json (production)
+
+### Spanish Version
 # Proyecto Front-end para Sistema Integral Blockchain voting System
 **ESTADO**: ACTIVO
 ### Tabla de contenidos
