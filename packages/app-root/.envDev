@@ -1,0 +1,4 @@
+URLCONEXIONGRAPQL = 'https://f45bqq8r-3090.use2.devtunnels.ms/graphql'
+URLHOME = 'http://localhost:9000'
+URLLOGOUT = 'http://localhost:9000/app/home'
+FRONT_ETIQUETA = 'AMBIENTE DESARROLLO'

@@ -1,0 +1,20 @@
+{
+  "extends": "ts-config-single-spa",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "declarationDir": "dist",
+    "baseUrl": "../library/src/",
+    "skipLibCheck": true,
+    "strict": true,
+        "paths": {
+            "@public/*": ["public/*"],
+            "@components/*": ["components/*"],
+            "@infrastructure/*": ["infrastructure/*"],
+            "@api/*": ["api/*"] ,
+            "@store/*": ["store/*"],           
+        }
+  },
+  "files": ["src/bsc-library.tsx"],
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test*"]
+}

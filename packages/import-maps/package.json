@@ -1,0 +1,11 @@
+{
+  "name": "@bsc/import-maps",
+  "license": "MIT",
+  "version": "1.0.1",
+  "scripts": {
+    "deploy": "./scripts/deploy.sh"
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
+  }
+}
