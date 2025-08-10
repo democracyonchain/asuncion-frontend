@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { setLabelTab } from '@presentation/actions';
 import { FormCore, graphql, UtilsSpinner, SelectInput, UtilsButton, UtilsPanel, TextInput } from "@bsc/library";
 import { formActaDigita } from '@application/components/form'
-import { processResetForm, processActaDignidad, processDignidadSelect, processSaveDigita } from "@application/services/actasService"
+import { processResetForm, processActaDignidad, processDignidadSelect, processSaveDigita, processActaDignidadControl } from "@application/services/actasService"
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 import Icon from '@mui/material/Icon';
@@ -32,7 +32,7 @@ import { useFieldArray } from "react-hook-form";
  * - Utiliza `useFieldArray` para manejar arreglos de campos en el formulario.
  * - Utiliza `useState` para manejar varios estados locales como `visible`, `labels`, `dataDignidadSelect`, `statusLoading` y `dataDigita`.
  */
-export const FormDigitacion = ({ navigate }: { navigate: any }) => {
+export const FormControl = ({ navigate }: { navigate: any }) => {
     //Gestor estados Redux
     const { labelTab }: any = useSelector<RootState>((state) => state.procesos);
     const dispatch = useDispatch();
@@ -60,9 +60,9 @@ export const FormDigitacion = ({ navigate }: { navigate: any }) => {
     )
 
     //Metodos Graphql
-    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadListLazyQuery, useDigtVotosUpdateMutation } = graphql
+    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadControlListLazyQuery, useDigtVotosUpdateMutation } = graphql
     const [getDignidadLazyQuery, { loading: loadingDign }] = useDignidadDigtSelectLazyQuery();
-    const [listActaDigitaLazyQuery] = useDigtActaByDignidadListLazyQuery();
+    const [listActaControlLazyQuery] = useDigtActaByDignidadControlListLazyQuery();
     const [digtVotosUpdateMutation] = useDigtVotosUpdateMutation();
 
     useEffect(() => {
@@ -98,8 +98,8 @@ export const FormDigitacion = ({ navigate }: { navigate: any }) => {
                         />
                     </div>
                     <div className='field col-12 md:col-4 mt-4'>
-                        <UtilsButton label=' Procesar Acta' size='small' className="text-sm gap-2" rounded icon={<Icon>cached</Icon>}
-                            onClick={handleSubmit((data: any) => { processActaDignidad({ data, toast, listActaDigitaLazyQuery, setDataDigita, setStatusLoading }) })} />
+                        <UtilsButton label=' Pedir acta' size='small' className="text-sm gap-2" rounded icon={<Icon>cached</Icon>}
+                            onClick={handleSubmit((data: any) => { processActaDignidadControl({ data, toast, listActaControlLazyQuery, setDataDigita, setStatusLoading }) })} />
                     </div>
                 </div>
                

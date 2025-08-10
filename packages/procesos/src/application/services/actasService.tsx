@@ -31,8 +31,7 @@ export const processSubmitForm=(
         },
         fetchPolicy: 'cache-and-network',
         onCompleted:(c:any)=>{ 
-            let datos = c?.digtActaByJuntaList;          
-                       
+            let datos = c?.digtActaByJuntaList;  
             let itemsPerPage = 8;
             let valores=datos?.votos.length;
             let parteEntera=Math.trunc(valores/itemsPerPage);
@@ -45,7 +44,7 @@ export const processSubmitForm=(
            
 
             for (let aux=1; aux <= numPaginas; aux++){
-                numPaginasMap=[...numPaginasMap,{id:'qrcode_'+aux,pagina:'pagina ' + aux + '->' + tratamientoValues(datos,parameters.data)}];
+                numPaginasMap=[...numPaginasMap,{id:'qrcode_'+aux,pagina:tratamientoValues(datos,parameters.data,aux)}];
                  numPaginasMapAux['qrcode_'+aux]=''
                 for (var i = 0; i < datos?.votos.length; i++) {
                     if (i >= (aux - 1) * itemsPerPage && i < aux * itemsPerPage) {
@@ -99,13 +98,15 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                 {
                     startY: 5,
                     margin: { top: 5.5,right:1,left:1 },
+                    pageBreak: 'auto',
+                    rowPageBreak: 'avoid',
                     headStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01},
-                    bodyStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01,minCellHeight:1.9,valign:'middle'},	
+                    bodyStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01,minCellHeight:1.80,valign:'middle'},	
                     theme:'grid',
                     columnStyles: {  
                         lista: { cellWidth:1.5,halign: 'center',fillColor: [255, 255, 255],valign:'middle'},
                         candidato: { cellWidth:4,halign: 'center',fillColor: [255, 255, 255]},
-                        valoresLetras: { cellWidth:7,halign: 'center',fillColor: [255, 255, 255]},
+                        valoresLetras: { cellWidth:10,halign: 'center',fillColor: [255, 255, 255]},
                     },
                     head:[
                         [
@@ -117,7 +118,7 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                         [
                             {
                                 content:`TOTAL DE SUFRAGANTES `,colSpan: 2,
-                                styles: { halign: 'center', fontSize:7,fontStyle:'bold',valign:'middle', textColor:[0,0,0],fillColor: [255, 255, 255],minCellHeight:1.5,lineColor:'#bebebe',lineWidth:0.01}
+                                styles: { halign: 'center', fontSize:7,fontStyle:'bold',valign:'middle', textColor:[0,0,0],fillColor: [255, 255, 255],minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01}
                             },
                             {
                                 content:'',
@@ -132,7 +133,7 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                         [
                             {
                                 content:`VOTOS BLANCOS`,colSpan: 2,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:2,lineColor:'#bebebe',lineWidth:0.01 }
+                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01 }
                             },
                             {
                                 content:'',
@@ -147,7 +148,7 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                         [
                             {
                                 content:`VOTOS NULOS `,colSpan: 2,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:2,lineColor:'#bebebe',lineWidth:0.01 }
+                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01 }
                             },
                             {
                                 content:'',
@@ -164,25 +165,29 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                             {
                                 content:`VOTACIÓN OBTENIDA PARA LAS O LOS CANDIDATOS `,
                                 colSpan: 4,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:10,fontStyle:'bold',valign:'middle',lineWidth:0 }
+                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:10,fontStyle:'bold',valign:'middle',lineWidth:0,minCellHeight:0.82}
                             }
                                                         
                         ],   
                         [
-                            { content:'LISTA', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'CANDIDATO', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'TOTAL EN LETRAS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'TOTAL EN NÚMEROS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} }
+                            { content:'LISTA', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
+                            { content:'CANDIDATO', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
+                            { content:'TOTAL EN LETRAS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
+                            { content:'TOTAL EN NÚMEROS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} }
                         ],                     
                     ],	
-                    willDrawPage: function (data:any) {                        
+                    willDrawPage: function (data:any) {   
+                        const pageNumber = doc.internal.getNumberOfPages();
+                        if(pageNumber > 1){
+                            data.cursor.y= 5.5;
+                        }                     
                        
                          doc.setFont("Courier");
                          doc.barcode((datos.seguridad).toString() + ' Blockchain', {
-                            fontSize: 45,
+                            fontSize: 38,
                             textColor: "#000000",
                             x: data.settings.margin.right + 9,
-                            y: 1.7,
+                            y: 1.8,
                           })
 
                         //Header
@@ -215,35 +220,35 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                          //Sección 1
                         doc.setFont('helvetica','','bold');
                         doc.setFontSize(9)
-                        doc.text( `PROVINCIA:`,4,3,{align:'left'});
-                        doc.text( `PARROQUIA:`,12,3,{align:'left'});
+                        doc.text( `PROVINCIA:`,4,2.4,{align:'left'});
+                        doc.text( `PARROQUIA:`,12,2.4,{align:'left'});
 
                         doc.setFont('helvetica','','normal');
                         doc.setFontSize(8)
-                        doc.text( datos.junta.provincia.nombre,6,3,{align:'left'});
-                        doc.text( datos.junta.parroquia.nombre,14.2,3,{align:'left'});
+                        doc.text( datos.junta.provincia.nombre,6,2.4,{align:'left'});
+                        doc.text( datos.junta.parroquia.nombre,14.2,2.4,{align:'left'});
 
                         //Seccion 2
                         doc.setFont('helvetica','','bold');
                         doc.setFontSize(9)
-                        doc.text( `CANTON:`,4,3.5,{align:'left'});
-                        doc.text( `ZONA:`,12,3.5,{align:'left'});
+                        doc.text( `CANTON:`,4,2.9,{align:'left'});
+                        doc.text( `ZONA:`,12,2.9,{align:'left'});
 
                         doc.setFont('helvetica','','normal');
                         doc.setFontSize(8)
-                        doc.text( datos.junta.canton.nombre,5.5,3.5,{align:'left'});
-                        doc.text( zona,13.2,3.5,{align:'left'});
+                        doc.text( datos.junta.canton.nombre,5.5,2.9,{align:'left'});
+                        doc.text( zona,13.2,2.9,{align:'left'});
 
                         //Seccion 3
                         doc.setFont('helvetica','','bold');
                         doc.setFontSize(9)
-                        doc.text( `CIRCUNSCRIPCIÓN:`,4,4,{align:'left'});
-                        doc.text( `JUNTA N°:`,12,4,{align:'left'});
+                        doc.text( `CIRCUNSCRIPCIÓN:`,4,3.4,{align:'left'});
+                        doc.text( `JUNTA N°:`,12,3.4,{align:'left'});
 
                         doc.setFont('helvetica','','normal');
                         doc.setFontSize(8)
-                        doc.text( ' ',6.5,4,{align:'left'});
-                        doc.text( datos.junta.junta + ' - ' + datos.junta.sexo ,14,4,{align:'left'});
+                        doc.text( ' ',6.5,3.4,{align:'left'});
+                        doc.text( datos.junta.junta + ' - ' + datos.junta.sexo ,14,3.4,{align:'left'});
             
 
                       },
@@ -277,7 +282,7 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
                 let img = document.querySelector('canvas#qrcode_'+aux);  
                 doc.setTextColor('#000000')
                 doc.setPage(aux)               
-                doc.addImage(img, 'JPEG', 0.2, 0, 3.8, 3.8)               
+                doc.addImage(img, 'JPEG', 0.8, 0.5, 3.0, 3.0)               
             }
 
             if (typeof doc.putTotalPages === 'function') { 
@@ -318,12 +323,12 @@ const tratamientoData =(datos:any)=>{
  * @param {any} formData - Objeto que contiene información de ubicación como `idProvincia_acta`, `idCanton_acta`, `idParroquia_acta`, e `idZona_acta`.
  * @returns {string} - Una cadena JSON que representa los valores concatenados de `datos` y `formData`.
  */
-const tratamientoValues=(datos:any,formData:any)=>{
+const tratamientoValues=(datos:any,formData:any,pagina:any)=>{
 
     let objValues= datos.id + ',' + datos.seguridad + ',' + formData.idProvincia_acta.id + ',' +
         formData.idCanton_acta.id + ',' + formData.idParroquia_acta.id + ',' +
         formData.idZona_acta.id + ','+ datos.junta.junta + ',' + datos.junta.sexo + ',' +
-        datos.dignidad.id
+        datos.dignidad.id+',' +pagina;
     return JSON.stringify(objValues)
 }
 
@@ -615,6 +620,7 @@ export const processDignidadSelect =(parameters:{getDignidadLazyQuery:any,setDat
  * basadas en la dignidad proporcionada. Muestra un mensaje de éxito si la consulta 
  * se completa correctamente y actualiza los datos de actas digitalizadas. En caso 
  * de error, muestra un mensaje de error.
+ * para aqu+i
  */
 export const processActaDignidad=(
     parameters:
@@ -628,6 +634,7 @@ export const processActaDignidad=(
             },
             fetchPolicy: 'cache-and-network',
             onCompleted:(c:any)=>{ 
+                console.log(c);
                 parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
                 parameters.setDataDigita(c.digtActaByDignidadList);
                 parameters.setStatusLoading(false);
@@ -662,7 +669,7 @@ export const processSaveDigita=async (parameters:{setVisible:any,toast:any,data:
 
     parameters.setVisible(
         {
-            status:true,mensaje:`Esta seguro que desea Procesar esta Acta?`,
+            status:true,mensaje:`Esta seguro que desea Procesar esta Acta1`,
             accept:()=>{
                 processUpdateDigitaVoto(
                     {
@@ -718,6 +725,7 @@ const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutatio
                 }
             ]
         });
+        console.log(dataSave);
         update.setStatusLoading(true);
         update.digtVotosUpdateMutation({
             variables:{
@@ -740,4 +748,46 @@ const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutatio
         }catch(e:any){
             update.setStatusLoading(false);
         }
+}
+
+/**
+ * Procesa un acta de dignidad.
+ *
+ * @param {Object} parameters - Los parámetros necesarios para procesar el acta.
+ * @param {any} parameters.toast - Componente de notificación para mostrar mensajes.
+ * @param {any} parameters.data - Datos necesarios para procesar el acta.
+ * @param {any} parameters.listActaDigitaLazyQuery - Función para realizar la consulta de actas.
+ * @param {any} parameters.setDataDigita - Función para actualizar los datos de actas digitalizadas.
+ * @param {any} parameters.setStatusLoading - Función para establecer el estado de carga.
+ *
+ * @returns {void}
+ *
+ * Esta función realiza una consulta para obtener una lista de actas Digitadas y que tienen
+ * registro con inconsi 
+ * basadas en la dignidad proporcionada. Muestra un mensaje de éxito si la consulta 
+ * se completa correctamente y actualiza los datos de actas digitalizadas. En caso 
+ * de error, muestra un mensaje de error.
+ * para aqu+i
+ */
+export const processActaDignidadControl=(
+    parameters:
+    {
+        toast:any,data:any,listActaControlLazyQuery:any,setDataDigita:any,setStatusLoading:any
+})=>{
+    parameters.setStatusLoading(true);
+    parameters.listActaControlLazyQuery({
+            variables:{   
+                dignidad_id: parameters.data.idDignidad_acta.id,
+            },
+            fetchPolicy: 'cache-and-network',
+            onCompleted:(c:any)=>{ 
+                console.log("miraa",c);
+                parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
+                parameters.setDataDigita(c.digtActaByDignidadControlList);
+                parameters.setStatusLoading(false);
+            },onError:(error:any)=>{
+                parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });  
+                parameters.setStatusLoading(false); 
+            }
+        })
 }

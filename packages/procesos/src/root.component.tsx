@@ -1,6 +1,6 @@
 import Layout,{Utils404} from "@bsc/library";
 import { Routes, Route,BrowserRouter } from "react-router-dom";
-import { HomeActas, HomeProcesos, HomeDigitacion} from "@presentation/views/";
+import { HomeActas, HomeProcesos, HomeDigitacion,HomeControl} from "@presentation/views/";
 import { Provider } from 'react-redux';
 import { store } from '@presentation/stores';
 
@@ -30,6 +30,7 @@ import { store } from '@presentation/stores';
  * @see {@link HomeActas}
  * @see {@link HomeProcesos}
  * @see {@link HomeDigitacion}
+ * @see {@link HomeControl}
  */
 export default function Root() {
 
@@ -41,7 +42,8 @@ export default function Root() {
 						<Route path="*" element={<Utils404 path={'procesos'}></Utils404>} />
 						<Route path="app/procesos/actas/*"  element={<HomeActas/>}/> 
             			<Route path="app/procesos/home"  element={<HomeProcesos/>}/>  
-						<Route path="app/procesos/digitacion/*"  element={<HomeDigitacion/>}/>  						
+						<Route path="app/procesos/digitacion/*"  element={<HomeDigitacion/>}/>  
+						<Route path="app/procesos/control/*"  element={<HomeControl/>}/> 						
 					</Routes>
 				</Provider>
 			</Layout>
