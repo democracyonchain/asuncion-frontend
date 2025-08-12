@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "start": "webpack serve --port 9004",
+    "start": "webpack serve --port 9004 --host 0.0.0.0",
     "start:standalone": "webpack serve --env standalone",
     "build-dev": "concurrently yarn:build:*",
     "build": "webpack --mode=production",   

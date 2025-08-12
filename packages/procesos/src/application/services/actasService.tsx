@@ -1,5 +1,7 @@
 import "jspdf-barcode";
 import { setInitial,setMessage } from '@presentation/actions';
+import { sendToBlockchain } from "./blockchainService";
+import { buildBlockchainPayload } from "./payloadBuilder";
 /**
  * Procesa el envío de un formulario y realiza una consulta perezosa para obtener datos de actas.
  * 
@@ -634,7 +636,7 @@ export const processActaDignidad=(
             },
             fetchPolicy: 'cache-and-network',
             onCompleted:(c:any)=>{ 
-                console.log(c);
+                console.log('otro',c);
                 parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
                 parameters.setDataDigita(c.digtActaByDignidadList);
                 parameters.setStatusLoading(false);
@@ -725,7 +727,7 @@ const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutatio
                 }
             ]
         });
-        console.log(dataSave);
+        console.log('nose',dataSave);
         update.setStatusLoading(true);
         update.digtVotosUpdateMutation({
             variables:{
@@ -763,7 +765,7 @@ const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutatio
  * @returns {void}
  *
  * Esta función realiza una consulta para obtener una lista de actas Digitadas y que tienen
- * registro con inconsi 
+ * registro con diferencias para poder hacer conrol de calidad, 
  * basadas en la dignidad proporcionada. Muestra un mensaje de éxito si la consulta 
  * se completa correctamente y actualiza los datos de actas digitalizadas. En caso 
  * de error, muestra un mensaje de error.
@@ -781,7 +783,6 @@ export const processActaDignidadControl=(
             },
             fetchPolicy: 'cache-and-network',
             onCompleted:(c:any)=>{ 
-                console.log("miraa",c);
                 parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
                 parameters.setDataDigita(c.digtActaByDignidadControlList);
                 parameters.setStatusLoading(false);
@@ -790,4 +791,110 @@ export const processActaDignidadControl=(
                 parameters.setStatusLoading(false); 
             }
         })
+}
+
+/**
+ * Procesa y guarda el control de calidad de votos.
+ * 
+ * @param {Object} parameters - Parámetros necesarios para el procesamiento.
+ * @param {Function} parameters.setVisible - Función para establecer la visibilidad de un componente.
+ * @param {Object} parameters.toast - Objeto para mostrar mensajes de notificación.
+ * @param {Object} parameters.data - Datos que contienen los votos a procesar.
+ * @param {Function} parameters.digtVotosUpdateMutation - Mutación para actualizar los votos digitalizados.
+ * @param {Function} parameters.navigate - Función para navegar a diferentes rutas.
+ * @param {Function} parameters.dispatch - Función para despachar acciones en el estado global.
+ * @param {Function} parameters.setStatusLoading - Función para establecer el estado de carga.
+ * 
+ * @returns {Promise<boolean>} - Retorna false si hay datos faltantes, de lo contrario no retorna nada.
+ */
+export const processSaveControl=async (parameters:{setVisible:any,toast:any,data:any,digtVotosControlUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
+    
+    let dataFaltante=parameters.data.atributoRecorteControl.filter((x:any)=>x === null);
+    if(dataFaltante.length >0){
+        parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail:'Registre todos los valores del listado Acta', life: 3000 });    
+        return false;
+    }
+
+    parameters.setVisible(
+        {
+            status:true,mensaje:`Esta seguro que desea Procesar esta Acta1`,
+            accept:()=>{
+                
+                processUpdateControlVoto(
+                    {
+                        data:parameters.data,toast:parameters.toast,
+                        digtVotosControlUpdateMutation:parameters.digtVotosControlUpdateMutation,
+                        navigate:parameters.navigate,setStatusLoading:parameters.setStatusLoading,
+                        dispatch:parameters.dispatch,
+                    }
+                )
+            },reject:()=>{}
+        }
+    );
+  
+}
+
+/**
+ * Procesa la actualización de la digitación de votos.
+ *
+ * @param {Object} update - Objeto que contiene las propiedades necesarias para la actualización.
+ * @param {any} update.toast - Referencia al componente de notificación.
+ * @param {any} update.data - Datos necesarios para la actualización.
+ * @param {any} update.digtVotosUpdateMutation - Función de mutación para actualizar los votos digitados.
+ * @param {any} update.navigate - Función para navegar a otra ruta.
+ * @param {any} update.dispatch - Función para despachar acciones de Redux.
+ * @param {any} update.setStatusLoading - Función para establecer el estado de carga.
+ *
+ * @throws {any} - Captura y maneja cualquier error que ocurra durante el proceso.
+ *
+ * @returns {void}
+ */
+const processUpdateControlVoto=(update:{toast:any,data:any,digtVotosControlUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
+    try{
+        
+        const CryptoTS = require("crypto-ts");
+        const iv =  CryptoTS.enc.Utf8.parse('algorithmencript');
+        const key = 'asuncionbackalgorithmencript2024';
+                
+        let dataRecorte=update.data.atributoRecorteControl;
+        let dataCandidato=update.data.dataGeneral.candidatoId   
+        let dataSave:{candidato_id:number,votoscontrol:number,cifrado:string}[]=[];
+                
+        dataRecorte.forEach((element:any,x:number) => {   
+            dataSave=[...dataSave,{
+                candidato_id:dataCandidato[x],
+                votoscontrol:parseInt(element),
+                cifrado: CryptoTS.AES.encrypt(JSON.stringify(
+                    {candidato_id:dataCandidato[x],votoscontrol:element}),  key,
+                        {
+                            mode: CryptoTS.mode.CBC,
+                            iv: iv,  
+                        }
+                    ).toString()
+                }
+            ]
+        });
+        console.log('esto',dataSave);
+        update.setStatusLoading(true);
+        update.digtVotosControlUpdateMutation({
+            variables:{
+                inputUpdate: {
+                    acta_id:update.data.actaId,
+                   votos:dataSave
+               }
+            },onCompleted:(c:any)=>{      
+                update.navigate("record");
+                update.dispatch(setInitial({initial:1}))
+                update.dispatch(setMessage({message:c.digtControlUpdate?.message}))
+                update.setStatusLoading(false);
+            },onError:(error:any)=>{
+                update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });   
+                update.setStatusLoading(false);           
+           }
+        })
+    
+    
+        }catch(e:any){
+            update.setStatusLoading(false);
+        }
 }

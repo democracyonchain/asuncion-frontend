@@ -83,6 +83,15 @@ export class Constantes{
      * La URL se obtiene de la variable de entorno `dataEnv.URLCONEXIONGRAPQL`.
      */
     static readonly URLCONEXIONGRAPQL: string = dataEnv.URLCONEXIONGRAPQL;
+
+
+    /**
+     * URL de conexión para el servicio del API Blockchain.
+     * 
+     * Esta constante almacena la URL utilizada para conectarse al servicio Blockchain.
+     * La URL se obtiene de la variable de entorno `dataEnv.BLOCKCHAIN_API`.
+     */
+    static readonly URLBLOCKCHAIN: string = dataEnv.URLBLOCKCHAIN;
     
     /**
      * @constant {string} URLHOME

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { PROVINCIA_DIGT_SELECT_FIELDS,CANTON_DIGT_SELECT_FIELDS,PARROQUIA_DIGT_SELECT_FIELDS,ZONA_DIGT_SELECT_FIELDS,
-        JUNTA_DIGT_SELECT_FIELDS,DIGNIDAD_DIGT_SELECT_FIELDS, ACTA_DIGT_LIST_FIELDS,ACTA_DIGITALIZACION_LIST_FIELDS } from '@infrastructure/graphql/graphql-digt-fragment';
+        JUNTA_DIGT_SELECT_FIELDS,DIGNIDAD_DIGT_SELECT_FIELDS, ACTA_DIGT_LIST_FIELDS,ACTA_DIGITALIZACION_LIST_FIELDS, ACTA_CONTROL_LIST_FIELDS} from '@infrastructure/graphql/graphql-digt-fragment';
         
 /**
  * Consulta GraphQL para obtener la selección de provincias digitalizadas.
@@ -256,4 +256,40 @@ export const  GET_ACTA_DIGITALIZACION = ()=>{
             }
     
     `
+
+    
 }
+
+/**
+ * Consulta GraphQL para obtener la lista de actas de digitalización por dignidad.
+ * 
+ * @returns {DocumentNode} Consulta GraphQL para obtener la lista de actas de digitalización.
+ * 
+ * @example
+ * ```typescript
+ * import { GET_ACTA_DIGITALIZACION } from './graphql-digt-query';
+ * 
+ * const query = GET_ACTA_DIGITALIZACION();
+ * ```
+ * 
+ * @typedef {Object} DigtActaByDignidadList
+ * @property {number} dignidad_id - El ID de la dignidad para la cual se obtendrán las actas de digitalización.
+ * 
+ * @typedef {Object} ActaByDigitalizacionListFields
+ * @property {string} campo1 - Descripción del campo 1.
+ * @property {string} campo2 - Descripción del campo 2.
+ * // Agregar más campos según sea necesario.
+ */
+export const  GET_ACTA_CONTROL = ()=>{
+    return  gql`
+        ${ACTA_CONTROL_LIST_FIELDS}
+            query DigtActaByDignidadControlList($dignidad_id: Int!){
+                digtActaByDignidadControlList(dignidad_id:$dignidad_id){
+                ...actaByControlListFields                
+                }
+            }
+    
+    `
+}
+
+

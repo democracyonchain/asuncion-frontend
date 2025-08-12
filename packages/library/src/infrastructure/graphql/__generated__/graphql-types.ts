@@ -33,6 +33,22 @@ export type Scalars = {
   Decimal: { input: any; output: any };
 };
 
+export type ActaControlVotoImagen = {
+  __typename?: "ActaControlVotoImagen";
+  blancosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  dignidad?: Maybe<DignidadDigitalizacion>;
+  dignidad_id?: Maybe<Scalars["Float"]["output"]>;
+  estado?: Maybe<Scalars["Float"]["output"]>;
+  id: Scalars["Float"]["output"];
+  junta?: Maybe<JuntaDigitalizacion>;
+  junta_id?: Maybe<Scalars["Float"]["output"]>;
+  nulosdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  peticion?: Maybe<Scalars["Float"]["output"]>;
+  seguridad?: Maybe<Scalars["Float"]["output"]>;
+  sufragantesdigitacion?: Maybe<Scalars["Float"]["output"]>;
+  votos: Array<VotosDigitalizacionAleatorio>;
+};
+
 export type ActaDigitalizacionBasic = {
   __typename?: "ActaDigitalizacionBasic";
   dignidad?: Maybe<DignidadDigitalizacion>;
@@ -94,6 +110,7 @@ export type ActaUpdateInput = {
   imagensegmento: Array<ImagenSegmentoUpdateInput>;
   nulos: Scalars["Int"]["input"];
   sufragantes: Scalars["Int"]["input"];
+  txicr: Scalars["String"]["input"];
   votos: Array<VotosUpdateInput>;
   votosicr?: InputMaybe<Scalars["Int"]["input"]>;
 };
@@ -402,6 +419,7 @@ export type Mutation = {
   authCambioPassword: GlobalResultType;
   digtActaLiberaUpdate: GlobalResultType;
   digtActaUpdate: GlobalResultType;
+  digtVotosControlUpdate: GlobalResultType;
   digtVotosUpdate: GlobalResultType;
 };
 
@@ -477,6 +495,10 @@ export type MutationDigtActaLiberaUpdateArgs = {
 
 export type MutationDigtActaUpdateArgs = {
   dataInput: ActaUpdateInput;
+};
+
+export type MutationDigtVotosControlUpdateArgs = {
+  dataInput: VotosControlUpdateInput;
 };
 
 export type MutationDigtVotosUpdateArgs = {
@@ -665,6 +687,7 @@ export type Query = {
   authModuloPermisosId: Array<ModuloAuth>;
   authPerfil: UsuarioAuth;
   digitActaCollection?: Maybe<ActaDigitalizacionBasicCollectionType>;
+  digtActaByDignidadControlList: ActaControlVotoImagen;
   digtActaByDignidadList: ActaDigitalizacionVotoImagen;
   digtActaByJuntaList: ActaDigitalizacionVoto;
   digtCantonCollection?: Maybe<CantonDigitalizacionCollectionType>;
@@ -759,6 +782,10 @@ export type QueryDigitActaCollectionArgs = {
   order?: InputMaybe<StringOrderInput>;
   pagination?: InputMaybe<PaginationInput>;
   where?: InputMaybe<ActaDigitalizacionFilterInput>;
+};
+
+export type QueryDigtActaByDignidadControlListArgs = {
+  dignidad_id: Scalars["Int"]["input"];
 };
 
 export type QueryDigtActaByDignidadListArgs = {
@@ -998,6 +1025,17 @@ export type UsuarioUpdateInput = {
   provincia_id?: InputMaybe<Scalars["Float"]["input"]>;
   roles?: InputMaybe<Array<Scalars["Int"]["input"]>>;
   username?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type VotosControlUpdateBasicInput = {
+  candidato_id: Scalars["Int"]["input"];
+  cifrado?: InputMaybe<Scalars["String"]["input"]>;
+  votoscontrol: Scalars["Int"]["input"];
+};
+
+export type VotosControlUpdateInput = {
+  acta_id: Scalars["Int"]["input"];
+  votos: Array<VotosControlUpdateBasicInput>;
 };
 
 export type VotosDigitacionUpdateBasicInput = {
@@ -1440,6 +1478,20 @@ export type ActaDigitaCrudFieldsFragment = {
   status: boolean;
 };
 
+export type ActaByControlListFieldsFragment = {
+  __typename?: "ActaControlVotoImagen";
+  id: number;
+  votos: Array<{
+    __typename?: "VotosDigitalizacionAleatorio";
+    votosdigitacion: number;
+    imagensegmento?: {
+      __typename?: "ImagenSegmentoDigitalizacionAleatorio";
+      imagen?: string | null;
+      candidato_id: number;
+    } | null;
+  }>;
+};
+
 export type DigtVotosUpdateMutationVariables = Exact<{
   inputUpdate: VotosDigitacionUpdateInput;
 }>;
@@ -1447,6 +1499,19 @@ export type DigtVotosUpdateMutationVariables = Exact<{
 export type DigtVotosUpdateMutation = {
   __typename?: "Mutation";
   digtVotosUpdate: {
+    __typename?: "GlobalResultType";
+    message: string;
+    status: boolean;
+  };
+};
+
+export type DigtVotosControlUpdateMutationVariables = Exact<{
+  inputUpdate: VotosControlUpdateInput;
+}>;
+
+export type DigtVotosControlUpdateMutation = {
+  __typename?: "Mutation";
+  digtVotosControlUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1647,6 +1712,27 @@ export type DigtActaByDignidadListQuery = {
   __typename?: "Query";
   digtActaByDignidadList: {
     __typename?: "ActaDigitalizacionVotoImagen";
+    id: number;
+    votos: Array<{
+      __typename?: "VotosDigitalizacionAleatorio";
+      votosdigitacion: number;
+      imagensegmento?: {
+        __typename?: "ImagenSegmentoDigitalizacionAleatorio";
+        imagen?: string | null;
+        candidato_id: number;
+      } | null;
+    }>;
+  };
+};
+
+export type DigtActaByDignidadControlListQueryVariables = Exact<{
+  dignidad_id: Scalars["Int"]["input"];
+}>;
+
+export type DigtActaByDignidadControlListQuery = {
+  __typename?: "Query";
+  digtActaByDignidadControlList: {
+    __typename?: "ActaControlVotoImagen";
     id: number;
     votos: Array<{
       __typename?: "VotosDigitalizacionAleatorio";
@@ -2535,6 +2621,18 @@ export const ActaDigitaCrudFieldsFragmentDoc = gql`
     status
   }
 `;
+export const ActaByControlListFieldsFragmentDoc = gql`
+  fragment actaByControlListFields on ActaControlVotoImagen {
+    id
+    votos {
+      votosdigitacion
+      imagensegmento {
+        imagen
+        candidato_id
+      }
+    }
+  }
+`;
 export const MenuCollectionFieldsFragmentDoc = gql`
   fragment menuCollectionFields on MenuCollectionType {
     data {
@@ -3371,6 +3469,57 @@ export type DigtVotosUpdateMutationOptions = Apollo.BaseMutationOptions<
   DigtVotosUpdateMutation,
   DigtVotosUpdateMutationVariables
 >;
+export const DigtVotosControlUpdateDocument = gql`
+  mutation DigtVotosControlUpdate($inputUpdate: VotosControlUpdateInput!) {
+    digtVotosControlUpdate(dataInput: $inputUpdate) {
+      ...actaDigitaCrudFields
+    }
+  }
+  ${ActaDigitaCrudFieldsFragmentDoc}
+`;
+export type DigtVotosControlUpdateMutationFn = Apollo.MutationFunction<
+  DigtVotosControlUpdateMutation,
+  DigtVotosControlUpdateMutationVariables
+>;
+
+/**
+ * __useDigtVotosControlUpdateMutation__
+ *
+ * To run a mutation, you first call `useDigtVotosControlUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDigtVotosControlUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [digtVotosControlUpdateMutation, { data, loading, error }] = useDigtVotosControlUpdateMutation({
+ *   variables: {
+ *      inputUpdate: // value for 'inputUpdate'
+ *   },
+ * });
+ */
+export function useDigtVotosControlUpdateMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DigtVotosControlUpdateMutation,
+    DigtVotosControlUpdateMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DigtVotosControlUpdateMutation,
+    DigtVotosControlUpdateMutationVariables
+  >(DigtVotosControlUpdateDocument, options);
+}
+export type DigtVotosControlUpdateMutationHookResult = ReturnType<
+  typeof useDigtVotosControlUpdateMutation
+>;
+export type DigtVotosControlUpdateMutationResult =
+  Apollo.MutationResult<DigtVotosControlUpdateMutation>;
+export type DigtVotosControlUpdateMutationOptions = Apollo.BaseMutationOptions<
+  DigtVotosControlUpdateMutation,
+  DigtVotosControlUpdateMutationVariables
+>;
 export const ProvinciaDigtSelectDocument = gql`
   query ProvinciaDigtSelect(
     $inputWhere: ProvinciaDigitalizacionFilterInput
@@ -3995,6 +4144,87 @@ export type DigtActaByDignidadListSuspenseQueryHookResult = ReturnType<
 export type DigtActaByDignidadListQueryResult = Apollo.QueryResult<
   DigtActaByDignidadListQuery,
   DigtActaByDignidadListQueryVariables
+>;
+export const DigtActaByDignidadControlListDocument = gql`
+  query DigtActaByDignidadControlList($dignidad_id: Int!) {
+    digtActaByDignidadControlList(dignidad_id: $dignidad_id) {
+      ...actaByControlListFields
+    }
+  }
+  ${ActaByControlListFieldsFragmentDoc}
+`;
+
+/**
+ * __useDigtActaByDignidadControlListQuery__
+ *
+ * To run a query within a React component, call `useDigtActaByDignidadControlListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDigtActaByDignidadControlListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDigtActaByDignidadControlListQuery({
+ *   variables: {
+ *      dignidad_id: // value for 'dignidad_id'
+ *   },
+ * });
+ */
+export function useDigtActaByDignidadControlListQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  > &
+    (
+      | {
+          variables: DigtActaByDignidadControlListQueryVariables;
+          skip?: boolean;
+        }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  >(DigtActaByDignidadControlListDocument, options);
+}
+export function useDigtActaByDignidadControlListLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  >(DigtActaByDignidadControlListDocument, options);
+}
+export function useDigtActaByDignidadControlListSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    DigtActaByDignidadControlListQuery,
+    DigtActaByDignidadControlListQueryVariables
+  >(DigtActaByDignidadControlListDocument, options);
+}
+export type DigtActaByDignidadControlListQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadControlListQuery
+>;
+export type DigtActaByDignidadControlListLazyQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadControlListLazyQuery
+>;
+export type DigtActaByDignidadControlListSuspenseQueryHookResult = ReturnType<
+  typeof useDigtActaByDignidadControlListSuspenseQuery
+>;
+export type DigtActaByDignidadControlListQueryResult = Apollo.QueryResult<
+  DigtActaByDignidadControlListQuery,
+  DigtActaByDignidadControlListQueryVariables
 >;
 export const MenuUpdateDocument = gql`
   mutation MenuUpdate($inputUpdate: MenuUpdateInput!) {
@@ -5419,6 +5649,7 @@ export const namedOperations = {
     DignidadDigtSelect: "DignidadDigtSelect",
     DigtActaByJuntaList: "DigtActaByJuntaList",
     DigtActaByDignidadList: "DigtActaByDignidadList",
+    DigtActaByDignidadControlList: "DigtActaByDignidadControlList",
     MenuCollection: "MenuCollection",
     Menu: "Menu",
     MenuSelect: "MenuSelect",
@@ -5434,6 +5665,7 @@ export const namedOperations = {
   Mutation: {
     AuthCambioPassword: "AuthCambioPassword",
     DigtVotosUpdate: "DigtVotosUpdate",
+    DigtVotosControlUpdate: "DigtVotosControlUpdate",
     MenuUpdate: "MenuUpdate",
     MenuCreate: "MenuCreate",
     MenuDelete: "MenuDelete",
@@ -5465,6 +5697,7 @@ export const namedOperations = {
     actaDigtListFields: "actaDigtListFields",
     actaByDigititalizacionListFields: "actaByDigititalizacionListFields",
     actaDigitaCrudFields: "actaDigitaCrudFields",
+    actaByControlListFields: "actaByControlListFields",
     menuCollectionFields: "menuCollectionFields",
     menuIdFields: "menuIdFields",
     menuCrudFields: "menuCrudFields",
