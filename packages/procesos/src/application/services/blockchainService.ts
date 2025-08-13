@@ -1,7 +1,7 @@
 import axios from "axios";
-import { Constantes } from "../../../../library/src/components/service/constantes";
+ 
 
-const BLOCKCHAIN_API = Constantes.URLBLOCKCHAIN;
+const BLOCKCHAIN_API = "http://192.168.68.128:5000/api";
 
 export interface BlockchainResponse {
   transactionId?: string; // p.ej. "Transaction submitted: <txHash>"
@@ -22,7 +22,36 @@ export async function sendToBlockchain(
   actaId: number | string,
   payload: any
 ): Promise<string> {
-  const url = `${BLOCKCHAIN_API}/Acta/${actaId}/escaneo`; // mismo endpoint para ambos casos
+  try
+  {
+    const url = `${BLOCKCHAIN_API}/Acta/${actaId}/escaneo`; // mismo endpoint para ambos casos
+console.log("payload:", payload );
+// ---- JSON básico para probar (ajústalo si Swagger pide otros campos) ----
+    const testBody = {
+      codigo: Number(actaId),
+      seguridad: 0,
+      provincia: 0,
+      canton: 0,
+      parroquia: 0,
+      zona: 0,
+      junta: 0,
+      sexo: "M",
+      dignidad: 1,
+      pagina: 1,
+      numero_paginas: 1,
+      path: "string",
+      paginas: [
+        {
+          actaId: Number(actaId),
+          numero: 1,
+          nombre: "pagina-1.jpg",
+          path: "string",
+          url: "string",
+          hash: "string",
+          candidatos: [] as Array<{ id: number; orden: number; nombre?: string; votos?: number }>
+        }
+      ]
+    };
 
   const { data } = await axios.post<BlockchainResponse>(url, payload, {
     headers: { "Content-Type": "application/json" },
@@ -38,4 +67,12 @@ export async function sendToBlockchain(
     throw new Error("No se pudo extraer el txHash de la respuesta del backend de blockchain.");
   }
   return txHash;
+
+  }
+  catch(e:any)
+  {
+    return e.message;
+  }
+  
 }
+
