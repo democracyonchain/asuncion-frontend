@@ -1,5 +1,7 @@
 import "jspdf-barcode";
-import { setInitial,setMessage } from '@presentation/actions';
+import { setInitial, setMessage } from '@presentation/actions';
+import { sendToBlockchain } from "./blockchainService";
+import { buildBlockchainPayload } from "./payloadBuilder";
 /**
  * Procesa el envío de un formulario y realiza una consulta perezosa para obtener datos de actas.
  * 
@@ -16,47 +18,47 @@ import { setInitial,setMessage } from '@presentation/actions';
  * 
  * @returns {void}
  */
-export const processSubmitForm=(
+export const processSubmitForm = (
     parameters:
-    {
-        setVisible:any,toast:any,data:any,labels:any,
-        navigate:any,dispatch:any,listActaLazyQuery:any,setLabelQr:any,
-        setLabelQrAux:any
-})=>{
+        {
+            setVisible: any, toast: any, data: any, labels: any,
+            navigate: any, dispatch: any, listActaLazyQuery: any, setLabelQr: any,
+            setLabelQrAux: any
+        }) => {
 
-   parameters.listActaLazyQuery({
-        variables:{   
+    parameters.listActaLazyQuery({
+        variables: {
             dignidad_id: parameters.data.idDignidad_acta.id,
-            junta_id: parameters.data.idJunta_acta.id ,        
+            junta_id: parameters.data.idJunta_acta.id,
         },
         fetchPolicy: 'cache-and-network',
-        onCompleted:(c:any)=>{ 
-            let datos = c?.digtActaByJuntaList;  
+        onCompleted: (c: any) => {
+            let datos = c?.digtActaByJuntaList;
             let itemsPerPage = 8;
-            let valores=datos?.votos.length;
-            let parteEntera=Math.trunc(valores/itemsPerPage);
-            let resto=valores%itemsPerPage
-            let numPaginas=parteEntera + (resto>0?1:0);
-           
+            let valores = datos?.votos.length;
+            let parteEntera = Math.trunc(valores / itemsPerPage);
+            let resto = valores % itemsPerPage
+            let numPaginas = parteEntera + (resto > 0 ? 1 : 0);
 
-            let numPaginasMap:any=[];
-            let numPaginasMapAux:any[string]=[]
-           
 
-            for (let aux=1; aux <= numPaginas; aux++){
-                numPaginasMap=[...numPaginasMap,{id:'qrcode_'+aux,pagina:tratamientoValues(datos,parameters.data,aux)}];
-                 numPaginasMapAux['qrcode_'+aux]=''
+            let numPaginasMap: any = [];
+            let numPaginasMapAux: any[string] = []
+
+
+            for (let aux = 1; aux <= numPaginas; aux++) {
+                numPaginasMap = [...numPaginasMap, { id: 'qrcode_' + aux, pagina: tratamientoValues(datos, parameters.data, aux) }];
+                numPaginasMapAux['qrcode_' + aux] = ''
                 for (var i = 0; i < datos?.votos.length; i++) {
                     if (i >= (aux - 1) * itemsPerPage && i < aux * itemsPerPage) {
-                        numPaginasMapAux['qrcode_'+aux]=[...numPaginasMapAux['qrcode_'+aux], datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.orden] 
+                        numPaginasMapAux['qrcode_' + aux] = [...numPaginasMapAux['qrcode_' + aux], datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.partido.id + ',' + datos?.votos[i].candidato.orden]
                     }
                 }
             }
             parameters.setLabelQr(numPaginasMap);
             parameters.setLabelQrAux(numPaginasMapAux);
-            dataPdf(datos,parameters.data.idZona_acta.nombre,numPaginas); 
+            dataPdf(datos, parameters.data.idZona_acta.nombre, numPaginas);
 
-        },onError:(error:any)=>{            
+        }, onError: (error: any) => {
             //parameters.setDataJuntaSelect([]);
         }
     })
@@ -81,212 +83,212 @@ export const processSubmitForm=(
  * @example
  * dataPdf(datos, 'Zona 1', 5);
  */
-export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
+export const dataPdf = (datos: any, zona: string, numPaginas: number) => {
 
-    const getAdminConfig=JSON.parse(sessionStorage.getItem('getAdminConfig') as any)
-    const fecha = new Date(getAdminConfig[0].fechaproceso).toLocaleDateString('es',{ year: 'numeric', month: 'long',day: 'numeric'});
+    const getAdminConfig = JSON.parse(sessionStorage.getItem('getAdminConfig') as any)
+    const fecha = new Date(getAdminConfig[0].fechaproceso).toLocaleDateString('es', { year: 'numeric', month: 'long', day: 'numeric' });
 
     import('jspdf').then((jsPDF) => {
         import('jspdf-autotable').then(() => {
-            const doc:any = new jsPDF.default('p', 'cm', 0 as any,true);           
-            const totalPagesExp = 'total_pages_count_string';   
-                
+            const doc: any = new jsPDF.default('p', 'cm', 0 as any, true);
+            const totalPagesExp = 'total_pages_count_string';
+
             doc.autoTable([
-                {title:'Lista',key:"lista"},{title:'Candidato',key:"candidato"},
-                {title:'Total en Letras',key:"valoresLetras"},{title:'Total en Números',key:"valoresNum"}
-            ],tratamientoData(datos.votos),
+                { title: 'Lista', key: "lista" }, { title: 'Candidato', key: "candidato" },
+                { title: 'Total en Letras', key: "valoresLetras" }, { title: 'Total en Números', key: "valoresNum" }
+            ], tratamientoData(datos.votos),
                 {
                     startY: 5,
-                    margin: { top: 5.5,right:1,left:1 },
+                    margin: { top: 5.5, right: 1, left: 1 },
                     pageBreak: 'auto',
                     rowPageBreak: 'avoid',
-                    headStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01},
-                    bodyStyles:{fontSize:7,lineColor:'#bebebe',lineWidth:0.01,minCellHeight:1.80,valign:'middle'},	
-                    theme:'grid',
-                    columnStyles: {  
-                        lista: { cellWidth:1.5,halign: 'center',fillColor: [255, 255, 255],valign:'middle'},
-                        candidato: { cellWidth:4,halign: 'center',fillColor: [255, 255, 255]},
-                        valoresLetras: { cellWidth:10,halign: 'center',fillColor: [255, 255, 255]},
+                    headStyles: { fontSize: 7, lineColor: '#bebebe', lineWidth: 0.01 },
+                    bodyStyles: { fontSize: 7, lineColor: '#bebebe', lineWidth: 0.01, minCellHeight: 1.80, valign: 'middle' },
+                    theme: 'grid',
+                    columnStyles: {
+                        lista: { cellWidth: 1.5, halign: 'center', fillColor: [255, 255, 255], valign: 'middle' },
+                        candidato: { cellWidth: 4, halign: 'center', fillColor: [255, 255, 255] },
+                        valoresLetras: { cellWidth: 10, halign: 'center', fillColor: [255, 255, 255] },
                     },
-                    head:[
+                    head: [
                         [
-                            { content:'', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'TOTAL EN LETRAS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} },
-                            { content:'TOTAL EN NÚMEROS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0} }
+                            { content: '', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0 } },
+                            { content: '', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0 } },
+                            { content: 'TOTAL EN LETRAS', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0 } },
+                            { content: 'TOTAL EN NÚMEROS', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0 } }
                         ],
                         [
                             {
-                                content:`TOTAL DE SUFRAGANTES `,colSpan: 2,
-                                styles: { halign: 'center', fontSize:7,fontStyle:'bold',valign:'middle', textColor:[0,0,0],fillColor: [255, 255, 255],minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01}
+                                content: `TOTAL DE SUFRAGANTES `, colSpan: 2,
+                                styles: { halign: 'center', fontSize: 7, fontStyle: 'bold', valign: 'middle', textColor: [0, 0, 0], fillColor: [255, 255, 255], minCellHeight: 1.8, lineColor: '#bebebe', lineWidth: 0.01 }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center' }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center' }
                             }
-                                                        
+
                         ],
                         [
                             {
-                                content:`VOTOS BLANCOS`,colSpan: 2,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01 }
+                                content: `VOTOS BLANCOS`, colSpan: 2,
+                                styles: { halign: 'center', fillColor: [255, 255, 255], textColor: [0, 0, 0], fontSize: 7, fontStyle: 'bold', valign: 'middle', minCellHeight: 1.8, lineColor: '#bebebe', lineWidth: 0.01 }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center',fontStyle:'normal'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center', fontStyle: 'normal' }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center' }
                             }
-                                                        
+
                         ],
                         [
                             {
-                                content:`VOTOS NULOS `,colSpan: 2,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:7,fontStyle:'bold',valign:'middle',minCellHeight:1.8,lineColor:'#bebebe',lineWidth:0.01 }
+                                content: `VOTOS NULOS `, colSpan: 2,
+                                styles: { halign: 'center', fillColor: [255, 255, 255], textColor: [0, 0, 0], fontSize: 7, fontStyle: 'bold', valign: 'middle', minCellHeight: 1.8, lineColor: '#bebebe', lineWidth: 0.01 }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center' }
                             },
                             {
-                                content:'',
-                                styles:{fillColor: [255, 255, 255],textColor:[0,0,0],valign:'middle',halign:'center'}
+                                content: '',
+                                styles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], valign: 'middle', halign: 'center' }
                             }
-                                                        
+
                         ],
-                        [{ content:'',colSpan: 4, styles:{cellPadding:0.1,fillColor: [255, 255, 255],lineWidth:0} }],
+                        [{ content: '', colSpan: 4, styles: { cellPadding: 0.1, fillColor: [255, 255, 255], lineWidth: 0 } }],
                         [
                             {
-                                content:`VOTACIÓN OBTENIDA PARA LAS O LOS CANDIDATOS `,
+                                content: `VOTACIÓN OBTENIDA PARA LAS O LOS CANDIDATOS `,
                                 colSpan: 4,
-                                styles: { halign: 'center', fillColor: [255, 255, 255],textColor:[0,0,0],fontSize:10,fontStyle:'bold',valign:'middle',lineWidth:0,minCellHeight:0.82}
+                                styles: { halign: 'center', fillColor: [255, 255, 255], textColor: [0, 0, 0], fontSize: 10, fontStyle: 'bold', valign: 'middle', lineWidth: 0, minCellHeight: 0.82 }
                             }
-                                                        
-                        ],   
+
+                        ],
                         [
-                            { content:'LISTA', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
-                            { content:'CANDIDATO', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
-                            { content:'TOTAL EN LETRAS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} },
-                            { content:'TOTAL EN NÚMEROS', styles:{cellPadding:0.1,fillColor: [255, 255, 255],textColor:[0,0,0],halign:'center',lineWidth:0,minCellHeight:0.27} }
-                        ],                     
-                    ],	
-                    willDrawPage: function (data:any) {   
+                            { content: 'LISTA', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0, minCellHeight: 0.27 } },
+                            { content: 'CANDIDATO', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0, minCellHeight: 0.27 } },
+                            { content: 'TOTAL EN LETRAS', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0, minCellHeight: 0.27 } },
+                            { content: 'TOTAL EN NÚMEROS', styles: { cellPadding: 0.1, fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', lineWidth: 0, minCellHeight: 0.27 } }
+                        ],
+                    ],
+                    willDrawPage: function (data: any) {
                         const pageNumber = doc.internal.getNumberOfPages();
-                        if(pageNumber > 1){
-                            data.cursor.y= 5.5;
-                        }                     
-                       
-                         doc.setFont("Courier");
-                         doc.barcode((datos.seguridad).toString() + ' Blockchain', {
+                        if (pageNumber > 1) {
+                            data.cursor.y = 5.5;
+                        }
+
+                        doc.setFont("Courier");
+                        doc.barcode((datos.seguridad).toString() + ' Blockchain', {
                             fontSize: 38,
                             textColor: "#000000",
                             x: data.settings.margin.right + 9,
                             y: 1.8,
-                          })
+                        })
 
                         //Header
                         doc.setFontSize(10);
                         doc.setTextColor('#000000')
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.text(getAdminConfig[0].nombreproceso, data.settings.margin.right + 3, 0.5)
 
-                        doc.setFont('helvetica','','bold');
+                        doc.setFont('helvetica', '', 'bold');
                         doc.setFontSize(12);
                         doc.text('ACTA DE ESCRUTINIO', data.settings.margin.right + 3, 1)
                         doc.setFontSize(8);
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.text(fecha, data.settings.margin.right + 3, 1.4)
 
                         doc.setFontSize(10);
                         doc.setTextColor('#000000')
-                        doc.setFont('helvetica','','bold');
+                        doc.setFont('helvetica', '', 'bold');
                         doc.text(datos.dignidad.nombre, data.settings.margin.right + 3, 1.9)
 
                         doc.setFontSize(8);
                         doc.setTextColor('#000000')
-                        doc.setFont('helvetica','','bold');
+                        doc.setFont('helvetica', '', 'bold');
                         doc.text('Acta N°:', data.settings.margin.right + 9.3, 2)
-                        doc.text('Control N°:', data.settings.margin.right + 14.8, 2)                      
-                        doc.setFont('helvetica','','normal');
+                        doc.text('Control N°:', data.settings.margin.right + 14.8, 2)
+                        doc.setFont('helvetica', '', 'normal');
                         doc.text((datos.id).toString(), data.settings.margin.right + 10.6, 2)
                         doc.text((datos.seguridad).toString(), data.settings.margin.right + 16.3, 2)
 
-                         //Sección 1
-                        doc.setFont('helvetica','','bold');
+                        //Sección 1
+                        doc.setFont('helvetica', '', 'bold');
                         doc.setFontSize(9)
-                        doc.text( `PROVINCIA:`,4,2.4,{align:'left'});
-                        doc.text( `PARROQUIA:`,12,2.4,{align:'left'});
+                        doc.text(`PROVINCIA:`, 4, 2.4, { align: 'left' });
+                        doc.text(`PARROQUIA:`, 12, 2.4, { align: 'left' });
 
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.setFontSize(8)
-                        doc.text( datos.junta.provincia.nombre,6,2.4,{align:'left'});
-                        doc.text( datos.junta.parroquia.nombre,14.2,2.4,{align:'left'});
+                        doc.text(datos.junta.provincia.nombre, 6, 2.4, { align: 'left' });
+                        doc.text(datos.junta.parroquia.nombre, 14.2, 2.4, { align: 'left' });
 
                         //Seccion 2
-                        doc.setFont('helvetica','','bold');
+                        doc.setFont('helvetica', '', 'bold');
                         doc.setFontSize(9)
-                        doc.text( `CANTON:`,4,2.9,{align:'left'});
-                        doc.text( `ZONA:`,12,2.9,{align:'left'});
+                        doc.text(`CANTON:`, 4, 2.9, { align: 'left' });
+                        doc.text(`ZONA:`, 12, 2.9, { align: 'left' });
 
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.setFontSize(8)
-                        doc.text( datos.junta.canton.nombre,5.5,2.9,{align:'left'});
-                        doc.text( zona,13.2,2.9,{align:'left'});
+                        doc.text(datos.junta.canton.nombre, 5.5, 2.9, { align: 'left' });
+                        doc.text(zona, 13.2, 2.9, { align: 'left' });
 
                         //Seccion 3
-                        doc.setFont('helvetica','','bold');
+                        doc.setFont('helvetica', '', 'bold');
                         doc.setFontSize(9)
-                        doc.text( `CIRCUNSCRIPCIÓN:`,4,3.4,{align:'left'});
-                        doc.text( `JUNTA N°:`,12,3.4,{align:'left'});
+                        doc.text(`CIRCUNSCRIPCIÓN:`, 4, 3.4, { align: 'left' });
+                        doc.text(`JUNTA N°:`, 12, 3.4, { align: 'left' });
 
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.setFontSize(8)
-                        doc.text( ' ',6.5,3.4,{align:'left'});
-                        doc.text( datos.junta.junta + ' - ' + datos.junta.sexo ,14,3.4,{align:'left'});
-            
+                        doc.text(' ', 6.5, 3.4, { align: 'left' });
+                        doc.text(datos.junta.junta + ' - ' + datos.junta.sexo, 14, 3.4, { align: 'left' });
 
-                      },
-                    didDrawPage:function (data:any) {
-                        const footer ='Blockchain Voting System | BSM';
-                        const footerAsuncion ='democracyonchain.com'
+
+                    },
+                    didDrawPage: function (data: any) {
+                        const footer = 'Blockchain Voting System | BSM';
+                        const footerAsuncion = 'democracyonchain.com'
                         let pagina = 'Página ' + doc.internal.getNumberOfPages()
                         let pageSize = doc.internal.pageSize;
                         let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
-                    
+
                         if (typeof doc.putTotalPages === 'function') {
-                            pagina = pagina + ' / ' + totalPagesExp 
+                            pagina = pagina + ' / ' + totalPagesExp
                         }
 
-                        doc.setFont('helvetica','','normal');
+                        doc.setFont('helvetica', '', 'normal');
                         doc.setTextColor('#9e9e9e')
                         doc.setFontSize(9)
 
                         doc.text(footerAsuncion, data.settings.margin.left, pageHeight - 0.5);
-                        doc.text(footer, data.settings.margin.left, pageHeight - 0.9);  
-                        doc.text(pagina,  doc.internal.pageSize.getWidth() / 2, pageHeight - 0.8)
-                        doc.setFont('helvetica','','bold');
+                        doc.text(footer, data.settings.margin.left, pageHeight - 0.9);
+                        doc.text(pagina, doc.internal.pageSize.getWidth() / 2, pageHeight - 0.8)
+                        doc.setFont('helvetica', '', 'bold');
                         doc.setFontSize(50)
-                        
-                     },
-                    showHead:'firstPage'
+
+                    },
+                    showHead: 'firstPage'
                 }
             )
 
-            for (let aux=1; aux <= numPaginas; aux++){                
-                let img = document.querySelector('canvas#qrcode_'+aux);  
+            for (let aux = 1; aux <= numPaginas; aux++) {
+                let img = document.querySelector('canvas#qrcode_' + aux);
                 doc.setTextColor('#000000')
-                doc.setPage(aux)               
-                doc.addImage(img, 'JPEG', 0.8, 0.5, 3.0, 3.0)               
+                doc.setPage(aux)
+                doc.addImage(img, 'JPEG', 0.8, 0.5, 3.0, 3.0)
             }
 
-            if (typeof doc.putTotalPages === 'function') { 
-                doc.putTotalPages(totalPagesExp) 
+            if (typeof doc.putTotalPages === 'function') {
+                doc.putTotalPages(totalPagesExp)
             }
             doc.save(`Acta-${datos.id}[${datos.seguridad}].pdf`);
         })
@@ -300,15 +302,15 @@ export const dataPdf=(datos:any,zona:string,numPaginas:number)=>{
  * @returns {Array<{ lista: string, candidato: string, valoresLetras: string, valoresNum: string }>} 
  *          Una lista de objetos con las propiedades `lista`, `candidato`, `valoresLetras` y `valoresNum`.
  */
-const tratamientoData =(datos:any)=>{
-    
-    const valores= datos?.map((element:any) => {
+const tratamientoData = (datos: any) => {
+
+    const valores = datos?.map((element: any) => {
 
         return {
-            lista:element.candidato.partido.lista,
-            candidato:element.candidato.partido.nombre + ' - ' + element.candidato.nombre,
-            valoresLetras:'',
-            valoresNum:''
+            lista: element.candidato.partido.lista,
+            candidato: element.candidato.partido.nombre + ' - ' + element.candidato.nombre,
+            valoresLetras: '',
+            valoresNum: ''
         }
     })
 
@@ -323,12 +325,12 @@ const tratamientoData =(datos:any)=>{
  * @param {any} formData - Objeto que contiene información de ubicación como `idProvincia_acta`, `idCanton_acta`, `idParroquia_acta`, e `idZona_acta`.
  * @returns {string} - Una cadena JSON que representa los valores concatenados de `datos` y `formData`.
  */
-const tratamientoValues=(datos:any,formData:any,pagina:any)=>{
+const tratamientoValues = (datos: any, formData: any, pagina: any) => {
 
-    let objValues= datos.id + ',' + datos.seguridad + ',' + formData.idProvincia_acta.id + ',' +
+    let objValues = datos.id + ',' + datos.seguridad + ',' + formData.idProvincia_acta.id + ',' +
         formData.idCanton_acta.id + ',' + formData.idParroquia_acta.id + ',' +
-        formData.idZona_acta.id + ','+ datos.junta.junta + ',' + datos.junta.sexo + ',' +
-        datos.dignidad.id+',' +pagina;
+        formData.idZona_acta.id + ',' + datos.junta.junta + ',' + datos.junta.sexo + ',' +
+        datos.dignidad.id + ',' + pagina;
     return JSON.stringify(objValues)
 }
 
@@ -343,18 +345,18 @@ const tratamientoValues=(datos:any,formData:any,pagina:any)=>{
  * @param {Function} parameters.setLabelTab - Función para actualizar las etiquetas de las pestañas.
  * @param {Function} parameters.navigate - Función para navegar a una nueva ruta.
  */
-export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:any,labelTab:any,setLabelTab:any,navigate:any})=>{
-    parameters.clearErrors(); 
+export const processResetForm = (parameters: { clearErrors: any, reset: any, dispatch: any, labelTab: any, setLabelTab: any, navigate: any }) => {
+    parameters.clearErrors();
     parameters.reset({
-        idProvincia_acta:'',
-        idCanton_acta:'',
-        idParroquia_acta:'',
-        idZona_acta:'',
-        idDignidad_acta:'',
-        idJunta_acta:''
+        idProvincia_acta: '',
+        idCanton_acta: '',
+        idParroquia_acta: '',
+        idZona_acta: '',
+        idDignidad_acta: '',
+        idJunta_acta: ''
     });
     parameters.navigate("new")
-    parameters.dispatch(parameters.setLabelTab({...parameters.labelTab,labelNew:'Imprimir Acta',iconNew:'post_add'}));
+    parameters.dispatch(parameters.setLabelTab({ ...parameters.labelTab, labelNew: 'Imprimir Acta', iconNew: 'post_add' }));
 }
 
 /**
@@ -370,13 +372,13 @@ export const processResetForm=(parameters:{clearErrors:any,reset:any,dispatch:an
  * En caso de éxito, establece los datos de la selección de provincia utilizando la función `setDataProvinciaSelect`.
  * En caso de error, establece un arreglo vacío utilizando la misma función.
  */
-export const processProvinciaSelect =(parameters:{getProvinciaSelectLazyQuery:any,setDataProvinciaSelect:any,cache?:string,dispatch:any})=>{
-    
+export const processProvinciaSelect = (parameters: { getProvinciaSelectLazyQuery: any, setDataProvinciaSelect: any, cache?: string, dispatch: any }) => {
+
     parameters.getProvinciaSelectLazyQuery({
         fetchPolicy: 'cache-and-network',
-        onCompleted:(c:any)=>{            
-            parameters.setDataProvinciaSelect(c?.digtProvinciaCollection?.data);          
-        },onError:(error:any)=>{            
+        onCompleted: (c: any) => {
+            parameters.setDataProvinciaSelect(c?.digtProvinciaCollection?.data);
+        }, onError: (error: any) => {
             parameters.setDataProvinciaSelect([]);
         }
     })
@@ -399,35 +401,35 @@ export const processProvinciaSelect =(parameters:{getProvinciaSelectLazyQuery:an
  * Si ocurre un error durante la consulta, establece los datos de la selección de cantón como un arreglo vacío.
  * Si el parámetro `id` no está presente, establece todos los datos de selección (cantón, parroquia, zona, junta) como arreglos vacíos y restablece los valores del formulario.
  */
-export const processCantonSelect =(
-    parameters:{
-        getCantonSelectLazyQuery:any,setDataCantonSelect:any,setDataParroquiaSelect?:any,setDataZonaSelect?:any,setDataJuntaSelect?:any,
-        dispatch:any,id:any,setValue?:any
-    })=>{
-    if(parameters.id){
+export const processCantonSelect = (
+    parameters: {
+        getCantonSelectLazyQuery: any, setDataCantonSelect: any, setDataParroquiaSelect?: any, setDataZonaSelect?: any, setDataJuntaSelect?: any,
+        dispatch: any, id: any, setValue?: any
+    }) => {
+    if (parameters.id) {
         parameters.getCantonSelectLazyQuery({
-            variables:{        
-                inputWhere:{
+            variables: {
+                inputWhere: {
                     provincia_id: { is: parameters.id }
                 }
             },
             fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{            
-                parameters.setDataCantonSelect(c?.digtCantonCollection?.data);          
-            },onError:(error:any)=>{            
+            onCompleted: (c: any) => {
+                parameters.setDataCantonSelect(c?.digtCantonCollection?.data);
+            }, onError: (error: any) => {
                 parameters.setDataCantonSelect([]);
             }
         })
-    }else{
+    } else {
         parameters.setDataCantonSelect([]);
         parameters.setDataParroquiaSelect([]);
         parameters.setDataZonaSelect([]);
         parameters.setDataJuntaSelect([]);
 
-        parameters.setValue('idCanton_acta',null);
-        parameters.setValue('idParroquia_acta',null);
-        parameters.setValue('idZona_acta',null);
-        parameters.setValue('idJunta_acta',null);
+        parameters.setValue('idCanton_acta', null);
+        parameters.setValue('idParroquia_acta', null);
+        parameters.setValue('idZona_acta', null);
+        parameters.setValue('idJunta_acta', null);
     }
 }
 
@@ -446,33 +448,33 @@ export const processCantonSelect =(
  * Si el ID está presente, realiza una consulta para obtener las parroquias correspondientes al cantón y actualiza los datos de la selección de parroquias.
  * Si el ID no está presente, limpia las selecciones de parroquias, zonas y juntas, y restablece los valores del formulario.
  */
-export const processParroquiaSelect =(
-    parameters:{
-        getParroquiaSelectLazyQuery:any,setDataParroquiaSelect:any,setDataZonaSelect?:any,setDataJuntaSelect?:any,
-        dispatch:any,id:any,setValue?:any
-    })=>{
-    if(parameters.id){
+export const processParroquiaSelect = (
+    parameters: {
+        getParroquiaSelectLazyQuery: any, setDataParroquiaSelect: any, setDataZonaSelect?: any, setDataJuntaSelect?: any,
+        dispatch: any, id: any, setValue?: any
+    }) => {
+    if (parameters.id) {
         parameters.getParroquiaSelectLazyQuery({
-            variables:{        
-                inputWhere:{
+            variables: {
+                inputWhere: {
                     canton_id: { is: parameters.id }
                 }
             },
             fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{            
-                parameters.setDataParroquiaSelect(c?.digtParroquiaCollection?.data);          
-            },onError:(error:any)=>{            
+            onCompleted: (c: any) => {
+                parameters.setDataParroquiaSelect(c?.digtParroquiaCollection?.data);
+            }, onError: (error: any) => {
                 parameters.setDataParroquiaSelect([]);
             }
         })
-    }else{
+    } else {
         parameters.setDataParroquiaSelect([]);
         parameters.setDataZonaSelect([]);
         parameters.setDataJuntaSelect([]);
 
-        parameters.setValue('idParroquia_acta',null);
-        parameters.setValue('idZona_acta',null);
-        parameters.setValue('idJunta_acta',null);
+        parameters.setValue('idParroquia_acta', null);
+        parameters.setValue('idZona_acta', null);
+        parameters.setValue('idJunta_acta', null);
     }
 }
 
@@ -488,37 +490,37 @@ export const processParroquiaSelect =(
  * @param parameters.id - Identificador de la parroquia para la consulta.
  * @param parameters.setValue - (Opcional) Función para establecer valores en el formulario.
  */
-export const processZonaSelect =(
-        parameters:{
-            getZonaSelectLazyQuery:any,setDataZonaSelect:any,cache?:string,setDataJuntaSelect?:any
-            dispatch?:any,id:any,setValue?:any
-        })=>{
-    if(parameters.id){
+export const processZonaSelect = (
+    parameters: {
+        getZonaSelectLazyQuery: any, setDataZonaSelect: any, cache?: string, setDataJuntaSelect?: any
+        dispatch?: any, id: any, setValue?: any
+    }) => {
+    if (parameters.id) {
         parameters.getZonaSelectLazyQuery({
-            variables:{        
-                inputWhere:{
+            variables: {
+                inputWhere: {
                     parroquia_id: { is: parameters.id }
                 }
             },
             fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{ 
-                let datos = c?.digtZonaCollection?.data;           
-                parameters.setDataZonaSelect(datos.map((element:any)=>{
+            onCompleted: (c: any) => {
+                let datos = c?.digtZonaCollection?.data;
+                parameters.setDataZonaSelect(datos.map((element: any) => {
                     return {
-                        id:element.zona_id,
+                        id: element.zona_id,
                         nombre: element.nombre
                     }
-                }));          
-            },onError:(error:any)=>{            
+                }));
+            }, onError: (error: any) => {
                 parameters.setDataZonaSelect([]);
             }
         })
-    }else{
+    } else {
         parameters.setDataZonaSelect([]);
         parameters.setDataJuntaSelect([]);
 
-        parameters.setValue('idZona_acta',null);
-        parameters.setValue('idJunta_acta',null);
+        parameters.setValue('idZona_acta', null);
+        parameters.setValue('idJunta_acta', null);
     }
 }
 
@@ -543,15 +545,15 @@ export const processZonaSelect =(
  * Si el parámetro `idZona` no está presente, se establece un arreglo vacío en los datos de la selección de junta y
  * se establece el valor del campo `idJunta_acta` a `null`.
  */
-export const processJuntaSelect =(
-    parameters:{
-        getJuntaSelectLazyQuery:any,setDataJuntaSelect:any,cache?:string,dispatch?:any,
-        idParroquia:number,idCanton:number,idProvincia:number,idZona:number,setValue?:any
-    })=>{
-    if(parameters.idZona){
+export const processJuntaSelect = (
+    parameters: {
+        getJuntaSelectLazyQuery: any, setDataJuntaSelect: any, cache?: string, dispatch?: any,
+        idParroquia: number, idCanton: number, idProvincia: number, idZona: number, setValue?: any
+    }) => {
+    if (parameters.idZona) {
         parameters.getJuntaSelectLazyQuery({
-            variables:{        
-                inputWhere:{
+            variables: {
+                inputWhere: {
                     parroquia_id: { is: parameters.idParroquia },
                     canton_id: { is: parameters.idCanton },
                     provincia_id: { is: parameters.idProvincia },
@@ -559,22 +561,22 @@ export const processJuntaSelect =(
                 }
             },
             fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{ 
-                let datos = c?.digtJuntaCollection?.data;           
-                parameters.setDataJuntaSelect(datos.map((element:any)=>{
+            onCompleted: (c: any) => {
+                let datos = c?.digtJuntaCollection?.data;
+                parameters.setDataJuntaSelect(datos.map((element: any) => {
                     return {
-                        id:element.id,
-                        nombre: 'Junta ' + element.junta + ' - ' +  element.sexo
+                        id: element.id,
+                        nombre: 'Junta ' + element.junta + ' - ' + element.sexo
                     }
-                }));          
-            },onError:(error:any)=>{            
+                }));
+            }, onError: (error: any) => {
                 parameters.setDataJuntaSelect([]);
             }
         })
-    }else{
+    } else {
         parameters.setDataJuntaSelect([]);
 
-        parameters.setValue('idJunta_acta',null);
+        parameters.setValue('idJunta_acta', null);
     }
 }
 
@@ -592,13 +594,13 @@ export const processJuntaSelect =(
  * En caso de éxito, establece los datos de la selección de dignidad con los datos obtenidos.
  * En caso de error, establece la selección de dignidad como un arreglo vacío.
  */
-export const processDignidadSelect =(parameters:{getDignidadLazyQuery:any,setDataDignidadSelect:any,cache?:string,dispatch:any})=>{
-    
+export const processDignidadSelect = (parameters: { getDignidadLazyQuery: any, setDataDignidadSelect: any, cache?: string, dispatch: any }) => {
+
     parameters.getDignidadLazyQuery({
         fetchPolicy: 'cache-and-network',
-        onCompleted:(c:any)=>{            
-            parameters.setDataDignidadSelect(c?.digtDignidadCollection?.data);          
-        },onError:(error:any)=>{            
+        onCompleted: (c: any) => {
+            parameters.setDataDignidadSelect(c?.digtDignidadCollection?.data);
+        }, onError: (error: any) => {
             parameters.setDataDignidadSelect([]);
         }
     })
@@ -622,27 +624,27 @@ export const processDignidadSelect =(parameters:{getDignidadLazyQuery:any,setDat
  * de error, muestra un mensaje de error.
  * para aqu+i
  */
-export const processActaDignidad=(
+export const processActaDignidad = (
     parameters:
-    {
-        toast:any,data:any,listActaDigitaLazyQuery:any,setDataDigita:any,setStatusLoading:any
-})=>{
+        {
+            toast: any, data: any, listActaDigitaLazyQuery: any, setDataDigita: any, setStatusLoading: any
+        }) => {
     parameters.setStatusLoading(true);
     parameters.listActaDigitaLazyQuery({
-            variables:{   
-                dignidad_id: parameters.data.idDignidad_acta.id,
-            },
-            fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{ 
-                console.log(c);
-                parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
-                parameters.setDataDigita(c.digtActaByDignidadList);
-                parameters.setStatusLoading(false);
-            },onError:(error:any)=>{
-                parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });  
-                parameters.setStatusLoading(false); 
-            }
-        })
+        variables: {
+            dignidad_id: parameters.data.idDignidad_acta.id,
+        },
+        fetchPolicy: 'cache-and-network',
+        onCompleted: (c: any) => {
+            console.log('otro', c);
+            parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail: 'Acta procesada', life: 3000 });
+            parameters.setDataDigita(c.digtActaByDignidadList);
+            parameters.setStatusLoading(false);
+        }, onError: (error: any) => {
+            parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });
+            parameters.setStatusLoading(false);
+        }
+    })
 }
 
 /**
@@ -659,30 +661,30 @@ export const processActaDignidad=(
  * 
  * @returns {Promise<boolean>} - Retorna false si hay datos faltantes, de lo contrario no retorna nada.
  */
-export const processSaveDigita=async (parameters:{setVisible:any,toast:any,data:any,digtVotosUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
-    
-    let dataFaltante=parameters.data.atributoRecorte.filter((x:any)=>x === null);
-    if(dataFaltante.length >0){
-        parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail:'Registre todos los valores del listado Acta', life: 3000 });    
+export const processSaveDigita = async (parameters: { setVisible: any, toast: any, data: any, digtVotosUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+
+    let dataFaltante = parameters.data.atributoRecorte.filter((x: any) => x === null);
+    if (dataFaltante.length > 0) {
+        parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail: 'Registre todos los valores del listado Acta', life: 3000 });
         return false;
     }
 
     parameters.setVisible(
         {
-            status:true,mensaje:`Esta seguro que desea Procesar esta Acta1`,
-            accept:()=>{
+            status: true, mensaje: `Esta seguro que desea Procesar esta Acta1`,
+            accept: () => {
                 processUpdateDigitaVoto(
                     {
-                        data:parameters.data,toast:parameters.toast,
-                        digtVotosUpdateMutation:parameters.digtVotosUpdateMutation,
-                        navigate:parameters.navigate,setStatusLoading:parameters.setStatusLoading,
-                        dispatch:parameters.dispatch,
+                        data: parameters.data, toast: parameters.toast,
+                        digtVotosUpdateMutation: parameters.digtVotosUpdateMutation,
+                        navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
+                        dispatch: parameters.dispatch,
                     }
                 )
-            },reject:()=>{}
+            }, reject: () => { }
         }
     );
-    
+
 }
 
 /**
@@ -700,54 +702,54 @@ export const processSaveDigita=async (parameters:{setVisible:any,toast:any,data:
  *
  * @returns {void}
  */
-const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutation:any,navigate:any,dispatch:any,setStatusLoading:any})=>{
-    try{
-   
+const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+    try {
+
         const CryptoTS = require("crypto-ts");
-        const iv =  CryptoTS.enc.Utf8.parse('algorithmencript');
+        const iv = CryptoTS.enc.Utf8.parse('algorithmencript');
         const key = 'asuncionbackalgorithmencript2024';
-                
-        let dataRecorte=update.data.atributoRecorte;
-        let dataCandidato=update.data.dataGeneral.candidatoId   
-        let dataSave:{candidato_id:number,votosdigitacion:number,cifrado:string}[]=[];
-                
-        dataRecorte.forEach((element:any,x:number) => {   
-            dataSave=[...dataSave,{
-                candidato_id:dataCandidato[x],
-                votosdigitacion:parseInt(element),
+
+        let dataRecorte = update.data.atributoRecorte;
+        let dataCandidato = update.data.dataGeneral.candidatoId
+        let dataSave: { candidato_id: number, votosdigitacion: number, cifrado: string }[] = [];
+
+        dataRecorte.forEach((element: any, x: number) => {
+            dataSave = [...dataSave, {
+                candidato_id: dataCandidato[x],
+                votosdigitacion: parseInt(element),
                 cifrado: CryptoTS.AES.encrypt(JSON.stringify(
-                    {candidato_id:dataCandidato[x],votosdigitacion:element}),  key,
-                        {
-                            mode: CryptoTS.mode.CBC,
-                            iv: iv,  
-                        }
-                    ).toString()
-                }
+                    { candidato_id: dataCandidato[x], votosdigitacion: element }), key,
+                    {
+                        mode: CryptoTS.mode.CBC,
+                        iv: iv,
+                    }
+                ).toString()
+            }
             ]
         });
-        console.log(dataSave);
+        console.log('nose', dataSave);
         update.setStatusLoading(true);
         update.digtVotosUpdateMutation({
-            variables:{
+            variables: {
                 inputUpdate: {
-                    acta_id:update.data.actaId,
-                   votos:dataSave
-               }
-            },onCompleted:(c:any)=>{      
+                    acta_id: update.data.actaId,
+                    votos: dataSave
+                }
+            }, onCompleted: (c: any) => {
                 update.navigate("record");
-                update.dispatch(setInitial({initial:1}))
-                update.dispatch(setMessage({message:c.digtVotosUpdate?.message}))
+                update.dispatch(setInitial({ initial: 1 }))
+                update.dispatch(setMessage({ message: c.digtVotosUpdate?.message }))
                 update.setStatusLoading(false);
-            },onError:(error:any)=>{
-                update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });   
-                update.setStatusLoading(false);           
-           }
+            }, onError: (error: any) => {
+                update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });
+                update.setStatusLoading(false);
+            }
         })
-    
-    
-        }catch(e:any){
-            update.setStatusLoading(false);
-        }
+
+
+    } catch (e: any) {
+        update.setStatusLoading(false);
+    }
 }
 
 /**
@@ -763,31 +765,151 @@ const processUpdateDigitaVoto=(update:{toast:any,data:any,digtVotosUpdateMutatio
  * @returns {void}
  *
  * Esta función realiza una consulta para obtener una lista de actas Digitadas y que tienen
- * registro con inconsi 
+ * registro con diferencias para poder hacer conrol de calidad, 
  * basadas en la dignidad proporcionada. Muestra un mensaje de éxito si la consulta 
  * se completa correctamente y actualiza los datos de actas digitalizadas. En caso 
  * de error, muestra un mensaje de error.
  * para aqu+i
  */
-export const processActaDignidadControl=(
+export const processActaDignidadControl = (
     parameters:
-    {
-        toast:any,data:any,listActaControlLazyQuery:any,setDataDigita:any,setStatusLoading:any
-})=>{
+        {
+            toast: any, data: any, listActaControlLazyQuery: any, setDataDigita: any, setStatusLoading: any
+        }) => {
     parameters.setStatusLoading(true);
     parameters.listActaControlLazyQuery({
-            variables:{   
-                dignidad_id: parameters.data.idDignidad_acta.id,
-            },
-            fetchPolicy: 'cache-and-network',
-            onCompleted:(c:any)=>{ 
-                console.log("miraa",c);
-                parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail:'Acta procesada', life: 3000 });
-                parameters.setDataDigita(c.digtActaByDignidadControlList);
-                parameters.setStatusLoading(false);
-            },onError:(error:any)=>{
-                parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });  
-                parameters.setStatusLoading(false); 
+        variables: {
+            dignidad_id: parameters.data.idDignidad_acta.id,
+        },
+        fetchPolicy: 'cache-and-network',
+        onCompleted: (c: any) => {
+            parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail: 'Acta procesada', life: 3000 });
+            parameters.setDataDigita(c.digtActaByDignidadControlList);
+            parameters.setStatusLoading(false);
+        }, onError: (error: any) => {
+            parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });
+            parameters.setStatusLoading(false);
+        }
+    })
+}
+
+/**
+ * Procesa y guarda el control de calidad de votos.
+ * 
+ * @param {Object} parameters - Parámetros necesarios para el procesamiento.
+ * @param {Function} parameters.setVisible - Función para establecer la visibilidad de un componente.
+ * @param {Object} parameters.toast - Objeto para mostrar mensajes de notificación.
+ * @param {Object} parameters.data - Datos que contienen los votos a procesar.
+ * @param {Function} parameters.digtVotosUpdateMutation - Mutación para actualizar los votos digitalizados.
+ * @param {Function} parameters.navigate - Función para navegar a diferentes rutas.
+ * @param {Function} parameters.dispatch - Función para despachar acciones en el estado global.
+ * @param {Function} parameters.setStatusLoading - Función para establecer el estado de carga.
+ * 
+ * @returns {Promise<boolean>} - Retorna false si hay datos faltantes, de lo contrario no retorna nada.
+ */
+export const processSaveControl = async (parameters: { setVisible: any, toast: any, data: any, digtVotosControlUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+
+    let dataFaltante = parameters.data.atributoRecorteControl.filter((x: any) => x === null);
+    if (dataFaltante.length > 0) {
+        parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail: 'Registre todos los valores del listado Acta', life: 3000 });
+        return false;
+    }
+ console.log('***entroacaaaaa ');
+    parameters.setVisible(
+        {
+            status: true, mensaje: `Esta seguro que desea Procesar esta Acta1`,
+            accept: async () => {
+               
+                    try {                        
+                        parameters.setStatusLoading(true);
+                        const actaId = Number(parameters.data?.actaId);
+                        const payloadBC = buildBlockchainPayload(parameters.data, "control");
+                        const txHash = await sendToBlockchain(actaId, payloadBC);
+                        console.log('txHash', txHash);
+
+                        
+                        processUpdateControlVoto(
+                            {
+                                data: parameters.data, toast: parameters.toast,
+                                digtVotosControlUpdateMutation: parameters.digtVotosControlUpdateMutation,
+                                navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
+                                dispatch: parameters.dispatch,
+                            }
+                        )
+                        parameters.setStatusLoading(false);
+                    }
+                    catch (e: any) {
+                       parameters.setStatusLoading(false);
+                    }
+             
+
+            }, reject: () => { }
+        }
+    );
+
+}
+
+/**
+ * Procesa la actualización de la digitación de votos.
+ *
+ * @param {Object} update - Objeto que contiene las propiedades necesarias para la actualización.
+ * @param {any} update.toast - Referencia al componente de notificación.
+ * @param {any} update.data - Datos necesarios para la actualización.
+ * @param {any} update.digtVotosUpdateMutation - Función de mutación para actualizar los votos digitados.
+ * @param {any} update.navigate - Función para navegar a otra ruta.
+ * @param {any} update.dispatch - Función para despachar acciones de Redux.
+ * @param {any} update.setStatusLoading - Función para establecer el estado de carga.
+ *
+ * @throws {any} - Captura y maneja cualquier error que ocurra durante el proceso.
+ *
+ * @returns {void}
+ */
+const processUpdateControlVoto = (update: { toast: any, data: any, digtVotosControlUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+    try {
+
+        const CryptoTS = require("crypto-ts");
+        const iv = CryptoTS.enc.Utf8.parse('algorithmencript');
+        const key = 'asuncionbackalgorithmencript2024';
+
+        let dataRecorte = update.data.atributoRecorteControl;
+        let dataCandidato = update.data.dataGeneral.candidatoId
+        let dataSave: { candidato_id: number, votoscontrol: number, cifrado: string }[] = [];
+
+        dataRecorte.forEach((element: any, x: number) => {
+            dataSave = [...dataSave, {
+                candidato_id: dataCandidato[x],
+                votoscontrol: parseInt(element),
+                cifrado: CryptoTS.AES.encrypt(JSON.stringify(
+                    { candidato_id: dataCandidato[x], votoscontrol: element }), key,
+                    {
+                        mode: CryptoTS.mode.CBC,
+                        iv: iv,
+                    }
+                ).toString()
+            }
+            ]
+        });
+        console.log('esto', dataSave);
+        update.setStatusLoading(true);
+        update.digtVotosControlUpdateMutation({
+            variables: {
+                inputUpdate: {
+                    acta_id: update.data.actaId,
+                    votos: dataSave
+                }
+            }, onCompleted: (c: any) => {
+                update.navigate("record");
+                update.dispatch(setInitial({ initial: 1 }))
+                update.dispatch(setMessage({ message: c.digtControlUpdate?.message }))
+                update.setStatusLoading(false);
+            }, onError: (error: any) => {
+                update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });
+                update.setStatusLoading(false);
             }
         })
+
+
+    } catch (e: any) {
+        update.setStatusLoading(false);
+    }
 }

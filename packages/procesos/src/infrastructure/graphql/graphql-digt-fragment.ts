@@ -347,3 +347,17 @@ export const ACTADIGITA_CRUD_FIELDS =  gql`
         status
     }
 `
+
+export const ACTA_CONTROL_LIST_FIELDS = gql`
+    fragment actaByControlListFields on ActaControlVotoImagen{
+        id
+        votos {
+            votosdigitacion
+            imagensegmento {
+                imagen
+                candidato_id               
+            }
+        }
+    }
+`
+

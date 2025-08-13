@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { setLabelTab } from '@presentation/actions';
 import { FormCore, graphql, UtilsSpinner, SelectInput, UtilsButton, UtilsPanel, TextInput } from "@bsc/library";
 import { formActaDigita } from '@application/components/form'
-import { processResetForm, processActaDignidad, processDignidadSelect, processSaveDigita, processActaDignidadControl } from "@application/services/actasService"
+import { processResetForm, processDignidadSelect, processSaveDigita, processActaDignidadControl, processSaveControl } from "@application/services/actasService"
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '@presentation/stores';
 import Icon from '@mui/material/Icon';
@@ -45,6 +45,7 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
     const { clearErrors, reset, handleSubmit, control } = methods;
     useFieldArray({ control, name: `atributoRecorte` });
     useFieldArray({ control, name: `dataGeneral` });
+    useFieldArray({ control, name: `atributoRecorteControl` });
 
     //Hook State
     const [visible, setVisible] = useState<{ status: boolean, mensaje: string, accept?: any, reject?: any }>(
@@ -60,10 +61,10 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
     )
 
     //Metodos Graphql
-    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadControlListLazyQuery, useDigtVotosUpdateMutation } = graphql
+    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadControlListLazyQuery, useDigtVotosControlUpdateMutation } = graphql
     const [getDignidadLazyQuery, { loading: loadingDign }] = useDignidadDigtSelectLazyQuery();
     const [listActaControlLazyQuery] = useDigtActaByDignidadControlListLazyQuery();
-    const [digtVotosUpdateMutation] = useDigtVotosUpdateMutation();
+    const [digtVotosControlUpdateMutation] = useDigtVotosControlUpdateMutation();
 
     useEffect(() => {
         processDignidadSelect({ getDignidadLazyQuery, setDataDignidadSelect, dispatch })
@@ -75,7 +76,7 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
             <UtilsSpinner visible={statusLoading} />
             <FormCore
                 labels={labels}
-                onSubmit={(data: any) => { processSaveDigita({ data, setVisible, toast, digtVotosUpdateMutation, dispatch, navigate, setStatusLoading }) }}
+                onSubmit={(data: any) => { processSaveControl({ data, setVisible, toast, digtVotosControlUpdateMutation, dispatch, navigate, setStatusLoading }) }}
                 onReset={() => processResetForm({ clearErrors, reset, dispatch, labelTab, setLabelTab, navigate })}
                 methods={methods}
                 visible={visible}
@@ -140,7 +141,7 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
                             <div className="text-sm ml-4 font-semibold text-blue-400 p-0 flex items-center h-[80px]">
                                 <TextInput
                                     label='&nbsp;'
-                                    name={`atributoRecorte.${key}`}
+                                    name={`atributoRecorteControl.${key}`}
                                     methods={methods}
                                     optInput='N'
                                     minLength={0}

@@ -2,3 +2,5 @@ URLCONEXIONGRAPQL = 'http://192.168.100.6:3090/graphql'
 URLHOME = 'http://dev-sni.msp.gob.ec'
 URLLOGOUT = 'http://dev-sni.msp.gob.ec/app/administracion'
 FRONT_ETIQUETA = 'AMBIENTE DESARROLLO'
+BLOCKCHAIN_API='http://192.168.100.6:5000/api'
+

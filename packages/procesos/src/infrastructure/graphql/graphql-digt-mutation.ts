@@ -21,3 +21,24 @@ export const UPDATE_MENU=()=>{
         }
     `
 }
+
+/**
+ * Actualiza el menú mediante una mutación GraphQL.
+ *
+ * @returns Una cadena de plantilla GraphQL que contiene la mutación para actualizar los votos de digitación.
+ *
+ * @example
+ * ```typescript
+ * const mutation = UPDATE_MENU();
+ * ```
+ */
+export const UPDATE_VOTOS_CONTROL=()=>{
+    return gql`
+        ${ACTADIGITA_CRUD_FIELDS}
+        mutation DigtVotosControlUpdate($inputUpdate: VotosControlUpdateInput!) {
+            digtVotosControlUpdate(dataInput: $inputUpdate) {
+                ... actaDigitaCrudFields
+            }
+        }
+    `
+}

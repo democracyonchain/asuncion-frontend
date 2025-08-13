@@ -49,7 +49,8 @@ module.exports = (webpackConfigEnv, argv) => {
 					'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 					'URLCONEXIONGRAPQL': JSON.stringify(dotenv.parsed.URLCONEXIONGRAPQL),					
 					'URLHOME': JSON.stringify(dotenv.parsed.URLHOME),					
-					'FRONT_ETIQUETA': JSON.stringify(dotenv.parsed.FRONT_ETIQUETA),					
+					'FRONT_ETIQUETA': JSON.stringify(dotenv.parsed.FRONT_ETIQUETA),	
+					'URLBLOCKCHAIN': JSON.stringify(dotenv.parsed.BLOCKCHAIN_API),					
 		    	}
 		  	})
 		],
