@@ -56,14 +56,16 @@ export const FormDigitacion = ({ navigate }: { navigate: any }) => {
     const [dataDignidadSelect, setDataDignidadSelect] = useState<any[]>();
     const [statusLoading, setStatusLoading] = useState<boolean>(false)
 
-    const [dataDigita, setDataDigita] = useState<any>(       
+    const [dataDigita, setDataDigita] = useState<any>(
     )
 
     //Metodos Graphql
-    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadListLazyQuery, useDigtVotosUpdateMutation } = graphql
+    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadListLazyQuery, useDigtVotosUpdateMutation, useDigtActaEstadoUpdateMutation} = graphql
     const [getDignidadLazyQuery, { loading: loadingDign }] = useDignidadDigtSelectLazyQuery();
     const [listActaDigitaLazyQuery] = useDigtActaByDignidadListLazyQuery();
     const [digtVotosUpdateMutation] = useDigtVotosUpdateMutation();
+    const [digtActaEstadoUpdateMutation] = useDigtActaEstadoUpdateMutation();
+
 
     useEffect(() => {
         processDignidadSelect({ getDignidadLazyQuery, setDataDignidadSelect, dispatch })
@@ -75,7 +77,10 @@ export const FormDigitacion = ({ navigate }: { navigate: any }) => {
             <UtilsSpinner visible={statusLoading} />
             <FormCore
                 labels={labels}
-                onSubmit={(data: any) => { processSaveDigita({ data, setVisible, toast, digtVotosUpdateMutation, dispatch, navigate, setStatusLoading }) }}
+                onSubmit={(data: any) => {
+                    console.log('ANTES DE ENVIAR LA DIGITACIÓN', data);
+                    processSaveDigita({ data, setVisible, toast, digtVotosUpdateMutation,digtActaEstadoUpdateMutation ,dispatch, navigate, setStatusLoading })
+                }}
                 onReset={() => processResetForm({ clearErrors, reset, dispatch, labelTab, setLabelTab, navigate })}
                 methods={methods}
                 visible={visible}
@@ -102,70 +107,122 @@ export const FormDigitacion = ({ navigate }: { navigate: any }) => {
                             onClick={handleSubmit((data: any) => { processActaDignidad({ data, toast, listActaDigitaLazyQuery, setDataDigita, setStatusLoading }) })} />
                     </div>
                 </div>
-               
 
-{(dataDigita) &&
-    <>
-        <UtilsPanel header={'Votos'} toggleable={false}>
-            <span className='hidden'>
-                <TextInput 
-                    disabled={false} 
-                    label='&nbsp;' 
-                    name={`actaId`} 
-                    methods={methods} 
-                    defaultValue={dataDigita?.id} 
-                />
-            </span>
 
-           
-            {dataDigita?.votos?.filter((element: any) => element.imagensegmento?.imagen != null).map((data: any, key: any) => {
-                return (
-                    <div key={key} className='formgrid grid'>
-                      
-                        
-                        {/* Descomentar cuando funcione el h1 */}
-                        <div className='field col-12 md:col-9'>
-                            <span className={`text-sm ml-4 font-semibold text-blue-400`}>
-                                <Image 
-                                    src={`data:image/gif;base64,${data.imagensegmento?.imagen}`}
-                                    alt="Image" 
-                                    width="580" 
-                                    height="98" 
-                                    preview 
+                {(dataDigita) &&
+                    <>
+                        <UtilsPanel header={'Votos'} toggleable={false}>
+                            <span className='hidden' >
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`actaId`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.id}
+                                />
+                                 <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`provincia`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.provincia?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`canton`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.canton?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`parroquia`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.parroquia.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`zona`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.zona?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`junta`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.junta}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`sexo`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.sexo}
                                 />
                             </span>
-                        </div>
-                        
-                        <div className='field col-12 md:col-3'>
-                            <div className="text-sm ml-4 font-semibold text-blue-400 p-0 flex items-center h-[80px]">
-                                <TextInput
-                                    label='&nbsp;'
-                                    name={`atributoRecorte.${key}`}
-                                    methods={methods}
-                                    optInput='N'
-                                    minLength={0}
-                                    maxLength={350}
-                                    defaultValue='0'
-                                    style={{ height: '150px' }}
-                                    onChange={(e: any) => console.log(e)}
-                                />
-                                <span className='hidden'>
-                                    <TextInput
-                                        disabled={false}
-                                        label='&nbsp;'
-                                        name={`dataGeneral.candidatoId.${key}`}
-                                        methods={methods}
-                                        defaultValue={data.imagensegmento?.candidato_id}
-                                    />
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })}
-        </UtilsPanel>
-    </>
-}
+                            
+
+
+                            {dataDigita?.votos?.filter((element: any) => element.imagensegmento?.imagen != null).map((data: any, key: any) => {
+                                return (
+                                    <div key={key} className='formgrid grid'>
+
+
+                                        {/* Descomentar cuando funcione el h1 */}
+                                        <div className='field col-12 md:col-9'>
+                                            <span className={`text-sm ml-4 font-semibold text-blue-400`}>
+                                                <Image
+                                                    src={`data:image/gif;base64,${data.imagensegmento?.imagen}`}
+                                                    alt="Image"
+                                                    width="580"
+                                                    height="98"
+                                                    preview
+                                                />
+                                            </span>
+                                        </div>
+
+                                        <div className='field col-12 md:col-3'>
+                                            <div className="text-sm ml-4 font-semibold text-blue-400 p-0 flex items-center h-[80px]">
+                                                <TextInput
+                                                    label='&nbsp;'
+                                                    name={`atributoRecorte.${key}`}
+                                                    methods={methods}
+                                                    optInput='N'
+                                                    minLength={0}
+                                                    maxLength={350}
+                                                    defaultValue='0'
+                                                    style={{ height: '150px' }}
+                                                    onChange={(e: any) => console.log(e)}
+                                                />
+                                                <span className='hidden'>
+                                                    <TextInput
+                                                        disabled={false}
+                                                        label='&nbsp;'
+                                                        name={`dataGeneral.candidatoId.${key}`}
+                                                        methods={methods}
+                                                        defaultValue={data.imagensegmento?.candidato_id}
+                                                    />
+                                                </span>
+                                              <span className='hidden'>
+                                                <TextInput
+                                                        disabled={false}
+                                                        label='&nbsp;'
+                                                        name={`dataGeneral.candidatoNombre.${key}`}
+                                                        methods={methods}
+                                                        defaultValue={data.candidato?.nombre}
+                                                    />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </UtilsPanel>
+                    </>
+                }
             </FormCore>
         </>
     )
