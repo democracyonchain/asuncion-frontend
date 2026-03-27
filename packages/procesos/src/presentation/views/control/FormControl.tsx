@@ -61,10 +61,11 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
     )
 
     //Metodos Graphql
-    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadControlListLazyQuery, useDigtVotosControlUpdateMutation } = graphql
+    const { useDignidadDigtSelectLazyQuery, useDigtActaByDignidadControlListLazyQuery, useDigtVotosControlUpdateMutation,useDigtActaEstadoUpdateMutation } = graphql
     const [getDignidadLazyQuery, { loading: loadingDign }] = useDignidadDigtSelectLazyQuery();
     const [listActaControlLazyQuery] = useDigtActaByDignidadControlListLazyQuery();
     const [digtVotosControlUpdateMutation] = useDigtVotosControlUpdateMutation();
+    const [digtActaEstadoUpdateMutation] = useDigtActaEstadoUpdateMutation();
 
     useEffect(() => {
         processDignidadSelect({ getDignidadLazyQuery, setDataDignidadSelect, dispatch })
@@ -76,7 +77,7 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
             <UtilsSpinner visible={statusLoading} />
             <FormCore
                 labels={labels}
-                onSubmit={(data: any) => { processSaveControl({ data, setVisible, toast, digtVotosControlUpdateMutation, dispatch, navigate, setStatusLoading }) }}
+                onSubmit={(data: any) => { processSaveControl({ data, setVisible, toast, digtVotosControlUpdateMutation, digtActaEstadoUpdateMutation,dispatch, navigate, setStatusLoading }) }}
                 onReset={() => processResetForm({ clearErrors, reset, dispatch, labelTab, setLabelTab, navigate })}
                 methods={methods}
                 visible={visible}
@@ -108,15 +109,57 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
 {(dataDigita) &&
     <>
         <UtilsPanel header={'Votos'} toggleable={false}>
-            <span className='hidden'>
-                <TextInput 
-                    disabled={false} 
-                    label='&nbsp;' 
-                    name={`actaId`} 
-                    methods={methods} 
-                    defaultValue={dataDigita?.id} 
-                />
-            </span>
+            
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`actaId`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.id}
+                                />
+                                 <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`provincia`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.provincia?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`canton`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.canton?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`parroquia`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.parroquia.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`zona`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.zona?.nombre}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`junta`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.junta}
+                                />
+                                <TextInput
+                                    disabled={false}
+                                    label='&nbsp;'
+                                    name={`sexo`}
+                                    methods={methods}
+                                    defaultValue={dataDigita?.junta?.sexo}
+                                />
+                            
 
            
             {dataDigita?.votos?.filter((element: any) => element.imagensegmento?.imagen != null).map((data: any, key: any) => {
@@ -151,14 +194,24 @@ export const FormControl = ({ navigate }: { navigate: any }) => {
                                     onChange={(e: any) => console.log(e)}
                                 />
                                 <span className='hidden'>
+                                                    <TextInput
+                                                        disabled={false}
+                                                        label='&nbsp;'
+                                                        name={`dataGeneral.candidatoId.${key}`}
+                                                        methods={methods}
+                                                        defaultValue={data.imagensegmento?.candidato_id}
+                                                    />
+                                                </span>
+                                <span className='hidden'>
                                     <TextInput
                                         disabled={false}
                                         label='&nbsp;'
-                                        name={`dataGeneral.candidatoId.${key}`}
+                                        name={`dataGeneral.candidatoNombre.${key}`}
                                         methods={methods}
-                                        defaultValue={data.imagensegmento?.candidato_id}
+                                        defaultValue={data.candidato?.nombre}
                                     />
-                                </span>
+                                    </span>
+                                
                             </div>
                         </div>
                     </div>

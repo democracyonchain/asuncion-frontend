@@ -307,7 +307,33 @@ export const ACTA_DIGT_LIST_FIELDS = gql`
 export const ACTA_DIGITALIZACION_LIST_FIELDS = gql`
     fragment actaByDigititalizacionListFields on ActaDigitalizacionVotoImagen{
         id
+        junta{
+            id
+            provincia{
+                id
+                nombre
+            }
+            canton{
+                id
+                nombre
+            }
+            parroquia{
+                id
+                nombre
+            } 
+            zona{
+                zona_id
+                nombre
+            }            
+            junta
+            sexo 
+        }
         votos {
+            candidato{
+                id
+                nombre
+                orden
+            }
             votosdigitacion
             imagensegmento {
                 imagen
@@ -348,10 +374,37 @@ export const ACTADIGITA_CRUD_FIELDS =  gql`
     }
 `
 
+
 export const ACTA_CONTROL_LIST_FIELDS = gql`
     fragment actaByControlListFields on ActaControlVotoImagen{
         id
+        junta{
+            id
+            provincia{
+                id
+                nombre
+            }
+            canton{
+                id
+                nombre
+            }
+            parroquia{
+                id
+                nombre
+            } 
+            zona{
+                zona_id
+                nombre
+            }            
+            junta
+            sexo 
+        }
         votos {
+        candidato{
+                id
+                nombre
+                orden
+            }
             votosdigitacion
             imagensegmento {
                 imagen

@@ -35,7 +35,6 @@ type EscaneoRequest = {
   dignidad: number;
   pagina: number;
   numero_paginas: number;
-  path: string;
   paginas: PaginaItem[];
   estado?: number;
   sufragantes?: number;
@@ -44,6 +43,44 @@ type EscaneoRequest = {
   txIcr?: string;
 };
 
+
+type CandidatoItemBlockChain= {
+  id?: number;
+  orden?: number;
+  nombre?: string;
+  votos?: number;  
+};
+
+type PaginaItemBlockChain = {
+  actaId: number;
+  numero: number;
+  nombre?: string;  // usaremos la etapa como nombre
+  path?: string;
+  url?: string;
+  hash?: string;
+  candidatos?: CandidatoItemBlockChain[];
+  estado?: number;
+};
+
+type EscaneoRequestBlockChain = {
+  codigo: number;
+  seguridad: number;
+  provincia: number;
+  canton: number;
+  parroquia: number;
+  zona: number;
+  junta: number;
+  sexo: string;
+  dignidad: number;
+  pagina: number;
+  numero_paginas: number;
+  paginas: PaginaItemBlockChain[];
+  estado?: number;
+  sufragantes?: number;
+  blancos?: number;
+  nulos?: number;
+  txIcr?: string;
+}; 
 // Helpers de normalización
 const n = (v: any, def = 0) => (v === undefined || v === null || v === "" ? def : Number(v));
 const s = (v: any, def = "") => (v === undefined || v === null ? def : String(v));
@@ -77,77 +114,79 @@ function compact<T extends Record<string, any>>(obj: T): Partial<T> {
 }
 
 
-
 /**
  * Construye el payload con el shape que acepta el backend para /Acta/{id}/escaneo.
  * Soporta tanto "digitacion" como "control".
  */
-export function buildBlockchainPayload(formData: any, etapa: Etapa): EscaneoRequest {
+export function buildBlockchainPayload(formData: any, etapa: Etapa): EscaneoRequestBlockChain {
   const actaId = n(formData?.actaId);
   const dignidadId = n(formData?.idDignidad_acta?.id ?? formData?.dignidad, 1);
 
-  // Valores de votos según la etapa
-  const valores: any[] =
-    etapa === "control"
-      ? formData?.atributoRecorteControl ?? []
-      : formData?.atributoRecorte ?? [];
+  // Valores de votos 
+  const valores: any[]=
+  etapa=='digitacion'
+  ? formData?.atributoRecorte ?? []
+  :formData?.atributoRecorteControl ?? [];
 
   // IDs de candidatos
   const candidatosIds: any[] =
     formData?.dataGeneral?.candidatoId ??
     formData?.dataGeneral?.candidatos ??
     [];
+  
+  // Nombres de candidatos
+  const candidatosNombres: any[] =
+    formData?.dataGeneral?.candidatoNombre ??
+    formData?.dataGeneral?.candidatos ??
+    []; 
 
+    console.log('candidatosIds', candidatosNombres)
+    console.log('valores', valores)
   // Construye candidatos alineando índices candidatosIds <-> valores
-  const candidatos: CandidatoItem[] = candidatosIds
+  const candidatos: CandidatoItemBlockChain[] = candidatosIds
     .map((cid, i) => {
       const id = n(cid, NaN);
       if (Number.isNaN(id)) return undefined;
 
       const votosNum = n(valores[i], 0);
-
+      const nombresNum = s(candidatosNombres[i],"");
+      
       return {
         id,
         orden: i + 1,
-        votos: votosNum,      // si el backend usa "votos"
-        votosIa: votosNum,    // si usa "votosIa" (despreciará el no usado)
-        estado: 0,
-        // path/url/hash si los tienes en tu form:
-        path: undefined,
-        url: undefined,
-        hash: undefined,
+        votos: votosNum,
+        nombre: nombresNum
       };
     })
-    .filter(Boolean) as CandidatoItem[];
+    .filter(Boolean) as CandidatoItemBlockChain[];
 
   // Número de página (si tienes otro campo, cámbialo aquí)
   const numeroPagina = n(formData?.numeroPagina ?? 1, 1);
 
-  const pagina: PaginaItem = {
+  const pagina: PaginaItemBlockChain = {
     actaId,
     numero: numeroPagina,
     nombre: etapa, // "digitacion" | "control"
-    candidatos,
+    candidatos: candidatos,
     estado: 0,
     path: s(formData?.pathPagina, undefined as any),
     url: s(formData?.urlPagina, undefined as any),
     hash: s(formData?.hashPagina, undefined as any),
   };
-
-  const base: EscaneoRequest = {
+console.log('provincia***:', formData?.provincia)
+  const base: EscaneoRequestBlockChain = {
     codigo: actaId,
     seguridad: n(formData?.seguridad, 0),
-    provincia: n(formData?.provincia, 0),
-    canton: n(formData?.canton, 0),
-    parroquia: n(formData?.parroquia, 0),
-    zona: n(formData?.zona, 0),
+    provincia: formData?.provincia,
+    canton: formData?.canton, 
+    parroquia: formData?.parroquia,
+    zona: formData?.zona, 
     junta: n(formData?.junta, 0),
-    sexo: s(formData?.sexo, "M"),
+    sexo: formData?.sexo, 
     dignidad: dignidadId,
     pagina: numeroPagina,
     numero_paginas: n(formData?.numero_paginas ?? 1, 1),
-    path: s(formData?.path, "string"),
-    paginas: [compact(pagina) as PaginaItem],
+    paginas: [compact(pagina) as PaginaItemBlockChain],
     estado: n(formData?.estado, 0),
     sufragantes: n(formData?.sufragantes, undefined as any),
     blancos: n(formData?.blancos, undefined as any),
@@ -156,7 +195,7 @@ export function buildBlockchainPayload(formData: any, etapa: Etapa): EscaneoRequ
   };
 
   // Limpia opcionales nulos/undefined pero conserva 0s
-  return compact(base) as EscaneoRequest;
+  return compact(base) as EscaneoRequestBlockChain;
 }
 
 

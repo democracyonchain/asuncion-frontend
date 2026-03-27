@@ -1,7 +1,7 @@
 import axios from "axios";
  
 
-const BLOCKCHAIN_API = "http://192.168.68.128:5000/api";
+const BLOCKCHAIN_API = "http://192.168.100.45:5000/api";
 
 export interface BlockchainResponse {
   transactionId?: string; // p.ej. "Transaction submitted: <txHash>"
@@ -24,7 +24,7 @@ export async function sendToBlockchain(
 ): Promise<string> {
   try
   {
-    const url = `${BLOCKCHAIN_API}/Acta/${actaId}/escaneo`; // mismo endpoint para ambos casos
+    const url = `${BLOCKCHAIN_API}/Acta/${actaId}/ingreso`; // mismo endpoint para ambos casos
 console.log("payload:", payload );
 // ---- JSON básico para probar (ajústalo si Swagger pide otros campos) ----
     const testBody = {
@@ -36,7 +36,7 @@ console.log("payload:", payload );
       zona: 0,
       junta: 0,
       sexo: "M",
-      dignidad: 1,
+      dignidad: "Presidente",
       pagina: 1,
       numero_paginas: 1,
       path: "string",

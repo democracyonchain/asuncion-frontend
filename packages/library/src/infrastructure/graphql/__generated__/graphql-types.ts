@@ -106,7 +106,7 @@ export type ActaDigitalizacionVotoImagen = {
 export type ActaUpdateInput = {
   blancos: Scalars["Int"]["input"];
   id: Scalars["Int"]["input"];
-  imagenacta: ImagenActaUpdateInput;
+  imagenacta: Array<ImagenActaUpdateInput>;
   imagensegmento: Array<ImagenSegmentoUpdateInput>;
   nulos: Scalars["Int"]["input"];
   sufragantes: Scalars["Int"]["input"];
@@ -232,7 +232,7 @@ export type ImagenActaUpdateInput = {
   hash?: InputMaybe<Scalars["String"]["input"]>;
   imagen: Scalars["String"]["input"];
   nombre: Scalars["String"]["input"];
-  pagina?: InputMaybe<Scalars["String"]["input"]>;
+  pagina?: InputMaybe<Scalars["Int"]["input"]>;
   pathipfs?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -262,6 +262,7 @@ export type JuntaDigitalizacion = {
   parroquia?: Maybe<ParroquiaDigitalizacion>;
   provincia?: Maybe<ProvinciaDigitalizacion>;
   sexo: Scalars["String"]["output"];
+  zona?: Maybe<ZonaDigitalizacion>;
   zona_id?: Maybe<Scalars["Float"]["output"]>;
 };
 
@@ -417,6 +418,7 @@ export type Mutation = {
   adminUsuarioDelete: GlobalResultType;
   adminUsuarioUpdate: GlobalResultType;
   authCambioPassword: GlobalResultType;
+  digtActaEstadoUpdate: GlobalResultType;
   digtActaLiberaUpdate: GlobalResultType;
   digtActaUpdate: GlobalResultType;
   digtVotosControlUpdate: GlobalResultType;
@@ -486,6 +488,12 @@ export type MutationAdminUsuarioUpdateArgs = {
 export type MutationAuthCambioPasswordArgs = {
   id?: InputMaybe<Scalars["Int"]["input"]>;
   password: Scalars["String"]["input"];
+};
+
+export type MutationDigtActaEstadoUpdateArgs = {
+  acta_id: Scalars["Int"]["input"];
+  fase: Scalars["Int"]["input"];
+  tx_hash: Scalars["String"]["input"];
 };
 
 export type MutationDigtActaLiberaUpdateArgs = {
@@ -1461,9 +1469,41 @@ export type ActaDigtListFieldsFragment = {
 export type ActaByDigititalizacionListFieldsFragment = {
   __typename?: "ActaDigitalizacionVotoImagen";
   id: number;
+  junta?: {
+    __typename?: "JuntaDigitalizacion";
+    id: number;
+    junta: number;
+    sexo: string;
+    provincia?: {
+      __typename?: "ProvinciaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    canton?: {
+      __typename?: "CantonDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    parroquia?: {
+      __typename?: "ParroquiaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    zona?: {
+      __typename?: "ZonaDigitalizacion";
+      zona_id: number;
+      nombre: string;
+    } | null;
+  } | null;
   votos: Array<{
     __typename?: "VotosDigitalizacionAleatorio";
     votosdigitacion: number;
+    candidato?: {
+      __typename?: "CandidatoDigitalizacion";
+      id: number;
+      nombre: string;
+      orden?: number | null;
+    } | null;
     imagensegmento?: {
       __typename?: "ImagenSegmentoDigitalizacionAleatorio";
       imagen?: string | null;
@@ -1481,9 +1521,41 @@ export type ActaDigitaCrudFieldsFragment = {
 export type ActaByControlListFieldsFragment = {
   __typename?: "ActaControlVotoImagen";
   id: number;
+  junta?: {
+    __typename?: "JuntaDigitalizacion";
+    id: number;
+    junta: number;
+    sexo: string;
+    provincia?: {
+      __typename?: "ProvinciaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    canton?: {
+      __typename?: "CantonDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    parroquia?: {
+      __typename?: "ParroquiaDigitalizacion";
+      id: number;
+      nombre: string;
+    } | null;
+    zona?: {
+      __typename?: "ZonaDigitalizacion";
+      zona_id: number;
+      nombre: string;
+    } | null;
+  } | null;
   votos: Array<{
     __typename?: "VotosDigitalizacionAleatorio";
     votosdigitacion: number;
+    candidato?: {
+      __typename?: "CandidatoDigitalizacion";
+      id: number;
+      nombre: string;
+      orden?: number | null;
+    } | null;
     imagensegmento?: {
       __typename?: "ImagenSegmentoDigitalizacionAleatorio";
       imagen?: string | null;
@@ -1512,6 +1584,21 @@ export type DigtVotosControlUpdateMutationVariables = Exact<{
 export type DigtVotosControlUpdateMutation = {
   __typename?: "Mutation";
   digtVotosControlUpdate: {
+    __typename?: "GlobalResultType";
+    message: string;
+    status: boolean;
+  };
+};
+
+export type DigtActaEstadoUpdateMutationVariables = Exact<{
+  actaId: Scalars["Int"]["input"];
+  fase: Scalars["Int"]["input"];
+  txHash: Scalars["String"]["input"];
+}>;
+
+export type DigtActaEstadoUpdateMutation = {
+  __typename?: "Mutation";
+  digtActaEstadoUpdate: {
     __typename?: "GlobalResultType";
     message: string;
     status: boolean;
@@ -1713,9 +1800,41 @@ export type DigtActaByDignidadListQuery = {
   digtActaByDignidadList: {
     __typename?: "ActaDigitalizacionVotoImagen";
     id: number;
+    junta?: {
+      __typename?: "JuntaDigitalizacion";
+      id: number;
+      junta: number;
+      sexo: string;
+      provincia?: {
+        __typename?: "ProvinciaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      canton?: {
+        __typename?: "CantonDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      parroquia?: {
+        __typename?: "ParroquiaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      zona?: {
+        __typename?: "ZonaDigitalizacion";
+        zona_id: number;
+        nombre: string;
+      } | null;
+    } | null;
     votos: Array<{
       __typename?: "VotosDigitalizacionAleatorio";
       votosdigitacion: number;
+      candidato?: {
+        __typename?: "CandidatoDigitalizacion";
+        id: number;
+        nombre: string;
+        orden?: number | null;
+      } | null;
       imagensegmento?: {
         __typename?: "ImagenSegmentoDigitalizacionAleatorio";
         imagen?: string | null;
@@ -1734,9 +1853,41 @@ export type DigtActaByDignidadControlListQuery = {
   digtActaByDignidadControlList: {
     __typename?: "ActaControlVotoImagen";
     id: number;
+    junta?: {
+      __typename?: "JuntaDigitalizacion";
+      id: number;
+      junta: number;
+      sexo: string;
+      provincia?: {
+        __typename?: "ProvinciaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      canton?: {
+        __typename?: "CantonDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      parroquia?: {
+        __typename?: "ParroquiaDigitalizacion";
+        id: number;
+        nombre: string;
+      } | null;
+      zona?: {
+        __typename?: "ZonaDigitalizacion";
+        zona_id: number;
+        nombre: string;
+      } | null;
+    } | null;
     votos: Array<{
       __typename?: "VotosDigitalizacionAleatorio";
       votosdigitacion: number;
+      candidato?: {
+        __typename?: "CandidatoDigitalizacion";
+        id: number;
+        nombre: string;
+        orden?: number | null;
+      } | null;
       imagensegmento?: {
         __typename?: "ImagenSegmentoDigitalizacionAleatorio";
         imagen?: string | null;
@@ -2606,7 +2757,33 @@ export const ActaDigtListFieldsFragmentDoc = gql`
 export const ActaByDigititalizacionListFieldsFragmentDoc = gql`
   fragment actaByDigititalizacionListFields on ActaDigitalizacionVotoImagen {
     id
+    junta {
+      id
+      provincia {
+        id
+        nombre
+      }
+      canton {
+        id
+        nombre
+      }
+      parroquia {
+        id
+        nombre
+      }
+      zona {
+        zona_id
+        nombre
+      }
+      junta
+      sexo
+    }
     votos {
+      candidato {
+        id
+        nombre
+        orden
+      }
       votosdigitacion
       imagensegmento {
         imagen
@@ -2624,7 +2801,33 @@ export const ActaDigitaCrudFieldsFragmentDoc = gql`
 export const ActaByControlListFieldsFragmentDoc = gql`
   fragment actaByControlListFields on ActaControlVotoImagen {
     id
+    junta {
+      id
+      provincia {
+        id
+        nombre
+      }
+      canton {
+        id
+        nombre
+      }
+      parroquia {
+        id
+        nombre
+      }
+      zona {
+        zona_id
+        nombre
+      }
+      junta
+      sexo
+    }
     votos {
+      candidato {
+        id
+        nombre
+        orden
+      }
       votosdigitacion
       imagensegmento {
         imagen
@@ -3519,6 +3722,59 @@ export type DigtVotosControlUpdateMutationResult =
 export type DigtVotosControlUpdateMutationOptions = Apollo.BaseMutationOptions<
   DigtVotosControlUpdateMutation,
   DigtVotosControlUpdateMutationVariables
+>;
+export const DigtActaEstadoUpdateDocument = gql`
+  mutation DigtActaEstadoUpdate($actaId: Int!, $fase: Int!, $txHash: String!) {
+    digtActaEstadoUpdate(acta_id: $actaId, fase: $fase, tx_hash: $txHash) {
+      ...actaDigitaCrudFields
+    }
+  }
+  ${ActaDigitaCrudFieldsFragmentDoc}
+`;
+export type DigtActaEstadoUpdateMutationFn = Apollo.MutationFunction<
+  DigtActaEstadoUpdateMutation,
+  DigtActaEstadoUpdateMutationVariables
+>;
+
+/**
+ * __useDigtActaEstadoUpdateMutation__
+ *
+ * To run a mutation, you first call `useDigtActaEstadoUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDigtActaEstadoUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [digtActaEstadoUpdateMutation, { data, loading, error }] = useDigtActaEstadoUpdateMutation({
+ *   variables: {
+ *      actaId: // value for 'actaId'
+ *      fase: // value for 'fase'
+ *      txHash: // value for 'txHash'
+ *   },
+ * });
+ */
+export function useDigtActaEstadoUpdateMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    DigtActaEstadoUpdateMutation,
+    DigtActaEstadoUpdateMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    DigtActaEstadoUpdateMutation,
+    DigtActaEstadoUpdateMutationVariables
+  >(DigtActaEstadoUpdateDocument, options);
+}
+export type DigtActaEstadoUpdateMutationHookResult = ReturnType<
+  typeof useDigtActaEstadoUpdateMutation
+>;
+export type DigtActaEstadoUpdateMutationResult =
+  Apollo.MutationResult<DigtActaEstadoUpdateMutation>;
+export type DigtActaEstadoUpdateMutationOptions = Apollo.BaseMutationOptions<
+  DigtActaEstadoUpdateMutation,
+  DigtActaEstadoUpdateMutationVariables
 >;
 export const ProvinciaDigtSelectDocument = gql`
   query ProvinciaDigtSelect(
@@ -5666,6 +5922,7 @@ export const namedOperations = {
     AuthCambioPassword: "AuthCambioPassword",
     DigtVotosUpdate: "DigtVotosUpdate",
     DigtVotosControlUpdate: "DigtVotosControlUpdate",
+    DigtActaEstadoUpdate: "DigtActaEstadoUpdate",
     MenuUpdate: "MenuUpdate",
     MenuCreate: "MenuCreate",
     MenuDelete: "MenuDelete",

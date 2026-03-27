@@ -26,13 +26,17 @@ export const processSubmitForm = (
             setLabelQrAux: any
         }) => {
 
-    parameters.listActaLazyQuery({
+
+        console.log('paramertos de conuslta-dignodad',parameters.data.idDignidad_acta.id);
+        console.log('paramertos de conuslta-junta',parameters.data.idJunta_acta.id);
+    parameters.listActaLazyQuery({        
         variables: {
             dignidad_id: parameters.data.idDignidad_acta.id,
             junta_id: parameters.data.idJunta_acta.id,
         },
         fetchPolicy: 'cache-and-network',
         onCompleted: (c: any) => {
+           // console.log('datos de regreso', c)
             let datos = c?.digtActaByJuntaList;
             let itemsPerPage = 8;
             let valores = datos?.votos.length;
@@ -550,7 +554,7 @@ export const processJuntaSelect = (
         getJuntaSelectLazyQuery: any, setDataJuntaSelect: any, cache?: string, dispatch?: any,
         idParroquia: number, idCanton: number, idProvincia: number, idZona: number, setValue?: any
     }) => {
-    if (parameters.idZona) {
+    if (parameters.idZona>=0) {
         parameters.getJuntaSelectLazyQuery({
             variables: {
                 inputWhere: {
@@ -635,11 +639,11 @@ export const processActaDignidad = (
             dignidad_id: parameters.data.idDignidad_acta.id,
         },
         fetchPolicy: 'cache-and-network',
-        onCompleted: (c: any) => {
-            console.log('otro', c);
+        onCompleted: (c: any) => {            
             parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail: 'Acta procesada', life: 3000 });
             parameters.setDataDigita(c.digtActaByDignidadList);
             parameters.setStatusLoading(false);
+            console.log(c.digtActaByDignidadList);
         }, onError: (error: any) => {
             parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });
             parameters.setStatusLoading(false);
@@ -661,27 +665,55 @@ export const processActaDignidad = (
  * 
  * @returns {Promise<boolean>} - Retorna false si hay datos faltantes, de lo contrario no retorna nada.
  */
-export const processSaveDigita = async (parameters: { setVisible: any, toast: any, data: any, digtVotosUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+export const processSaveDigita = async (parameters: { setVisible: any, toast: any, data: any, digtVotosUpdateMutation: any,digtActaEstadoUpdateMutation: any,navigate: any, dispatch: any, setStatusLoading: any }) => {
 
     let dataFaltante = parameters.data.atributoRecorte.filter((x: any) => x === null);
     if (dataFaltante.length > 0) {
         parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail: 'Registre todos los valores del listado Acta', life: 3000 });
         return false;
     }
-
+    console.log('Entra en guardar digitación:->', parameters.data,);
     parameters.setVisible(
         {
-            status: true, mensaje: `Esta seguro que desea Procesar esta Acta1`,
-            accept: () => {
-                processUpdateDigitaVoto(
-                    {
-                        data: parameters.data, toast: parameters.toast,
-                        digtVotosUpdateMutation: parameters.digtVotosUpdateMutation,
-                        navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
-                        dispatch: parameters.dispatch,
-                    }
-                )
+            status: true, mensaje: `Esta seguro que desea Procesar esta Acta1 (Digitación)`,
+            accept: async () => {
+
+                try {
+                    parameters.setStatusLoading(true);
+                    const actaId = Number(parameters.data?.actaId);
+                    const payloadBC = buildBlockchainPayload(parameters.data, "digitacion");
+                    const txHash = await sendToBlockchain(actaId, payloadBC);
+                    console.log('payloadBC_Digitación', payloadBC);
+                    console.log('txHash', txHash);
+
+                    processUpdateDigitaVoto(
+                        {
+                            data: parameters.data, toast: parameters.toast,
+                            digtVotosUpdateMutation: parameters.digtVotosUpdateMutation,
+                            digtActaEstadoUpdateMutation: parameters.digtActaEstadoUpdateMutation,
+                            navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
+                            dispatch: parameters.dispatch,
+                            txHash: txHash,
+                            fase: 2,
+                        }
+                    )
+                    parameters.setStatusLoading(false);
+                }
+                catch (e: any) {
+                    parameters.setStatusLoading(false);
+                }
+
             }, reject: () => { }
+            /* accept: () => {
+                 processUpdateDigitaVoto(
+                     {
+                         data: parameters.data, toast: parameters.toast,
+                         digtVotosUpdateMutation: parameters.digtVotosUpdateMutation,
+                         navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
+                         dispatch: parameters.dispatch,
+                     }
+                 )
+             }, reject: () => { }*/
         }
     );
 
@@ -702,7 +734,7 @@ export const processSaveDigita = async (parameters: { setVisible: any, toast: an
  *
  * @returns {void}
  */
-const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdateMutation: any, digtActaEstadoUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any, txHash: string, fase: number }) => {
     try {
 
         const CryptoTS = require("crypto-ts");
@@ -728,6 +760,7 @@ const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdat
             ]
         });
         console.log('nose', dataSave);
+        console.log('**Update data', update.data);
         update.setStatusLoading(true);
         update.digtVotosUpdateMutation({
             variables: {
@@ -736,10 +769,29 @@ const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdat
                     votos: dataSave
                 }
             }, onCompleted: (c: any) => {
-                update.navigate("record");
-                update.dispatch(setInitial({ initial: 1 }))
-                update.dispatch(setMessage({ message: c.digtVotosUpdate?.message }))
-                update.setStatusLoading(false);
+                update.digtActaEstadoUpdateMutation({
+                    variables: {                        
+                            actaId: update.data.actaId,
+                            txHash: update.txHash,
+                            fase: update.fase
+                        
+                    }, onCompleted: (r: any) => {
+                        update.navigate("record");
+                        update.dispatch(setInitial({ initial: 1 }))
+                        update.dispatch(setMessage({ message: c.digtVotosUpdate?.message }))
+                        update.setStatusLoading(false);
+                    }, onError: (error: any) => {
+                        update.toast.current.show({
+                            severity: 'error',
+                            summary: 'Atención',
+                            detail: `Votos guardados, pero falló actualizar Acta con txHash: ${error.message}`,
+                            life: 5000
+                        });
+                        update.setStatusLoading(false);
+                    }
+                })
+
+
             }, onError: (error: any) => {
                 update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });
                 update.setStatusLoading(false);
@@ -771,7 +823,7 @@ const processUpdateDigitaVoto = (update: { toast: any, data: any, digtVotosUpdat
  * de error, muestra un mensaje de error.
  * para aqu+i
  */
-export const processActaDignidadControl = (
+export const processActaDignidadControl = (    
     parameters:
         {
             toast: any, data: any, listActaControlLazyQuery: any, setDataDigita: any, setStatusLoading: any
@@ -781,12 +833,13 @@ export const processActaDignidadControl = (
         variables: {
             dignidad_id: parameters.data.idDignidad_acta.id,
         },
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-and-network',        
         onCompleted: (c: any) => {
+            console.log('c', c);
             parameters.toast.current.show({ severity: 'success', summary: 'Atención', detail: 'Acta procesada', life: 3000 });
             parameters.setDataDigita(c.digtActaByDignidadControlList);
             parameters.setStatusLoading(false);
-        }, onError: (error: any) => {
+        }, onError: (error: any) => {           
             parameters.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 3000 });
             parameters.setStatusLoading(false);
         }
@@ -807,41 +860,45 @@ export const processActaDignidadControl = (
  * 
  * @returns {Promise<boolean>} - Retorna false si hay datos faltantes, de lo contrario no retorna nada.
  */
-export const processSaveControl = async (parameters: { setVisible: any, toast: any, data: any, digtVotosControlUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+export const processSaveControl = async (parameters: { setVisible: any, toast: any, data: any, digtVotosControlUpdateMutation: any,digtActaEstadoUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
 
     let dataFaltante = parameters.data.atributoRecorteControl.filter((x: any) => x === null);
     if (dataFaltante.length > 0) {
         parameters.toast.current.show({ severity: 'warn', summary: 'Atención', detail: 'Registre todos los valores del listado Acta', life: 3000 });
         return false;
     }
- console.log('***entroacaaaaa ');
+
     parameters.setVisible(
         {
-            status: true, mensaje: `Esta seguro que desea Procesar esta Acta1`,
+            status: true, mensaje: `Esta seguro que desea Procesar esta Acta (Control)`,
             accept: async () => {
-               
-                    try {                        
-                        parameters.setStatusLoading(true);
-                        const actaId = Number(parameters.data?.actaId);
-                        const payloadBC = buildBlockchainPayload(parameters.data, "control");
-                        const txHash = await sendToBlockchain(actaId, payloadBC);
-                        console.log('txHash', txHash);
 
-                        
-                        processUpdateControlVoto(
-                            {
-                                data: parameters.data, toast: parameters.toast,
-                                digtVotosControlUpdateMutation: parameters.digtVotosControlUpdateMutation,
-                                navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
-                                dispatch: parameters.dispatch,
-                            }
-                        )
-                        parameters.setStatusLoading(false);
-                    }
-                    catch (e: any) {
-                       parameters.setStatusLoading(false);
-                    }
-             
+                try {
+                    parameters.setStatusLoading(true);
+                    const actaId = Number(parameters.data?.actaId);
+                    const payloadBC = buildBlockchainPayload(parameters.data, "control");
+                    const txHash = await sendToBlockchain(actaId, payloadBC);
+                    console.log('payloadBC_Control', payloadBC);
+                    console.log('txHash', txHash);
+
+                    //console.log('data', parameters.data);
+                    processUpdateControlVoto(
+                        {
+                            data: parameters.data, toast: parameters.toast,
+                            digtVotosControlUpdateMutation: parameters.digtVotosControlUpdateMutation,
+                            digtActaEstadoUpdateMutation: parameters.digtActaEstadoUpdateMutation,
+                            navigate: parameters.navigate, setStatusLoading: parameters.setStatusLoading,
+                            dispatch: parameters.dispatch,
+                            txHash: txHash,
+                            fase: 3,
+                        }
+                    )
+                    parameters.setStatusLoading(false);
+                }
+                catch (e: any) {
+                    parameters.setStatusLoading(false);
+                }
+
 
             }, reject: () => { }
         }
@@ -864,16 +921,16 @@ export const processSaveControl = async (parameters: { setVisible: any, toast: a
  *
  * @returns {void}
  */
-const processUpdateControlVoto = (update: { toast: any, data: any, digtVotosControlUpdateMutation: any, navigate: any, dispatch: any, setStatusLoading: any }) => {
+const processUpdateControlVoto = (update: { toast: any, data: any, digtVotosControlUpdateMutation: any, digtActaEstadoUpdateMutation: any,navigate: any, dispatch: any, setStatusLoading: any ,txHash: string, fase: number }) => {
     try {
 
         const CryptoTS = require("crypto-ts");
         const iv = CryptoTS.enc.Utf8.parse('algorithmencript');
-        const key = 'asuncionbackalgorithmencript2024';
+        const key = 'asuncionbackalgorithmencript2024';        
 
         let dataRecorte = update.data.atributoRecorteControl;
         let dataCandidato = update.data.dataGeneral.candidatoId
-        let dataSave: { candidato_id: number, votoscontrol: number, cifrado: string }[] = [];
+        let dataSave: { candidato_id: number, votoscontrol: number, cifrado: string }[] = [];       
 
         dataRecorte.forEach((element: any, x: number) => {
             dataSave = [...dataSave, {
@@ -898,10 +955,28 @@ const processUpdateControlVoto = (update: { toast: any, data: any, digtVotosCont
                     votos: dataSave
                 }
             }, onCompleted: (c: any) => {
-                update.navigate("record");
-                update.dispatch(setInitial({ initial: 1 }))
-                update.dispatch(setMessage({ message: c.digtControlUpdate?.message }))
-                update.setStatusLoading(false);
+              update.digtActaEstadoUpdateMutation({
+                    variables: {                        
+                            actaId: update.data.actaId,
+                            txHash: update.txHash,
+                            fase: update.fase
+                        
+                    }, onCompleted: (r: any) => {
+                        update.navigate("record");
+                        update.dispatch(setInitial({ initial: 1 }))
+                        update.dispatch(setMessage({ message: c.digtControlUpdate?.message }))
+                        update.setStatusLoading(false);
+                    }, onError: (error: any) => {
+                        update.toast.current.show({
+                            severity: 'error',
+                            summary: 'Atención',
+                            detail: `Votos guardados, pero falló actualizar Acta con txHash: ${error.message}`,
+                            life: 5000
+                        });
+                        update.setStatusLoading(false);
+                    }
+                })
+              
             }, onError: (error: any) => {
                 update.toast.current.show({ severity: 'error', summary: 'Atención', detail: error.message, life: 4000 });
                 update.setStatusLoading(false);
